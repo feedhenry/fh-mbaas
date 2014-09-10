@@ -1,0 +1,48 @@
+{
+  "name": "fh-mbaas",
+  "version": "0.0.2-BUILD-NUMBER",
+  "description": "",
+  "main": "index.js",
+  "author": "FeedHenry",
+  "license": "Copyright (c) 2014 FeedHenry Ltd, All Rights Reserved.",
+  "scripts": {
+    "install": "scripts/install.sh",
+    "preinstall": "node scripts/preinstallvalidate.js",
+    "postinstall": "scripts/postinstall.sh"
+  },
+  "bin": {
+    "fh-mbaas": "./fh-mbaas.js"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "underscore": "^1.6.0",
+    "async": "^0.9.0",
+    "bunyan": "^0.23.1",
+    "rc": "^0.4.0",
+    "express": "^4.4.5",
+    "cors": "^2.3.1",
+    "body-parser": "^1.4.3",
+    "request": "^2.36.0",
+    "optimist": "^0.6.1",
+    "cuid": "^1.2.4",
+    "mongoose": "^3.8.13"
+  },
+  "devDependencies": {
+    "grunt-contrib-watch": "latest",
+    "grunt-nodemon": "0.2.0",
+    "grunt-concurrent": "latest",
+    "supertest": "0.8.2",
+    "should": "2.1.1",
+    "turbo-test-runner": "0.3.3",
+    "proxyquire": "0.5.3",
+    "grunt-shell": "0.6.4",
+    "istanbul": "0.2.7",
+    "grunt-env": "~0.4.1",
+    "load-grunt-tasks": "~0.4.0",
+    "time-grunt": "~0.3.1",
+    "grunt-node-inspector": "~0.1.5",
+    "grunt-open": "~0.2.3",
+    "grunt-plato": "~1.0.0",
+    "grunt-contrib-jshint": "^0.10.0"
+  }
+}

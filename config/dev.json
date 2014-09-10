@@ -1,0 +1,24 @@
+{
+  "fhmbaas": {
+    "port": 8818,
+    "code_coverage_enabled": false,
+    "logger": {
+      "name": "mbaas",
+      "streams": [{
+        "type": "stream",
+        "src": true,
+        "level": "trace",
+        "stream": "process.stdout"
+      }, {
+        "type": "raw",
+        "src": true,
+        "level": "trace",
+        "stream": "ringBuffer"
+      }]
+    },
+    "mongo": {
+      "enabled": false,
+      "url": "mongodb://localhost/fh-mbaas"
+    }
+  }
+}
