@@ -30,7 +30,7 @@ exports.setUp = function(finish){
     assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
     dropDatabase(connection, function(err) {
       assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
-      var port = 8818;
+      var port = 8819;
       server = app.listen(port, function(){
         console.log("Test App started at: " + new Date() + " on port: " + port);
         finish();

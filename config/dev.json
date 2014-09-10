@@ -1,6 +1,6 @@
 {
   "fhmbaas": {
-    "port": 8818,
+    "port": 8819,
     "code_coverage_enabled": false,
     "logger": {
       "name": "mbaas",

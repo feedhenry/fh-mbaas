@@ -1,2 +1,2 @@
-# fh-mbaas
+# fh-mbaas - FeedHenry MBaaS Management Service
 
