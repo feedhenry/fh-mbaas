@@ -1,6 +1,7 @@
 {
   "fhmbaas": {
     "port": 8819,
+    "key": "mBqxpulwlj3Rw7EsHZq0YEQyrArq2tlIRCQ0pCmr5DRPPDZMAP4ZNb7U0E6bPSb3",
     "code_coverage_enabled": false,
     "logger": {
       "name": "mbaas",
@@ -40,7 +41,7 @@
           "type": "size",
           "value": "-1"
         }
-      },
+      }
     }
   }
 }
