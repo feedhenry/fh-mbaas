@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 var TITLE = "fh-mbaas";
 process.env.component = TITLE;
 if (!process.env.conf_file) process.env.conf_file = process.argv[2];
@@ -12,7 +13,7 @@ var cluster = require('cluster');
 var server;
 var express = require('express');
 var cors = require('cors');
-
+var bodyParser = require('body-parser');
 
 // args and usage
 function usage() {
@@ -38,7 +39,7 @@ console.log(starting);
 var configFile = process.env.conf_file || args._[0];
 var config;
 
-if (!path.existsSync(configFile)) {
+if (!fs.existsSync(configFile)) {
   console.error("Config file does not exist: " + configFile);
   process.exit(0);
 }
@@ -65,7 +66,9 @@ if (config.fhmbaas.code_coverage_enabled === true) {
 
 // create bunyan logger
 var bunyan = require('bunyan');
-var ringBuffer = new bunyan.RingBuffer({ limit: 200 });
+var ringBuffer = new bunyan.RingBuffer({
+  limit: 200
+});
 // log serializer for generic requests
 function reqSerializer(req) {
   return {
@@ -80,7 +83,7 @@ function reqSerializer(req) {
 var loggerOptions = config.fhmbaas.logger;
 
 // Iterate through our streams and set accordingly
-for (var i=0; i<loggerOptions.streams.length; i++) {
+for (var i = 0; i < loggerOptions.streams.length; i++) {
   var stream = loggerOptions.streams[i];
   if (stream.type === 'raw') {
     stream.stream = ringBuffer;
@@ -106,14 +109,14 @@ require('./lib/util/config.js').setConfig(config);
 var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
 
 // handle uncaught exceptions
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function(err) {
   logger.error("FATAL: UncaughtException, please report: " + util.inspect(err));
   console.error(new Date().toString() + " FATAL: UncaughtException, please report: " + util.inspect(err));
   if (err !== undefined && err.stack !== undefined) {
-   logger.error(util.inspect(err.stack));
+    logger.error(util.inspect(err.stack));
   }
   console.trace();
-  cleanShutdown();  // exit on uncaught exception
+  cleanShutdown(); // exit on uncaught exception
 });
 
 
@@ -151,7 +154,10 @@ process.on(RELOAD_CONFIG_SIGNAL, reloadConfig);
 // reload the config
 function reloadConfig() {
   var masterWorker = cluster.isMaster ? 'Master' : 'Worker';
-  logger.info({worker: masterWorker, file: configFile}, 'Reloading config file');
+  logger.info({
+    worker: masterWorker,
+    file: configFile
+  }, 'Reloading config file');
   try {
     var buf = fs.readFileSync(configFile.toString());
     config = JSON.parse(buf.toString());
@@ -163,7 +169,7 @@ function reloadConfig() {
         if (worker.kill) worker.kill(RELOAD_CONFIG_SIGNAL);
         else if (worker.process && worker.process.kill) worker.process.kill(RELOAD_CONFIG_SIGNAL);
       }
-    }else {
+    } else {
       require('./lib/util/config.js').setConfig(config);
       console.log("Worker loaded new config ok..");
     }
@@ -181,16 +187,24 @@ function startWorker() {
   // Enable CORS for all requests
   app.use(cors());
 
-  var mbaas = require('./lib/mbaas.js')();
-  mbaas.init(function(err) {
+  // Parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }))
+
+  // Parse JSON payloads
+  app.use(bodyParser.json());
+
+  var models = require('./lib/models.js')();
+  models.init(function(err) {
     if (err) {
       console.error("FATAL: " + util.inspect(err));
       console.trace();
-      return cleanShutdown();  // exit on uncaught exception
+      return cleanShutdown(); // exit on uncaught exception
     }
 
     app.use('/sys', require('./lib/sys.js')());
-    app.use('/admin', require('./lib/admin-route.js')(mbaas));
+    app.use('/db', require('./lib/routes/db.js')(models));
 
     var port = config.fhmbaas.port;
     var server = app.listen(port, function() {
@@ -211,7 +225,7 @@ function start() {
     }
 
     // Handle workers exiting
-    cluster.on('exit', function (worker, code, signal) {
+    cluster.on('exit', function(worker, code, signal) {
       if (worker.suicide === true) {
         console.log("Cleanly exiting..");
         process.exit(0);
@@ -231,12 +245,12 @@ function start() {
   }
 }
 
-if (args.d === true){
+if (args.d === true) {
   console.log("STARING ONE WORKER FOR DEBUG PURPOSES");
   startWorker();
-}else {
+} else {
   // Note: if required as a module, its up to the user to call start();
-  if(require.main === module) {
+  if (require.main === module) {
     start();
   }
 }
