@@ -14,6 +14,7 @@ var server;
 var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+var auth = require('./lib/middleware/auth');
 
 // args and usage
 function usage() {
@@ -190,10 +191,13 @@ function startWorker() {
   // Parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({
     extended: false
-  }))
+  }));
 
   // Parse JSON payloads
   app.use(bodyParser.json());
+
+  //add authentication to the /api path
+  app.use('/api', auth(config));
 
   var models = require('./lib/models.js')();
   models.init(function(err) {
@@ -204,7 +208,7 @@ function startWorker() {
     }
 
     app.use('/sys', require('./lib/sys.js')());
-    app.use('/db', require('./lib/routes/db.js')(models));
+    app.use('/api/mbaas', require('./lib/routes/db.js')(models));
 
     var port = config.fhmbaas.port;
     var server = app.listen(port, function() {
