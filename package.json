@@ -21,6 +21,7 @@
     "cors": "^2.3.1",
     "cuid": "^1.2.4",
     "express": "^4.4.5",
+    "fh-dfc": "http://robert:scottishminister1790@bob.feedhenry.net:8080/job/fh-dfc_pullrequests/7/artifact/dist/fh-dfc-0.22.2-7.tar.gz",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",
@@ -47,6 +48,7 @@
     "mockgoose": "^1.10.7",
     "proxyquire": "0.5.3",
     "should": "2.1.1",
+    "sinon": "^1.10.3",
     "supertest": "0.8.2",
     "time-grunt": "~0.3.1",
     "turbo-test-runner": "0.3.3"

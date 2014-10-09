@@ -106,4 +106,66 @@ exports.it_should_create_mongo_db_replset = function(cb) {
   });
 };
 
+exports.it_should_drop_mongo_db = function(finish){
+  var TEST_DB = 'testdb';
+  var TEST_USER = 'testuser';
+
+  var mongodb = {
+    MongoClient: function() {
+      return {
+        open: function(cb) {
+          var mc = {
+            admin: function() {
+              return {
+                authenticate: function(user, pass, opts, cb1) {
+                  assert.equal(user, 'super');
+                  return cb1();
+                },
+                listDatabases: function(cb){
+                  return cb(null, {
+                    databases: [{name: TEST_DB}]
+                  });
+                },
+                close: function(){}
+              }
+            },
+            db: function(){
+              return {
+                removeUser: function(user, cb){
+                  assert.equal(user, TEST_USER);
+                  return cb();
+                },
+                dropDatabase: function(cb){
+                  return cb();
+                },
+                close: function(){}
+              }
+            }
+          };
+          return cb(null, mc);
+        }
+      }
+    },
+    Server: function(host, port, options) {
+      assert.equal(host, 'dummyhost', 'unexpected host name');
+    },
+    ReplSetServers: function(servers, options) {
+      assert.ok(false, 'should not call replset for single host');
+    }
+  };
+
+  var mongo = proxyquire('../../../lib/util/mongo.js', {'mongodb': mongodb});
+
+  var adminOpts = {
+    host: 'dummyhost',
+    port: 8000,
+    user: 'super',
+    pass: 'pass'
+  };
+  mongo.dropDb(adminOpts, TEST_USER, TEST_DB, function(err) {
+    assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
+    finish();
+  });
+}
+
 

@@ -101,13 +101,13 @@ exports.it_should_create_domain_db = function(finish){
     environment: TEST_ENV
   });
 
-  mbaas.createDomainDBForEnv(TEST_DOMAIN, TEST_ENV, cfg, function(err, results){
+  mbaas.createDb(cfg, function(err, results){
     assert.ok(!err, util.inspect(err));
     validateDBConf(dbConf, results);
     assert.ok(mockMongo.created, 'mongodb is not created');
     mockMongo.created = false;
 
-    mbaas.createDomainDBForEnv(TEST_DOMAIN, TEST_ENV, cfg, function(err, results){
+    mbaas.createDb(cfg, function(err, results){
       assert.ok(!err, util.inspect(err));
       validateDBConf(dbConf, results);
       assert.ok(!mockMongo.created, 'mongodb is created twice');
@@ -126,7 +126,7 @@ function it_should_rollback_db_conf(finish){
   });
   mbaas.save(function(err){
     assert.ok(!err, util.inspect(err));
-    mbaas.createDomainDBForEnv(TEST_DOMAIN, TEST_ENV, cfg, function(err, results){
+    mbaas.createDb(cfg, function(err, results){
       assert.ok(err != null, 'db creation should fail');
       Mbaas.findOne({domain: TEST_DOMAIN, environment: TEST_ENV}, function(err, found){
         assert.ok(!err, util.inspect(err));

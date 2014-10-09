@@ -47,5 +47,10 @@
         }
       }
     }
+  },
+  "fhditch": {
+    "host": "localhost",
+    "port": 8802,
+    "protocol": "http"
   }
 }
