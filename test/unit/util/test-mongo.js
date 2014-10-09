@@ -23,7 +23,8 @@ exports.it_should_create_mongo_db = function(cb) {
                 },
                 close: function(){}
               }
-            }
+            },
+            close: function(){}
           };
           return cb(null, mc);
         }
@@ -74,7 +75,8 @@ exports.it_should_create_mongo_db_replset = function(cb) {
                 },
                 close: function(){}
               }
-            }
+            },
+            close: function(){}
           };
           return cb(null, mc);
         }
@@ -110,25 +112,26 @@ exports.it_should_drop_mongo_db = function(finish){
   var TEST_DB = 'testdb';
   var TEST_USER = 'testuser';
 
+  var admin = function() {
+    return {
+      authenticate: function(user, pass, cb1) {
+        assert.equal(user, 'super');
+        return cb1();
+      },
+      listDatabases: function(cb){
+        return cb(null, {
+          databases: [{name: TEST_DB}]
+        });
+      },
+      close: function(){}
+    }
+  };
   var mongodb = {
     MongoClient: function() {
       return {
         open: function(cb) {
           var mc = {
-            admin: function() {
-              return {
-                authenticate: function(user, pass, opts, cb1) {
-                  assert.equal(user, 'super');
-                  return cb1();
-                },
-                listDatabases: function(cb){
-                  return cb(null, {
-                    databases: [{name: TEST_DB}]
-                  });
-                },
-                close: function(){}
-              }
-            },
+            admin: admin,
             db: function(){
               return {
                 removeUser: function(user, cb){
@@ -138,9 +141,11 @@ exports.it_should_drop_mongo_db = function(finish){
                 dropDatabase: function(cb){
                   return cb();
                 },
+                admin: admin,
                 close: function(){}
               }
-            }
+            },
+            close: function(){}
           };
           return cb(null, mc);
         }
