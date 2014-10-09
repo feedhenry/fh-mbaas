@@ -66,3 +66,43 @@ exports.it_should_return_db_url = function(finish){
     });
   });
 };
+
+var TEST_APP_NAME = 'fhmbaas-accept-test-appname';
+exports.it_should_migrate_db = function(finish){
+  var url = util.format('%s%s/%s/%s/%s/migratedb', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
+  console.log(url);
+  var params = {
+    url: url,
+    headers:{
+      'x-fh-service-key': 'testkey'
+    },
+    json:{
+    }
+  };
+  request.post(params, function(err, response){
+    assert.equal(response.statusCode, 400);
+
+    params.json.cacheKey = 'testcachekey';
+    params.json.appGuid = 'testappguid';
+
+    request.post(params, function(err, response, body){
+      assert.equal(response.statusCode, 200);
+
+      //request the same url again, we should get 423
+      request.post(params, function(err, response){
+        assert.equal(response.statusCode, 423);
+        
+        params.url = util.format('%s%s/%s/%s/%s/migrateComplete', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
+        request.post(params, function(err, response){
+          assert.equal(response.statusCode, 200);
+          
+          params.url = util.format('%s%s/%s/%s/%s/db', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
+          request.del(params, function(err, response){
+            assert.equal(response.statusCode, 200);
+            finish();
+          });
+        });
+      });
+    });
+  });
+}

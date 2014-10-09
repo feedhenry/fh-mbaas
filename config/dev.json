@@ -52,5 +52,11 @@
     "host": "localhost",
     "port": 8802,
     "protocol": "http"
+  },
+  "fhdfc": {
+    "dynofarm": "http://localhost:9000",
+    "username":"feedhenry",
+    "_password": "feedhenry101",
+    "loglevel": "warn"
   }
 }

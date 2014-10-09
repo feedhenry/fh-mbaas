@@ -5,20 +5,22 @@ var DOMAIN = "test";
 var ENVIRONMENT = "test";
 var APPNAME = "testappname";
 
-var mockdfc = {
-  dynos : function(args, cb){
-    console.log('get dyno for ' + args[0]);
-    if(args[0] === DOMAIN){
-      return cb();
-    } else {
-      return cb(new Error('not found'));
-    }
-  },
+var mockdfc = function(){
+  return {
+    dynos : function(args, cb){
+      console.log('get dyno for ' + args[0]);
+      if(args[0] === DOMAIN){
+        return cb();
+      } else {
+        return cb(new Error('not found'));
+      }
+    },
 
-  stopapp: function(args, cb){
-    assert.equal(args[0], DOMAIN, 'domain does not match');
-    assert.equal(args[1], APPNAME, 'appname does not match');
-    return cb();
+    'stop-app': function(args, cb){
+      assert.equal(args[0], DOMAIN, 'domain does not match');
+      assert.equal(args[1], APPNAME, 'appname does not match');
+      return cb();
+    }
   }
 }
 

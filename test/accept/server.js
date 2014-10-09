@@ -6,6 +6,13 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var auth = require('../../lib/middleware/auth');
 var MongoClient = require('mongodb').MongoClient;
+var dfutils = require('../../lib/util/dfutils');
+var async = require('async');
+
+var ditchServer;
+var ditchPort = 19001;
+var dynofarmServer;
+var dynofarmPort = 19002;
 
 // enable mongo
 var config = require('lib/util/config.js');
@@ -24,6 +31,9 @@ cfg.fhmbaas.mongo = {
     pass: 'admin'
   }
 }
+cfg.fhditch.port = ditchPort;
+cfg.fhdfc.dynofarm = 'http://localhost:' + dynofarmPort;
+
 config.setConfig(cfg);
 
 var models = require('../../lib/models')();
@@ -39,6 +49,33 @@ var server;
 
 var deleteAmdinUser = false;
 var new_db_prefix = "fhmbaas-accept-test";
+
+
+
+function setupDitchServer(cb){
+  var ditchApp = express();
+  ditchApp.use(bodyParser.json());
+  ditchApp.use('*', function(req, res){
+    return res.json({});
+  });
+  ditchServer = ditchApp.listen(ditchPort, function(){
+    console.log('Ditch server is running on port ' + ditchPort);
+    cb();
+  });
+}
+
+function setupDynofarm(cb){
+  var dynoApp = express();
+  dynoApp.use(bodyParser.json());
+  dynoApp.use('*', function(req, res){
+    console.log('[dynofarm] got request, url = ' + req.url);
+    return res.json([]);
+  });
+  dynofarmServer = dynoApp.listen(dynofarmPort, function(){
+    console.log('Dynofarm server is running on port ' + dynofarmPort);
+    cb();
+  });
+}
 
 function connectDb(cb){
   var dburl = util.format('mongodb://%s:%s/%s', cfg.fhmbaas.mongo.host, cfg.fhmbaas.mongo.port, cfg.fhmbaas.mongo.name);
@@ -79,11 +116,13 @@ function dropDBAdminUser(db, user, cb){
 }
 
 
-function dropCollection(db, collection, cb) {
-  console.log('Drop db collection ' + collection);
-  db.dropCollection(collection, function(err, results){
-    cb();
-  });
+function dropCollections(db, collections, cb) {
+  async.each(collections, function(collection, cb){
+    console.log('Drop db collection ' + collection);
+    db.dropCollection(collection, function(err, results){
+      cb();
+    });
+  }, cb);
 }
 
 function dropDbForDomain(db, cb){
@@ -120,7 +159,7 @@ exports.setUp = function(finish){
   console.log('Running setUp for acceptance tests...');
   connectDb(function(err, db){
     createDBAdminUser(db, cfg.fhmbaas.mongo.admin_auth.user, cfg.fhmbaas.mongo.admin_auth.pass, function(err){
-      dropCollection(db, 'mbaas', function(err, result){
+      dropCollections(db, ['mbaas', 'appmbaas'], function(err, result){
         dropDbForDomain(db, function(err){
           db.close(true, function(){
             models.init(function(err){
@@ -132,7 +171,11 @@ exports.setUp = function(finish){
               var port = 8819;
               server = app.listen(port, function(){
                 console.log("Test App started at: " + new Date() + " on port: " + port);
-                finish();
+                setupDitchServer(function(){
+                  setupDynofarm(function(){
+                    finish();
+                  });
+                });
               });
             });
           });
@@ -145,7 +188,7 @@ exports.setUp = function(finish){
 function removeAll(finish){
   connectDb(function(err, db){
     dropDBAdminUser(db, cfg.fhmbaas.mongo.admin_auth.user, function(){
-      dropCollection(db, 'mbaas', function(){
+      dropCollections(db, ['mbaas', 'appmbaas'], function(){
         dropDbForDomain(db, function(){
           db.close(true, function(){
             models.disconnect(function(err){
@@ -158,13 +201,41 @@ function removeAll(finish){
   });
 }
 
+function closeTestServer(cb){
+  console.log('close test server');
+  if(server){
+    server.close(cb);
+  } else {
+    cb();
+  }
+}
+
+function closeDitchServer(cb){
+  console.log('close ditch server');
+  if(ditchServer){
+    ditchServer.close(cb);
+  } else {
+    cb();
+  }
+}
+
+function closeDynoServer(cb){
+  console.log('close dynofarm server');
+  if(dynofarmServer){
+    dynofarmServer.close(cb);
+  } else {
+    cb();
+  }
+}
+
 exports.tearDown = function(finish) {
   console.log('Running tearDown for acceptance tests...');
-  if(server){
-    server.close(function(){
-      removeAll(finish);
+  dfutils.clearInterval();
+  closeDitchServer(function(){
+    closeDynoServer(function(){
+      closeTestServer(function(){
+        removeAll(finish);
+      });
     });
-  } else {
-    removeAll(finish);
-  }
+  });
 };
