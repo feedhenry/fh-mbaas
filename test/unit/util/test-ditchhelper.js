@@ -2,18 +2,14 @@ var proxyquire = require('proxyquire');
 var assert = require('assert');
 var sinon = require('sinon');
 var request = require('request');
-
-var mockConfig = {
-  getConfig: function(){
-    return {
-      fhditch: {
-        host: 'localhost',
-        protocol: 'http',
-        port: 9999
-      }
-    }
+var fhconfig = require('fh-config');
+fhconfig.setRawConfig({
+  fhditch: {
+    host: 'localhost',
+    protocol: 'http',
+    port: 9999
   }
-};
+});
 
 var DOMAIN = 'test';
 var ENVIRONMENT = 'test';
@@ -22,7 +18,7 @@ var APPNAME = 'testappname';
 exports.it_should_call_fh_ditch = function(finish){
   var mock = sinon.mock(request);
   var post = mock.expects('post');
-  var ditchhelper = proxyquire('../../../lib/util/ditchhelper', {request: mock, './config': mockConfig});
+  var ditchhelper = proxyquire('../../../lib/util/ditchhelper', {request: mock});
 
   var cb1 = sinon.spy();
   var cb2 = sinon.spy();

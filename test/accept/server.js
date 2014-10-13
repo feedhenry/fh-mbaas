@@ -4,38 +4,47 @@ var express = require('express');
 var app = express();
 var cors = require('cors');
 var bodyParser = require('body-parser');
-var auth = require('../../lib/middleware/auth');
 var MongoClient = require('mongodb').MongoClient;
-var dfutils = require('../../lib/util/dfutils');
 var async = require('async');
-
 var ditchServer;
 var ditchPort = 19001;
 var dynofarmServer;
 var dynofarmPort = 19002;
 
 // enable mongo
-var config = require('lib/util/config.js');
-var cfg = config.getConfig();
-cfg.fhmbaas.key = 'testkey';
-cfg.fhmbaas.mongo = {
-  enabled: true,
-  host: 'localhost',
-  port: 27017,
-  name: 'test-fhmbaas-accept',
-  auth: {
-    enabled: false
+var fhconfig = require('fh-config');
+fhconfig.setRawConfig({
+  fhmbaas:{
+    key:'testkey'
   },
-  admin_auth: {
-    user: 'admin',
-    pass: 'admin'
+  mongo:{
+    enabled: true,
+    host: 'localhost',
+    port: 27017,
+    name: 'test-fhmbaas-accept',
+    auth: {
+      enabled: false
+    },
+    admin_auth: {
+      user: 'admin',
+      pass: 'admin'
+    }
+  },
+  fhditch:{
+    host:'localhost',
+    port:ditchPort,
+    protocol:'http'
+  },
+  fhdfc:{
+    "dynofarm":'http://localhost:' + dynofarmPort,
+    "username":"fh",
+    "_password": "fh",
+    "loglevel": "warn"
   }
-}
-cfg.fhditch.port = ditchPort;
-cfg.fhdfc.dynofarm = 'http://localhost:' + dynofarmPort;
+});
 
-config.setConfig(cfg);
-
+var auth = require('../../lib/middleware/auth');
+var dfutils = require('../../lib/util/dfutils');
 var models = require('../../lib/models')();
 
 app.use(cors());
@@ -43,7 +52,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(bodyParser.json());
-app.use('/api', auth(cfg));
+app.use('/api', auth(fhconfig));
 
 var server;
 
@@ -78,7 +87,7 @@ function setupDynofarm(cb){
 }
 
 function connectDb(cb){
-  var dburl = util.format('mongodb://%s:%s/%s', cfg.fhmbaas.mongo.host, cfg.fhmbaas.mongo.port, cfg.fhmbaas.mongo.name);
+  var dburl = fhconfig.mongoConnectionString();
   MongoClient.connect(dburl, function(err, db){
     assert.ok(!err, 'Can not connect to mongodb : ' + util.inspect(err));
     return cb(err, db);
@@ -158,7 +167,7 @@ function dropDbForDomain(db, cb){
 exports.setUp = function(finish){
   console.log('Running setUp for acceptance tests...');
   connectDb(function(err, db){
-    createDBAdminUser(db, cfg.fhmbaas.mongo.admin_auth.user, cfg.fhmbaas.mongo.admin_auth.pass, function(err){
+    createDBAdminUser(db, fhconfig.value('mongo.admin_auth.user'), fhconfig.value('mongo.admin_auth.pass'), function(err){
       dropCollections(db, ['mbaas', 'appmbaas'], function(err, result){
         dropDbForDomain(db, function(err){
           db.close(true, function(){
@@ -187,7 +196,7 @@ exports.setUp = function(finish){
 
 function removeAll(finish){
   connectDb(function(err, db){
-    dropDBAdminUser(db, cfg.fhmbaas.mongo.admin_auth.user, function(){
+    dropDBAdminUser(db, fhconfig.value('mongo.admin_auth.user'), function(){
       dropCollections(db, ['mbaas', 'appmbaas'], function(){
         dropDbForDomain(db, function(){
           db.close(true, function(){

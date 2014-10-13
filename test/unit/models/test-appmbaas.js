@@ -15,8 +15,17 @@ var cfg = {
       user: 'admin',
       pass: 'admin'
     }
+  },
+  fhdfc: {
+    "dynofarm": "http://localhost:9000",
+    "username":"feedhenry",
+    "_password": "feedhenry101",
+    "loglevel": "warn"
   }
 };
+
+var fhconfig = require('fh-config');
+fhconfig.setRawConfig(cfg);
 
 var mongo = require('../../../lib/util/mongo');
 var mockMongo = sinon.mock(mongo);
@@ -208,7 +217,7 @@ exports.test_create_db = function(finish){
 
     createDb.reset();
     createDb.callsArg(4);
-    saved.createDb(cfg, function(err, conf){
+    saved.createDb(fhconfig, function(err, conf){
       assert.ok(!err, util.inspect(err));
       assert.ok(null != saved.dbConf);
       assert.ok(null != conf);
@@ -216,7 +225,7 @@ exports.test_create_db = function(finish){
       assert.equal(createDb.callCount, 1);
       createDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'});
 
-      saved.createDb(cfg, function(err, conf){
+      saved.createDb(fhconfig, function(err, conf){
         assert.equal(createDb.callCount, 1);
         assert.ok(null != conf);
 
@@ -242,7 +251,7 @@ function test_create_db_rollback(finish){
 
     createDb.reset();
     createDb.callsArgWith(4, new Error('failed'));
-    saved.createDb(cfg, function(err, conf){
+    saved.createDb(fhconfig, function(err, conf){
       assert.ok(null == saved.dbConf);
 
       assert.equal(createDb.callCount, 1);
@@ -270,7 +279,7 @@ exports.test_drop_db = function(finish){
 
     dropDb.reset();
     dropDb.callsArg(3);
-    saved.removeDb(cfg, function(err){
+    saved.removeDb(fhconfig, function(err){
       assert.ok(!err, util.inspect(err));
       assert.equal(dropDb.callCount, 1);
       dropDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'}, 'testuser', 'testdb');

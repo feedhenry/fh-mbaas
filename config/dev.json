@@ -17,22 +17,6 @@
         "stream": "ringBuffer"
       }]
     },
-    "mongo": {
-      "enabled": true,
-      "name": "fh-mbaas",
-      "host": "localhost",
-      "port": 27017,
-      "replicaset_name": null,
-      "auth": {
-        "enabled": false,
-        "user": "",
-        "pass": ""
-      },
-      "admin_auth": {
-        "user": "u-mbaas",
-        "pass": "password"
-      }
-    },
     "dynos": {
       "limit_defaults": {
         "ram": "1024M",
@@ -46,6 +30,22 @@
           "value": "-1"
         }
       }
+    }
+  },
+  "mongo": {
+    "enabled": true,
+    "name": "fh-mbaas",
+    "host": "localhost",
+    "port": 27017,
+    "replicaset_name": null,
+    "auth": {
+      "enabled": false,
+      "user": "",
+      "pass": ""
+    },
+    "admin_auth": {
+      "user": "u-mbaas",
+      "pass": "password"
     }
   },
   "fhditch": {

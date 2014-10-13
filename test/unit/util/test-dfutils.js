@@ -4,7 +4,6 @@ var assert = require('assert');
 var DOMAIN = "test";
 var ENVIRONMENT = "test";
 var APPNAME = "testappname";
-
 var mockdfc = function(){
   return {
     dynos : function(args, cb){

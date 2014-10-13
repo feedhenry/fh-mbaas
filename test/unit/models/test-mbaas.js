@@ -17,16 +17,15 @@ var cfg = {
   }
 };
 
+var fhconfig = require('fh-config');
+fhconfig.setRawConfig(cfg);
+
 var MockMongo = function(success){
   this.success = success;
   this.created = false;
 };
 
-MockMongo.prototype.createDb = function(adminOpts, user, pass, name, cb){
-  assert.equal(adminOpts.host, cfg.mongo.host, 'db host does not match');
-  assert.equal(adminOpts.port, cfg.mongo.port, 'db port does not match');
-  assert.equal(adminOpts.user, cfg.mongo.admin_auth.user, 'db admin user does not match');
-  assert.equal(adminOpts.pass, cfg.mongo.admin_auth.pass, 'db admin pass does not match');
+MockMongo.prototype.createDb = function(fhconfig, user, pass, name, cb){
   assert.ok(user.length > 0, 'invalid db user name : ' + user);
   assert.ok(pass.length > 0, 'invalid db user pass : ' + pass);
   assert.ok(name.length > 0, 'invalid db name : ' + name);
@@ -91,8 +90,8 @@ exports.it_should_create_domain_db = function(finish){
   mockMongo.success = true;
   var Mbaas = mongoose.model('Mbaas', MbaasSchema);
   var dbConf = {
-    host: cfg.mongo.host,
-    port: cfg.mongo.port,
+    host: fhconfig.value('mongo.host'),
+    port: fhconfig.value('mongo.port'),
     name: TEST_DOMAIN + '_' + TEST_ENV,
     user: TEST_DOMAIN + '_' + TEST_ENV
   }
@@ -101,13 +100,13 @@ exports.it_should_create_domain_db = function(finish){
     environment: TEST_ENV
   });
 
-  mbaas.createDb(cfg, function(err, results){
+  mbaas.createDb(fhconfig, function(err, results){
     assert.ok(!err, util.inspect(err));
     validateDBConf(dbConf, results);
     assert.ok(mockMongo.created, 'mongodb is not created');
     mockMongo.created = false;
 
-    mbaas.createDb(cfg, function(err, results){
+    mbaas.createDb(fhconfig, function(err, results){
       assert.ok(!err, util.inspect(err));
       validateDBConf(dbConf, results);
       assert.ok(!mockMongo.created, 'mongodb is created twice');
@@ -126,7 +125,7 @@ function it_should_rollback_db_conf(finish){
   });
   mbaas.save(function(err){
     assert.ok(!err, util.inspect(err));
-    mbaas.createDb(cfg, function(err, results){
+    mbaas.createDb(fhconfig, function(err, results){
       assert.ok(err != null, 'db creation should fail');
       Mbaas.findOne({domain: TEST_DOMAIN, environment: TEST_ENV}, function(err, found){
         assert.ok(!err, util.inspect(err));

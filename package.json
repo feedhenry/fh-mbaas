@@ -17,11 +17,11 @@
   "dependencies": {
     "async": "^0.9.0",
     "body-parser": "^1.4.3",
-    "bunyan": "^0.23.1",
     "cors": "^2.3.1",
     "cuid": "^1.2.4",
     "express": "^4.4.5",
     "fh-dfc": "http://robert:scottishminister1790@bob.feedhenry.net:8080/job/fh-dfc_pullrequests/7/artifact/dist/fh-dfc-0.22.2-7.tar.gz",
+    "fh-config":"http://robert:scottishminister1790@bob.feedhenry.net:8080/job/fh-config_pullrequests/lastSuccessfulBuild/artifact/dist/fh-config-0.0.1.tar.gz",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",
