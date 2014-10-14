@@ -47,7 +47,17 @@ exports.it_should_create_mongo_db = function(cb) {
   });
   mongo.createDb(fhconfig, 'a', 'b', 'bar', function(err) {
     assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
-    cb();
+    
+    mongodb.MongoClient.connect = function(url, cb){
+      return cb(new Error('mock error'));
+    }
+    mongo = proxyquire('../../../lib/util/mongo.js', {'mongodb': mongodb});
+
+    mongo.createDb(fhconfig, 'd', 'e', 'foo', function(err){
+      assert.ok(err);
+
+      cb();
+    });
   });
 };
 
@@ -55,25 +65,10 @@ exports.it_should_drop_mongo_db = function(finish){
   var TEST_DB = 'testdb';
   var TEST_USER = 'testuser';
 
-  var admin = function() {
-    return {
-      authenticate: function(user, pass, cb1) {
-        assert.equal(user, 'super');
-        return cb1();
-      },
-      listDatabases: function(cb){
-        return cb(null, {
-          databases: [{name: TEST_DB}]
-        });
-      },
-      close: function(){}
-    }
-  };
   var mongodb = {
     MongoClient: {
       connect: function(url, cb) {
         var mc = {
-          admin: admin,
           db: function(){
             return {
               removeUser: function(user, cb){
@@ -83,7 +78,10 @@ exports.it_should_drop_mongo_db = function(finish){
               dropDatabase: function(cb){
                 return cb();
               },
-              admin: admin,
+              authenticate: function(user, pass, opts, cb1) {
+                assert.equal(user, 'super');
+                return cb1();
+              },
               close: function(){}
             }
           },

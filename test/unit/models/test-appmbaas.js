@@ -52,56 +52,25 @@ function done(finish){
   finish();
 }
 
-exports.it_should_find_or_create = function(finish){
+exports.it_should_create = function(finish){
   mockgoose.reset();
   var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME,
-    domain: DOMAIN,
-    environment: ENVIRONMENT
-  });
-  appmbaas.save(function(err, saved){
+  AppMbaas.createModel(APPNAME, DOMAIN, ENVIRONMENT, fhconfig, function(err, created){
     assert.ok(!err, util.inspect(err));
 
-    AppMbaas.findOrCreateByName(APPNAME, DOMAIN, ENVIRONMENT, function(err, found){
-      assert.ok(!err, util.inspect(err));
-      assert.ok(!found.isNew, 'instance should not be new');
+    assert.equal(created.domain, DOMAIN, 'app mbaas instance domain does not match');
+    assert.equal(created.environment, ENVIRONMENT, 'app mbaas instance environment does not match');
 
-      assert.equal(found.domain, DOMAIN, 'app mbaas instance domain does not match');
-      assert.equal(found.environment, ENVIRONMENT, 'app mbaas instance environment does not match');
+    assert.ok(null != created.dbConf);
+    assert.ok(null != created.dbConf.host);
+    assert.ok(null != created.dbConf.port);
+    assert.ok(null != created.dbConf.name);
+    assert.ok(null != created.dbConf.user);
+    assert.ok(null != created.dbConf.pass);
 
-      var NEW_APPNAME = 'appmbaas_unittest_app2';
-      AppMbaas.findOrCreateByName(NEW_APPNAME, DOMAIN, ENVIRONMENT, function(err, newInstance){
-        assert.ok(!err, util.inspect(err));
-
-        assert.equal(NEW_APPNAME, newInstance.name, 'app mbaas instance name does not match');
-
-        done(finish);
-      });
-    });
-  });
-};
-
-exports.it_should_lock_and_unlock = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_lock',
-    domain: DOMAIN,
-    environment: ENVIRONMENT
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
-    assert.ok(!saved.locked, 'app mbaas instance should not be locked');
-
-    saved.lock(function(err){
-      assert.ok(!err, util.inspect(err));
-      assert.ok(saved.locked, 'app mbaas instance should be locked');
-      saved.unlock(function(err){
-        assert.ok(!err, util.inspect(err));
-        assert.ok(!saved.locked, 'app mbaas instance should be unlocked');
-        done(finish);
-      });
+    AppMbaas.createModel(APPNAME, DOMAIN, ENVIRONMENT, fhconfig, function(err){
+      assert.ok(err);
+      done(finish);
     });
   });
 };
@@ -121,6 +90,13 @@ exports.test_stop_app = function(finish){
     saved.stopApp(cb);
     mockDfutils.calledWith(DOMAIN, ENVIRONMENT, APPNAME + '_test_lock');
     assert(cb.calledOnce);
+
+    mockDfutils.reset();
+    var error = new Error('mock error');
+    mockDfutils.callsArgWith(3, error);
+    saved.stopApp(cb);
+
+    assert.ok(cb.calledWith(error));
     done(finish);
   });
 };
@@ -139,23 +115,8 @@ exports.test_migrate_db = function(finish){
     var cacheKey = 'tetscachekey';
     var appGuid = 'testappguid';
 
-    saved.migrated = true;
-    saved.migrateDb(cacheKey, appGuid, cb);
-    assert.equal(doMigrate.callCount, 0);
-    assert.ok(cb.calledOnce);
-
     cb.reset();
     doMigrate.reset();
-    saved.migrated = false;
-    saved.locked = true;
-    saved.migrateDb(cacheKey, appGuid, cb);
-    assert.equal(doMigrate.callCount, 0);
-    assert.ok(cb.calledOnce);
-
-    cb.reset();
-    doMigrate.reset();
-    saved.migrated = false;
-    saved.locked = false;
     doMigrate.callsArg(5);
     saved.migrateDb(cacheKey, appGuid, function(){
       assert.equal(doMigrate.callCount, 1);
@@ -182,21 +143,15 @@ exports.test_complete_migrate = function(finish){
     var cacheKey = 'tetscachekey';
     var appGuid = 'testappguid';
 
-    saved.locked = false;
-    saved.completeMigrate(cacheKey, appGuid, cb);
-    assert.equal(migrateComplete.callCount, 0);
-    assert.ok(cb.calledOnce);
-
-    saved.locked = true;
     cb.reset();
     migrateComplete.reset();
     migrateComplete.callsArg(5);
     saved.completeMigrate(cacheKey, appGuid, function(){
       assert.ok(saved.migrated);
-      assert.ok(!saved.locked);
       assert.equal(migrateComplete.callCount, 1);
       migrateComplete.withArgs(DOMAIN, ENVIRONMENT, APPNAME + '_test_complete_migrate', cacheKey, appGuid);
       migrateComplete.verify();
+
       done(finish);
     });
   });
@@ -208,56 +163,41 @@ exports.test_create_db = function(finish){
   var appmbaas = new AppMbaas({
     name: APPNAME + '_test_create_db',
     domain: DOMAIN,
-    environment: ENVIRONMENT
+    environment: ENVIRONMENT,
+    dbConf:{
+      host:'localhost',
+      port:8888,
+      name:'testdb',
+      user:'testuser'
+    }
   });
   appmbaas.save(function(err, saved){
     assert.ok(!err, util.inspect(err));
-
-    assert.equal(saved.dbConf, null);
 
     createDb.reset();
     createDb.callsArg(4);
     saved.createDb(fhconfig, function(err, conf){
-      assert.ok(!err, util.inspect(err));
-      assert.ok(null != saved.dbConf);
-      assert.ok(null != conf);
+      assert.ok(err);
 
-      assert.equal(createDb.callCount, 1);
-      createDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'});
+      saved.dbConf.pass = 'testpass';
+      saved.save(function(err, newsaved){
 
-      saved.createDb(fhconfig, function(err, conf){
-        assert.equal(createDb.callCount, 1);
-        assert.ok(null != conf);
+        newsaved.createDb(fhconfig, function(err,conf){
+          assert.ok(!err, util.inspect(err));
+          assert.ok(null != conf);
 
-        test_create_db_rollback(finish);
+          assert.equal(createDb.callCount, 1);
+          createDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'});
 
+          createDb.reset();
+          createDb.callsArgWith(4, new Error('mock error'));
+
+          newsaved.createDb(fhconfig, function(err, conf){
+            assert.ok(err);
+            done(finish);
+          });
+        });
       });
-    });
-  });
-};
-
-function test_create_db_rollback(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_create_db_rollback',
-    domain: DOMAIN,
-    environment: ENVIRONMENT
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
-
-    assert.equal(saved.dbConf, null);
-
-    createDb.reset();
-    createDb.callsArgWith(4, new Error('failed'));
-    saved.createDb(fhconfig, function(err, conf){
-      assert.ok(null == saved.dbConf);
-
-      assert.equal(createDb.callCount, 1);
-      createDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'});
-      
-      done(finish);
     });
   });
 };
@@ -284,7 +224,12 @@ exports.test_drop_db = function(finish){
       assert.equal(dropDb.callCount, 1);
       dropDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'}, 'testuser', 'testdb');
       
-      done(finish);
+      dropDb.reset();
+      dropDb.callsArgWith(3, new Error('mock error'));
+      saved.removeDb(fhconfig, function(err){
+        assert.ok(err);
+        done(finish);
+      });
     });
   });
 };

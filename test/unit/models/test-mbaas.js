@@ -52,90 +52,75 @@ function validateDBConf(confA, confB){
   assert.equal(confA.user, confB.user, 'db user does not match');
 }
 
-exports.it_should_find_mbaas_instance = function(finish){
+exports.it_should_create_mbaas_instance = function(finish){
   mockgoose.reset();
   var Mbaas = mongoose.model('Mbaas', MbaasSchema);
-  var mbaas = new Mbaas({
-    domain: TEST_DOMAIN,
-    environment: TEST_ENV
-  });
-  mbaas.save(function(err, saved){
+  Mbaas.createModel(TEST_DOMAIN, TEST_ENV, fhconfig, function(err, created){
     assert.ok(!err, util.inspect(err));
-
-    Mbaas.findOrCreateByDomainEnv(TEST_DOMAIN, TEST_ENV, function(err, found){
-       assert.ok(!err, util.inspect(err));
-
-       assert.equal(found.domain, TEST_DOMAIN, 'domain does not match');
-       assert.equal(found.environment, TEST_ENV, 'env does not match');
-       assert.ok(null == found.dbConf, 'dbConf is null');
-
-       var NEW_DOMAIN = "testDomain2";
-       var NEW_ENV = "live";
-
-       Mbaas.findOrCreateByDomainEnv(NEW_DOMAIN, NEW_ENV, function(err, created){
-        assert.ok(!err, util.inspect(err));
-
-        assert.equal(created.domain, NEW_DOMAIN, 'domain does not match');
-        assert.equal(created.environment, NEW_ENV, 'env does not match');
-        assert.ok(null == created.dbConf, 'dbConf is null');
-
-        finish();
-       });
-    });
-  }); 
+    assert.ok(null != created);
+    assert.equal(created.domain, TEST_DOMAIN);
+    assert.equal(created.environment, TEST_ENV);
+    assert.ok(null != created.dbConf);
+    assert.equal(created.dbConf.host, 'localhost');
+    assert.equal(created.dbConf.port, 8888);
+    assert.equal(created.dbConf.name, TEST_DOMAIN + '_' + TEST_ENV);
+    assert.equal(created.dbConf.user, TEST_DOMAIN + '_' + TEST_ENV);
+    assert.ok(null != created.dbConf.pass);
+    finish();
+  });
 };
 
 exports.it_should_create_domain_db = function(finish){
   mockgoose.reset();
   mockMongo.success = true;
   var Mbaas = mongoose.model('Mbaas', MbaasSchema);
-  var dbConf = {
-    host: fhconfig.value('mongo.host'),
-    port: fhconfig.value('mongo.port'),
-    name: TEST_DOMAIN + '_' + TEST_ENV,
-    user: TEST_DOMAIN + '_' + TEST_ENV
-  }
+  var ENV = TEST_ENV + '_CREATE';
+
   var mbaas = new Mbaas({
     domain: TEST_DOMAIN,
-    environment: TEST_ENV
+    environment: ENV,
+    dbConf:{
+      host:'localhost',
+      port: 8888,
+      name: TEST_DOMAIN + '_' + ENV,
+      user:'test'
+    }
   });
 
-  mbaas.createDb(fhconfig, function(err, results){
-    assert.ok(!err, util.inspect(err));
-    validateDBConf(dbConf, results);
-    assert.ok(mockMongo.created, 'mongodb is not created');
-    mockMongo.created = false;
+  mbaas.save(function(err, created){
+    created.createDb(fhconfig, function(err){
+      assert.ok(err);
 
-    mbaas.createDb(fhconfig, function(err, results){
-      assert.ok(!err, util.inspect(err));
-      validateDBConf(dbConf, results);
-      assert.ok(!mockMongo.created, 'mongodb is created twice');
-      it_should_rollback_db_conf(finish);
-    });
-  });
-};
+      created.dbConf.pass = 'testpass';
+      created.save(function(err, newsaved){
+        assert.ok(!err);
 
-function it_should_rollback_db_conf(finish){
-  mockgoose.reset();
-  mockMongo.success = false;
-  var Mbaas = mongoose.model('Mbaas', MbaasSchema);
-  var mbaas = new Mbaas({
-    domain: TEST_DOMAIN,
-    environment: TEST_ENV
-  });
-  mbaas.save(function(err){
-    assert.ok(!err, util.inspect(err));
-    mbaas.createDb(fhconfig, function(err, results){
-      assert.ok(err != null, 'db creation should fail');
-      Mbaas.findOne({domain: TEST_DOMAIN, environment: TEST_ENV}, function(err, found){
-        assert.ok(!err, util.inspect(err));
-        assert.ok(null != found, 'should find mbaas instance');
-        assert.ok(null == found.dbConf, 'mbaas instance should not have dbConf');
-        finish();
+        newsaved.createDb(fhconfig, function(err){
+          assert.ok(!err, util.inspect(err));
+
+          Mbaas.createModel(TEST_DOMAIN, ENV, fhconfig, function(err){
+            assert.ok(err);
+
+            it_should_not_create_db(finish);
+          });
+        });
       });
     });
   });
 };
+
+function it_should_not_create_db(finish){
+  mockgoose.reset();
+  mockMongo.success = false;
+  var Mbaas = mongoose.model('Mbaas', MbaasSchema);
+  Mbaas.createModel(TEST_DOMAIN, TEST_ENV + '_CREATE2', fhconfig, function(err, created){
+    assert.ok(!err, util.inspect(err));
+    created.createDb(fhconfig, function(err, db){
+      assert.ok(err);
+      finish();
+    });
+  });
+}
 
 
 
