@@ -217,7 +217,7 @@ exports.setUp = function(finish){
               app.use('/sys', require('../../lib/routes/sys.js')());
               app.use('/api/mbaas', require('../../lib/routes/api')(models));
 
-              var port = 8819;
+              var port = 18819;
               server = app.listen(port, function(){
                 console.log("Test App started at: " + new Date() + " on port: " + port);
                 setupDitchServer(function(){
