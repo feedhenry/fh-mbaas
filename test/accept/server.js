@@ -11,7 +11,6 @@ var ditchPort = 19001;
 var dynofarmServer;
 var dynofarmPort = 19002;
 
-// enable mongo
 var fhconfig = require('fh-config');
 fhconfig.setRawConfig({
   fhmbaas:{
@@ -40,6 +39,41 @@ fhconfig.setRawConfig({
     "username":"fh",
     "_password": "fh",
     "loglevel": "warn"
+  },
+  fhamqp:{
+    "enabled": false,
+    "max_connection_retry": 10,
+    "nodes":"localhost:5672",
+    "ssl": false,
+    "vhosts":{
+      "events":{
+        "name":"fhevents",
+        "user":"fheventuser",
+        "password":"fheventpassword"
+      }
+    },
+    "app":{
+      "enabled": false
+    }
+  },
+  fhmessaging:{
+    "enabled": false,
+    "host":"localhost",
+    "protocol":"http",
+    "port":8803,
+    "path":"msg/TOPIC",
+    "cluster":"development",
+    "realtime": false,
+    "files":{
+      "recovery_file":"../messages/recovery.log",
+      "backup_file":"../messages/backup.log"
+    }
+  },
+  fhstats:{
+    "enabled": false,
+    "host":"localhost",
+    "port": 8804,
+    "protocol": "http"
   }
 });
 
@@ -138,25 +172,31 @@ function dropDbForDomain(db, cb){
   var adminDb = db.admin();
   adminDb.listDatabases(function(err, dbs){
     assert.ok(!err, 'Failed to list databases: '+ util.inspect(err));
-    var doDbRemove = null;
+    //created by app env acceptance test, since no data is written, the db is not actually created, but the user is, so makeu sure it's removed
+    var doDbRemove = ['fhmbaas-accept-test-domain_test_appenvtest', 'test-fhmbaas-accept']; 
     dbs = dbs.databases;
     for(var i=0;i<dbs.length;i++){
+      console.log('db name = ' + dbs[i].name);
       if(dbs[i].name.indexOf(new_db_prefix) >= 0){
-        doDbRemove = dbs[i].name;
-        break;
+        doDbRemove.push(dbs[i].name);
       }
     }
-    if(doDbRemove){
-      console.log('Remove test db and its user : ' + doDbRemove);
-      var dbToRemove = db.db(doDbRemove);
-      dbToRemove.removeUser(doDbRemove, function(err){
-        if(err){
-          console.error('Failed to remove user :' + doDbRemove);
-        }
-        dbToRemove.dropDatabase(function(err){
-          assert.ok(!err, 'Failed to drop db : ' + util.inspect(err));
-          cb();
+    console.log('dbs to remove = ' + doDbRemove);
+    if(doDbRemove.length > 0){
+      async.each(doDbRemove, function(dbname, callback){
+        console.log('Remove test db and its user : ' + dbname);
+        var dbToRemove = db.db(dbname);
+        dbToRemove.removeUser(dbname, function(err){
+          if(err){
+            console.error('Failed to remove user :' + dbname);
+          }
+          dbToRemove.dropDatabase(function(err){
+            assert.ok(!err, 'Failed to drop db : ' + util.inspect(err));
+            callback();
+          });
         });
+      }, function(err){
+        cb();
       });
     } else {
       cb();
@@ -174,8 +214,8 @@ exports.setUp = function(finish){
             models.init(function(err){
               assert.ok(!err, 'Failed to init models : ' + util.inspect(err));
 
-              app.use('/sys', require('../../lib/sys.js')());
-              app.use('/api/mbaas', require('../../lib/routes/db')(models));
+              app.use('/sys', require('../../lib/routes/sys.js')());
+              app.use('/api/mbaas', require('../../lib/routes/api')(models));
 
               var port = 8819;
               server = app.listen(port, function(){

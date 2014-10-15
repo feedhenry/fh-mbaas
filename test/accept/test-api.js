@@ -105,4 +105,42 @@ exports.it_should_migrate_db = function(finish){
       });
     });
   });
+};
+
+exports.it_should_return_app_envs = function(finish){
+  var url = util.format('%s%s/%s/%s/db', common.baseUrl, 'api/mbaas', TEST_DOMAIN, TEST_ENV + '_appenvtest');
+  var params = {
+    url: url,
+    headers:{
+      'x-fh-service-key': 'testkey'
+    },
+    json:{}
+  };
+  request.post(params, function(err, response){
+    assert.ok(!err);
+    assert.equal(200, response.statusCode);
+
+    var appMigrateDbUrl = util.format('%s%s/%s/%s/%s/migratedb', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_envtest');
+    params.url = appMigrateDbUrl;
+    params.json.cacheKey = 'testcachekey';
+    params.json.appGuid = 'testappguid';
+
+    request.post(params, function(err, response){
+      assert.ok(!err);
+      assert.equal(200, response.statusCode);
+
+      var appEnvUrl = util.format('%s%s/%s/%s/%s/env', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_envtest');
+      request.get({
+        url: appEnvUrl,
+        headers:{
+          'x-fh-service-key': 'testkey'
+        },
+      }, function(err, response, body){
+        assert.ok(!err);
+        assert.equal(200, response.statusCode);
+
+        finish();
+      });
+    });
+  });
 }

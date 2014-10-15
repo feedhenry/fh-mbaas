@@ -136,8 +136,8 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
         return cleanShutdown(); // exit on uncaught exception
       }
 
-      app.use('/sys', require('./lib/sys.js')());
-      app.use('/api/mbaas', require('./lib/routes/db.js')(models));
+      app.use('/sys', require('./lib/routes/sys.js')());
+      app.use('/api/mbaas', require('./lib/routes/api.js')(models));
 
       var port = fhconfig.int('fhmbaas.port');
       var server = app.listen(port, function() {
