@@ -79,5 +79,10 @@
     "host":"localhost",
     "port": 8804,
     "protocol": "http"
+  },
+  "redis":{
+    "host": "localhost",
+    "port": 6379,
+    "password":""
   }
 }
