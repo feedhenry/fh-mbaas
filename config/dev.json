@@ -79,5 +79,10 @@
     "host":"localhost",
     "port": 8804,
     "protocol": "http"
+  },
+  "fhredis":{
+    "host": "127.0.0.1",
+    "port": 6379,
+    "password":""
   }
 }
