@@ -46,7 +46,7 @@
     "loglevel": "warn"
   },
   "fhamqp":{
-    "enabled": false,
+    "enabled": true,
     "max_connection_retry": 10,
     "nodes":"localhost:5672",
     "ssl": false,
@@ -58,11 +58,11 @@
       }
     },
     "app":{
-      "enabled": false
+      "enabled": true
     }
   },
   "fhmessaging":{
-    "enabled": false,
+    "enabled": true,
     "host":"localhost",
     "protocol":"http",
     "port":8803,
@@ -75,7 +75,7 @@
     }
   },
   "fhstats":{
-    "enabled": false,
+    "enabled": true,
     "host":"localhost",
     "port": 8804,
     "protocol": "http"
