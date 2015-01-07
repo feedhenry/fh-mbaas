@@ -54,3 +54,16 @@ exports.it_should_call_fh_ditch = function(finish){
   finish();
 };
 
+exports.it_should_check_status = function(finish){
+  var mock = sinon.mock(request);
+  var get = mock.expects('get');
+  var ditchhelper = proxyquire('../../../lib/util/ditchhelper', {request: mock});
+
+  var cb = sinon.spy();
+  get.callsArg(1);
+  ditchhelper.checkStatus(cb);
+  get.calledWith({url: 'http://localhost:9999/sys/info/status', json: true}, cb);
+  get.verify();
+  assert.ok(get.calledOnce);
+};
+
