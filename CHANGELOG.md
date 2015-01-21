@@ -1,13 +1,19 @@
 #Component: fh-mbaas
 
-##0.1.1 - 2015-01-05- IR244 - Michael Nairn
+##1.0.0 - 2015-01-21 - IR245 - Wei Li
 
-* Ticket 8551 - Update fh-dfc dependency version (0.23.1-15).
+* 8178 Added support for life cycle management.
 
-##0.1.0 - 2014-10-15- IR238 - Wei Li
+### Notes
 
-* Ticket 8007 - Changes for life cycle management.
+* The "mongo" config option should specify the connection details to the MongoDB inside the MBaas instance.
 
-##0.0.1 - 2014-09-10 - IR236 - dberesford
+* The host(s) values in those config properties:
 
-* Ticket 7934 - fh-mbaas: create skeleton fh-mbaas service
+  * fhamqp
+  * fhditch
+  * fhmessaging
+  * fhstats
+  * fhredis
+
+  They are used to construct the variouse FH service environment variables for the apps when they are deployed to dynofarm. Make sure the host(s) values are accessible from inside the dyno.
