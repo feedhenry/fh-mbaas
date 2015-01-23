@@ -124,9 +124,7 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
 
     // Parse JSON payloads
     app.use(bodyParser.json());
-
-    app.use('/cloud', require('./lib/routes/healthmonitor.js')());
-
+    
     //add authentication to the /api path
     app.use('/api', auth(fhconfig));
 
