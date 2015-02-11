@@ -72,7 +72,7 @@ module.exports = function(grunt) {
         options: {
           stdout: true
         },
-        command: 'env NODE_PATH=. node --debug-brk fh-mbaas.js'
+        command: 'env NODE_PATH=. node --debug-brk fh-mbaas.js ./config/dev.json -d'
       },
       unit: {
         options: {
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
             maxBuffer: 1048576
           }
         },
-        command: 'env NODE_PATH=. ./node_modules/.bin/turbo test/unit'
+        command: 'env NODE_PATH=. ./node_modules/.bin/turbo test/unit/**/*.js'
       },
       accept: {
         options: {
@@ -96,7 +96,7 @@ module.exports = function(grunt) {
         },
         // some database trouncing going on here at the moment, tests need to run in a particular order, these all need a refactor
         command:
-          'env NODE_PATH=. ./node_modules/.bin/turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js'
+          'env NODE_PATH=. ./node_modules/.bin/turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js'
       },
       coverage_unit: {
         options: {
@@ -109,7 +109,7 @@ module.exports = function(grunt) {
         },
         command: [
           'rm -rf coverage cov-unit',
-          'env NODE_PATH=. ./node_modules/.bin/istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- test/unit',
+          'env NODE_PATH=. ./node_modules/.bin/istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- test/unit/**/*.js',
           './node_modules/.bin/istanbul report',
           'echo "See html coverage at: `pwd`/coverage/lcov-report/index.html"'
         ].join('&&')
@@ -125,7 +125,7 @@ module.exports = function(grunt) {
         },
         command: [
           'rm -rf coverage cov-accept',
-          'env NODE_PATH=. ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js',
+          'env NODE_PATH=. ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js',
           './node_modules/.bin/istanbul report',
           './node_modules/.bin/istanbul report --report cobertura',
           'echo "See html coverage at: `pwd`/coverage/lcov-report/index.html"'

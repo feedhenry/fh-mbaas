@@ -1,6 +1,7 @@
 {
   "fhmbaas": {
     "port": 8819,
+    "key": "mBqxpulwlj3Rw7EsHZq0YEQyrArq2tlIRCQ0pCmr5DRPPDZMAP4ZNb7U0E6bPSb3",
     "code_coverage_enabled": false,
     "logger": {
       "name": "mbaas",
@@ -15,10 +16,73 @@
         "level": "trace",
         "stream": "ringBuffer"
       }]
-    },
-    "mongo": {
-      "enabled": false,
-      "url": "mongodb://localhost/fh-mbaas"
     }
+  },
+  "mongo": {
+    "enabled": true,
+    "name": "fh-mbaas",
+    "host": "localhost",
+    "port": 27017,
+    "replicaset_name": null,
+    "auth": {
+      "enabled": false,
+      "user": "",
+      "pass": ""
+    },
+    "admin_auth": {
+      "user": "u-mbaas",
+      "pass": "password"
+    }
+  },
+  "fhditch": {
+    "host": "localhost",
+    "port": 8802,
+    "protocol": "http"
+  },
+  "fhdfc": {
+    "dynofarm": "http://localhost:9000",
+    "username":"feedhenry",
+    "_password": "feedhenry101",
+    "loglevel": "warn"
+  },
+  "fhamqp":{
+    "enabled": true,
+    "max_connection_retry": 10,
+    "nodes":"localhost:5672",
+    "ssl": false,
+    "vhosts":{
+      "events":{
+        "name":"fhevents",
+        "user":"fheventuser",
+        "password":"fheventpassword"
+      }
+    },
+    "app":{
+      "enabled": true
+    }
+  },
+  "fhmessaging":{
+    "enabled": true,
+    "host":"localhost",
+    "protocol":"http",
+    "port":8803,
+    "path":"msg/TOPIC",
+    "cluster":"development",
+    "realtime": false,
+    "files":{
+      "recovery_file":"../messages/recovery.log",
+      "backup_file":"../messages/backup.log"
+    }
+  },
+  "fhstats":{
+    "enabled": true,
+    "host":"localhost",
+    "port": 8804,
+    "protocol": "http"
+  },
+  "fhredis":{
+    "host": "127.0.0.1",
+    "port": 6379,
+    "password":""
   }
 }

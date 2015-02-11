@@ -77,3 +77,9 @@ exports.it_should_sort_objects = function(finish) {
 
   finish();
 };
+
+exports.it_should_get_random_password = function(finish){
+  var pass = common.randomPassword();
+  assert.ok(pass.length > 0);
+  finish();
+};
