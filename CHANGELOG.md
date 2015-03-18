@@ -1,5 +1,9 @@
 #Component: fh-mbaas
 
+##1.0.0 - 2015-03-18 - Alan Moran
+
+* Updating dfc version in package.json as previous one has been deleted.
+
 ##1.0.0 - 2015-01-21 - IR245 - Wei Li
 
 * 8178 Added support for life cycle management.
