@@ -15,6 +15,10 @@ var mockdfc = function(){
       }
     },
 
+    'read-app': function(args, cb){
+      return cb();
+    },
+
     'stop-app': function(args, cb){
       assert.equal(args[0], DOMAIN, 'domain does not match');
       assert.equal(args[1], APPNAME, 'appname does not match');
