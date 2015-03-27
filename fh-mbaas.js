@@ -2,6 +2,7 @@
 
 var TITLE = "fh-mbaas";
 process.env.component = TITLE;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 if (!process.env.conf_file) process.env.conf_file = process.argv[2];
 
 var util = require('util');
