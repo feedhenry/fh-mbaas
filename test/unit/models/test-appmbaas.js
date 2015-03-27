@@ -189,15 +189,35 @@ exports.test_create_db = function(finish){
           assert.equal(createDb.callCount, 1);
           createDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'});
 
-          createDb.reset();
-          createDb.callsArgWith(4, new Error('mock error'));
-
-          newsaved.createDb(fhconfig, function(err, conf){
-            assert.ok(err);
-            done(finish);
-          });
+          done(finish);
         });
       });
+    });
+  });
+};
+
+exports.test_create_db_error = function(finish){
+  mockgoose.reset();
+  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
+  var appmbaas = new AppMbaas({
+    name: APPNAME + '_test_create_db_error',
+    domain: DOMAIN,
+    environment: ENVIRONMENT,
+    dbConf:{
+      host:'localhost',
+      port:8888,
+      name:'testdb',
+      user:'testuser'
+    }
+  });
+  appmbaas.save(function(err, saved){
+    assert.ok(!err, util.inspect(err));
+
+    createDb.reset();
+
+    saved.createDb(fhconfig, function(err, conf){
+      assert.ok(err);
+      done(finish);
     });
   });
 };
@@ -224,12 +244,31 @@ exports.test_drop_db = function(finish){
       assert.equal(dropDb.callCount, 1);
       dropDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'}, 'testuser', 'testdb');
       
-      dropDb.reset();
-      dropDb.callsArgWith(3, new Error('mock error'));
-      saved.removeDb(fhconfig, function(err){
-        assert.ok(err);
-        done(finish);
-      });
+      done(finish);
+    });
+  });
+};
+
+exports.test_drop_db_error = function(finish){
+  mockgoose.reset();
+  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
+  var appmbaas = new AppMbaas({
+    name: APPNAME + '_test_drop_db_error',
+    domain: DOMAIN,
+    environment: ENVIRONMENT,
+    dbConf: {
+      user: 'testuser',
+      name: 'testdb'
+    }
+  });
+  appmbaas.save(function(err, saved){
+    assert.ok(!err, util.inspect(err));
+
+    dropDb.reset();
+    dropDb.callsArgWith(3, new Error('mock error'));
+    saved.removeDb(fhconfig, function(err){
+      assert.ok(err);
+      done(finish);
     });
   });
 };

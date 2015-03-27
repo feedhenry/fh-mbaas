@@ -1,6 +1,9 @@
 #Component: fh-mbaas
 
-##1.0.0 - 2015-03-18 - Alan Moran
+## 1.0.2 - 2015-03-27 - Wei Li
+* Fix for issue FHPAAS-6 - Check app existence before deciding the dynoname.
+
+##1.0.1 - 2015-03-18 - Alan Moran
 
 * Updating dfc version in package.json as previous one has been deleted.
 
