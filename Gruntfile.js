@@ -189,7 +189,7 @@ module.exports = function(grunt) {
   grunt.registerTask('dist', ['shell:dist']);
 
   // Making grunt default to force in order not to break the project.
-  grunt.option('force', true);
+  //grunt.option('force', true);
 
   grunt.registerTask('analysis', ['plato:src', 'open:platoReport']);
 
