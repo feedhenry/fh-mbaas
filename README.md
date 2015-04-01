@@ -1,5 +1,7 @@
 ## fh-mbaas - FeedHenry MBaaS Management Service
 
+### Development guide
+
 The basic strategy how to develop and debug fh-mbaas component is as follows:
 
 * Be sure the source code of `fh-mbaas` is mounted via `nfs` to your Vagrant machine. `fh-mbaas` directory should be by default located in `/mnt/src/fh-mbaas` in Vagrant machine. You should be asked where your sources should be taken from while doing `./setup.sh` in `fhcap` for the first time. Before doing actual `vagrant up`, you have to put this configuration snippet into `roles/dev.json` in `fhcap` repository as a child of `override_attributes` field:
