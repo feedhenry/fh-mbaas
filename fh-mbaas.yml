@@ -1,0 +1,238 @@
+# mbaas endpoint routes
+swagger: '2.0'
+info:
+  title: MbaaS API
+  description: Endpoints For FH-MBaaS service
+  version: "1.0.2"
+
+schemes:
+  - https
+
+produces:
+  - application/json
+
+consumes:
+  - application/json
+
+paths:
+  /sys/info/ping:
+    get:
+      produces:
+        - text/plain
+      description: "tests if fh-mbaas service is up and running"
+      responses:
+        200:
+          description: "signals that service is up and running"
+      tags:
+        - sys
+  /sys/info/version:
+    get:
+      description: "retrieves version of the fh-mbaas service"
+      responses:
+        200:
+          description: "returned upon successfull version retrieval"
+        500:
+          description: "returned when there was error to get the version"
+      tags:
+        - sys
+  /sys/info/health:
+    get:
+      description: "checks status of the fh-mbaas health by checking MongoDB and fh-ditch connections"
+      responses:
+        200:
+          description: "returns health status"
+          schema:
+            $ref: '#/definitions/Health'
+      tags:
+        - sys
+  /api/mbaas/{domain}/{environment}/db:
+    post:
+      description: "gets fh-mbaas instance and creates database on it"
+      parameters:
+        - in: path
+          name: domain
+          description: "the domain to create a database instance on"
+          type: string
+          required: true
+        - in: path
+          name: environment
+          description: "the environment in the domain to create a database instance on"
+          type: string
+          required: true
+      responses:
+        200:
+          description: "returned database connection URI when database instance was created on specified domain and environment"
+          schema:
+            $ref: '#/definitions/DbURI'
+        500:
+          description: "returned when it was not possible to get fh-mbaas instance or it was not possible to create a database on it"
+      tags:
+        - api
+        - mbaas
+  /api/mbaas/apps/{domain}/{environment}/{appname}/migratedb:
+    post:
+      description: "migrates a database of the application in some domain and environment"
+      parameters:
+        - in: path
+          name: domain
+          description: "the domain of an application to migrate the database of"
+          type: string
+          required: true
+        - in: path
+          name: environment
+          description: "the environment of an application to migrate the database of"
+          type: string
+          required: true
+        - in: path
+          name: appname
+          description: "the name of an application to migrate the database of"
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: migration parameters
+          required: true
+          schema:
+            $ref: '#/definitions/AppMigrationParameters'
+      responses:
+        200:
+          description: "returned when the migration was successful"
+        400:
+          description: "returned when the request did not contain the body with either \"cacheKey\" or \"appGuid\" parameter"
+        423:
+          description: "returned when the migration is already started or completed"
+        500:
+          description: "returned when it was not possible to create application mbaas instance or it was not possible to create database for the application or if stopping of the application was unsuccessful or there as an error while the migration was performed"
+      tags:
+        - api
+        - mbaas
+  /api/mbaas/apps/{domain}/{environment}/{appname}/migrateComplete:
+    post:
+      description: "completes the database migration of specified application in some domain and environment"
+      parameters:
+        - in: path
+          name: domain
+          description: "the domain of an application to complete the migration of the database of"
+          type: string
+          required: true
+        - in: path
+          name: environment
+          description: "the environment of an application to complete the migration the database of"
+          type: string
+          required: true
+        - in: path
+          name: appname
+          description: "the name of an application to complete the migration the database of"
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: migration parameters
+          required: true
+          schema:
+            $ref: '#/definitions/AppMigrationParameters'
+      responses:
+        200:
+          description: "returned when database migration is complete"
+        400:
+          description: "returned when the request did not contain the body with either \"cacheKey\" or \"appGuid\" parameter or there was not app mbaas instance found for specified appname"
+        500:
+            description: "returned when there was an error while looking for app mbaas instance or the database migration failed to complete properly"
+  /api/mbaas/apps/{domain}/{environment}/{appname}/db:
+    delete:
+      description: "deletes the database of specified application"
+      parameters:
+        - in: path
+          name: domain
+          description: "the domain of an application to complete the migration of the database of"
+          type: string
+          required: true
+        - in: path
+          name: environment
+          description: "the environment of an application to complete the migration the database of"
+          type: string
+          required: true
+        - in: path
+          name: appname
+          description: "the name of an application to complete the migration the database of"
+          type: string
+          required: true
+      responses:
+        200:
+          description: "returned when database deletion was successful or there was not any database to delete"
+        500:
+          description: "returned when there was an error to find the app mbaas instance or to remove the database for the specified application"
+      tags:
+        - api
+        - mbaas
+  /api/mbaas/apps/{domain}/{environment}/{appname}/env:
+    get:
+      description: "gets the environment information for an application in an environment for a domain"
+      parameters:
+        - in: path
+          name: domain
+          description: "the domain of an application to complete the migration of the database of"
+          type: string
+          required: true
+        - in: path
+          name: environment
+          description: "the environment of an application to complete the migration the database of"
+          type: string
+          required: true
+        - in: path
+          name: appname
+          description: "the name of an application to complete the migration the database of"
+          type: string
+          required: true
+      responses:
+        200:
+          description: body with environment information
+      tags:
+        - api
+        - mbaas
+        - env
+
+definitions:
+  Health:
+    properties:
+      status:
+        type: string
+        description: ""
+      summary:
+        description: ""
+        type: string
+        enum: [
+            "No issues to report. All tests passed without error",
+            "Some non-critical tests encountered issues. See the \"details\" object for specifics.",
+            "A critical test item enconutered an error. Please investigate this. See the \"details\" object for specifics."
+          ]
+      details:
+        type: array
+        items:
+          $ref: '#/definitions/HealthDetail'
+  HealthDetail:
+    properties:
+      description:
+        description: "description of the health check"
+        type: string
+      test_status:
+        description: "status of the health check"
+        type: string
+        enum: [ "ok", "warn", "crit" ]
+      result:
+        description: "brief result of the check in a string form"
+        type: string
+      runtime:
+        description: "number indicating how long some particular health check lasted in milliseconds"
+        type: integer
+  DbURI:
+    properties:
+      uri:
+        type: string
+        description: "URI with mongodb schema"
+  AppMigrationParameters:
+    properties:
+      cacheKey:
+        type: string
+      appGuid:
+        type: string
