@@ -108,7 +108,7 @@ module.exports = function(grunt) {
           }
         },
         command: [
-          'rm -rf coverage cov-unit',
+          'rm -rf coverage cov-unit cov-accept',
           'env NODE_PATH=. ./node_modules/.bin/istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- test/unit/**/*.js',
           './node_modules/.bin/istanbul report',
           'echo "See html coverage at: `pwd`/coverage/lcov-report/index.html"'
@@ -124,7 +124,7 @@ module.exports = function(grunt) {
           }
         },
         command: [
-          'rm -rf coverage cov-accept',
+          'rm -rf coverage cov-unit cov-accept',
           'env NODE_PATH=. ./node_modules/.bin/istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js',
           './node_modules/.bin/istanbul report',
           './node_modules/.bin/istanbul report --report cobertura',

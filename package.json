@@ -44,7 +44,7 @@
     "grunt-open": "~0.2.3",
     "grunt-plato": "~1.0.0",
     "grunt-shell": "0.6.4",
-    "istanbul": "0.2.7",
+    "istanbul": "0.2.16",
     "load-grunt-tasks": "~0.4.0",
     "mockgoose": "^1.10.7",
     "proxyquire": "0.5.3",
