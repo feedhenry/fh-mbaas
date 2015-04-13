@@ -1,7 +1,6 @@
 #Component: fh-mbaas
 
 ## 1.0.3 - 2015-04-09 - Gerard Ryan
-* FH-137: Remove -BUILD-NUMBER from version
 * Add npm-shrinkwrap.json file to lock dependency versions
 
 ## 1.0.2 - 2015-03-27 - Wei Li
