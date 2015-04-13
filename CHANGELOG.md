@@ -1,5 +1,8 @@
 #Component: fh-mbaas
 
+## 1.0.4 - 2015-04-13 - Martin Murphy
+* FHPAAS-8 - Include error text in log output
+
 ## 1.0.3 - 2015-04-09 - Gerard Ryan
 * Add npm-shrinkwrap.json file to lock dependency versions
 
