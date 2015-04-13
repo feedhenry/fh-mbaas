@@ -9,7 +9,7 @@ module.exports = function(grunt) {
   var outputDir = './output';
   var pkgjs = require('./package.json');
   var buildNumber = (process.env['BUILD_NUMBER'] || 'BUILD-NUMBER');
-  var packageVersion = pkgjs.version + '-' + buildNumber;
+  var packageVersion = pkgjs.version.replace('BUILD-NUMBER', buildNumber);
   var releaseDir = pkgName + '-' + packageVersion;
   var releaseFile = pkgName + '-' + packageVersion + '.tar.gz';
 
@@ -145,6 +145,7 @@ module.exports = function(grunt) {
           'cp ./package.json ' +  outputDir + '/' + releaseDir,
           'cp ./fh-mbaas.js ' +  outputDir + '/' + releaseDir,
           'echo ' +  packageVersion + ' > ' + outputDir + '/' + releaseDir + '/VERSION.txt',
+	        'sed -i -e s/BUILD-NUMBER/' + buildNumber + '/ ' + outputDir + '/' + releaseDir + '/package.json',
 	        'tar -czf ' + distDir + '/' + releaseFile + ' -C ' + outputDir + ' ' + releaseDir
         ].join('&&')
       }
