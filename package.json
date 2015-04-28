@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "1.0.6",
+  "version": "1.0.7-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -34,23 +34,13 @@
     "underscore": "^1.6.0"
   },
   "devDependencies": {
-    "grunt-concurrent": "latest",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-watch": "latest",
-    "grunt-env": "~0.4.1",
-    "grunt-node-inspector": "~0.1.5",
-    "grunt-nodemon": "0.2.0",
-    "grunt-open": "~0.2.3",
-    "grunt-plato": "~1.0.0",
-    "grunt-shell": "0.6.4",
+    "grunt-fh-build": "*",
     "istanbul": "0.2.16",
-    "load-grunt-tasks": "~0.4.0",
     "mockgoose": "^1.10.7",
     "proxyquire": "0.5.3",
     "should": "2.1.1",
     "sinon": "^1.10.3",
     "supertest": "0.8.2",
-    "time-grunt": "~0.3.1",
     "turbo-test-runner": "0.3.3"
   }
 }
