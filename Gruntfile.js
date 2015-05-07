@@ -144,10 +144,20 @@ module.exports = function(grunt) {
           'cp -r ./scripts ' + outputDir + '/' + releaseDir,
           'cp ./package.json ' +  outputDir + '/' + releaseDir,
           'cp ./fh-mbaas.js ' +  outputDir + '/' + releaseDir,
+          'cp ./npm-shrinkwrap.json ' +  outputDir + '/' + releaseDir,
           'echo ' +  packageVersion + ' > ' + outputDir + '/' + releaseDir + '/VERSION.txt',
 	        'sed -i -e s/BUILD-NUMBER/' + buildNumber + '/ ' + outputDir + '/' + releaseDir + '/package.json',
 	        'tar -czf ' + distDir + '/' + releaseFile + ' -C ' + outputDir + ' ' + releaseDir
         ].join('&&')
+      },
+
+      install_dfc: {
+        options: {
+          stdout: true,
+          stderr: true,
+          failOnError: true
+        },
+        command: 'npm install fh-dfc@0.23.3-26 --registry http://bob.feedhenry.net:4873/'
       }
     },
     open: {
@@ -176,14 +186,14 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt, {scope: 'devDependencies'});
 
   // Testing tasks
-  grunt.registerTask('test', ['shell:unit', 'shell:accept']);
-  grunt.registerTask('unit', ['jshint', 'shell:unit']);
-  grunt.registerTask('accept', ['env:local', 'shell:accept']);
+  grunt.registerTask('test', ['shell:install_dfc', 'shell:unit', 'shell:accept']);
+  grunt.registerTask('unit', ['shell:install_dfc', 'jshint', 'shell:unit']);
+  grunt.registerTask('accept', ['shell:install_dfc', 'env:local', 'shell:accept']);
 
   // Coverage tasks
-  grunt.registerTask('coverage', ['jshint', 'shell:coverage_unit', 'shell:coverage_accept']);
-  grunt.registerTask('coverage-unit', ['shell:coverage_unit']);
-  grunt.registerTask('coverage-accept', ['env:local', 'shell:coverage_accept']);
+  grunt.registerTask('coverage', ['shell:install_dfc', 'jshint', 'shell:coverage_unit', 'shell:coverage_accept']);
+  grunt.registerTask('coverage-unit', ['shell:install_dfc', 'shell:coverage_unit']);
+  grunt.registerTask('coverage-accept', ['shell:install_dfc', 'env:local', 'shell:coverage_accept']);
 
   // dist command
   grunt.registerTask('dist', ['shell:dist']);
@@ -193,7 +203,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('analysis', ['plato:src', 'open:platoReport']);
 
-  grunt.registerTask('serve', ['env:local', 'concurrent:serve']);
-  grunt.registerTask('debug', ['env:local', 'concurrent:debug']);
+  grunt.registerTask('serve', ['shell:install_dfc', 'env:local', 'concurrent:serve']);
+  grunt.registerTask('debug', ['shell:install_dfc', 'env:local', 'concurrent:debug']);
   grunt.registerTask('default', ['serve']);
 };
