@@ -1,5 +1,9 @@
 #Component: fh-mbaas
 
+## 1.0.5 - 2015-05-07 - Gerard Ryan
+* FH-96 - Remove fh-dfc from package.json, depend on it being globally installed
+* Include npm-shrinkwrap.json file in tarball
+
 ## 1.0.4 - 2015-04-13 - Martin Murphy
 * FHPAAS-8 - Include error text in log output
 
