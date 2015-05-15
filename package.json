@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "1.0.7-BUILD-NUMBER",
+  "version": "2.0.0-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -24,14 +24,17 @@
     "fh-health": "0.0.6",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
+    "fh-dfc": "http://robert:scottishminister1790@bob.feedhenry.net:8080/job/fh-dfc_pullrequests/30/artifact/dist/fh-dfc-0.23.4-30.tar.gz",
     "mongoose-filter-denormalize": "0.2.1",
     "mongoose-timestamp": "0.3.0",
     "mongoose-unique-validator": "0.3.0",
     "mongoose-validator": "1.0.3",
     "optimist": "^0.6.1",
     "rc": "^0.4.0",
-    "request": "^2.36.0",
-    "underscore": "^1.6.0"
+    "request": "^2.45.0",
+    "underscore": "^1.6.0",
+    "fh-forms": "http://robert:scottishminister1790@bob.feedhenry.net:8080/job/fh-forms_pullrequests/116/artifact/dist/fh-forms-1.0.0-116.tar.gz",
+    "multer": "0.1.8"
   },
   "devDependencies": {
     "grunt-fh-build": "~0.1.0",

@@ -9,7 +9,8 @@ var dbConf = {
 var fhconfig = require('fh-config');
 fhconfig.setRawConfig({
   fhmbaas:{
-    key:'testkey'
+    key:'testkey',
+    protocol: 'https'
   },
   mongo:{
     enabled: true,
@@ -76,7 +77,21 @@ var appEnv = require('../../../lib/models/appEnv');
 var assert = require('assert');
 
 exports.test_app_envs = function(finish){
-  var envs = appEnv({dbConf:dbConf}, {dbConf: dbConf}, fhconfig);
+  var params = {
+    mbaas: {dbConf: dbConf},
+    appMbaas: {
+      dbConf: dbConf,
+      isDbMigrated: function(){
+        return true;
+      },
+      accessKey: "somembaasaccesskey",
+      type: 'feedhenry',
+      mbaasUrl: "https://mbaas.somembaas.com"
+    },
+    fhconfig: fhconfig
+  };
+
+  var envs = appEnv[params.appMbaas.type](params);
   assert.equal(envs.FH_AMQP_APP_ENABLED, false);
   assert.equal(envs.FH_AMQP_CONN_MAX, 10);
   assert.equal(envs.FH_AMQP_NODES, 'localhost:5672');
@@ -87,8 +102,6 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_DITCH_HOST, 'localhost');
   assert.equal(envs.FH_DITCH_PORT, 8803);
   assert.equal(envs.FH_DITCH_PROTOCOL, 'http');
-
-  assert.equal(envs.FH_DOMAIN_DATABASE, 'mongodb://testuser:testpass@localhost:27017/test');
 
   assert.equal(envs.FH_MESSAGING_BACKUP_FILE, '../messages/backup.log');
   assert.equal(envs.FH_MESSAGING_CLUSTER, 'development');
@@ -105,5 +118,12 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_STATS_HOST, 'localhost');
   assert.equal(envs.FH_STATS_PORT, 8804);
   assert.equal(envs.FH_STATS_PROTOCOL, 'http');
+
+
+  //Checking mbaas data checked
+  assert.equal(envs.FH_MBAAS_HOST, "mbaas.somembaas.com");
+  assert.equal(envs.FH_MBAAS_PROTOCOL, "https");
+  assert.equal(envs.FH_MBAAS_ENV_ACCESS_KEY, "somembaasaccesskey");
+
   finish();
 };

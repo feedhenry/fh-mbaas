@@ -17,6 +17,11 @@ exports.it_should_handle_error = function(finish) {
   common.handleError('dummy error', 'ignore the dummy error', 1, req, res);
 };
 
+exports.it_should_inspect_error = function(finish) {
+  common.logError({}, "", "", {});
+  finish();
+}
+
 exports.it_should_get_ip_address_header = function(finish){
   var req = {
     "headers": {
@@ -83,3 +88,23 @@ exports.it_should_get_random_password = function(finish){
   assert.ok(pass.length > 0);
   finish();
 };
+
+exports.it_should_get_random_user = function(finish) {
+  var user = common.randomUser();
+  assert.ok(user.length > 0);
+  finish();
+}
+
+exports.it_should_create_password_of_given_length = function(finish) {
+  var password_length = 10;
+  var password = common.make_passwd(password_length, "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890");
+  assert.ok(password.length, password_length);
+  finish();
+}
+
+exports.it_should_create_empty_password_using_non_positive_length = function(finish) {
+  var password_length = -1;
+  var password = common.make_passwd(password_length, "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890");
+  assert.equal(password, '');
+  finish();
+}

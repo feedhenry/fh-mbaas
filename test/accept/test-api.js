@@ -3,10 +3,20 @@ var util = require('util');
 var assert = require('assert');
 var common = require('./common');
 var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
+var url = require('url');
+var _ = require('underscore');
 
 var TEST_DOMAIN = 'fhmbaas-accept-test-domain';
 var TEST_ENV = 'test';
+
+var mockRequestData = {
+  cacheKey: 'testcachekey',
+  appGuid: 'testappguid',
+  coreHost: 'some.core.host.com',
+  apiKey: "someappapikey",
+  type: "feedhenry",
+  mbaasUrl: "https://mbaas.somembaas.com"
+};
 
 function connectDb(url, cb){
   MongoClient.connect(url, function(err, db){
@@ -51,7 +61,7 @@ exports.it_should_return_db_url = function(finish){
     json:{}
   };
   request.post(params, function(err, response, body){
-    assert.ok(!err, 'db create request should success');
+    assert.ok(!err, 'db create request should success ' + err);
     assert.equal(response.statusCode, 200);
     var new_db_url = body.uri;
     //call it again and should get the same reponse
@@ -70,7 +80,6 @@ exports.it_should_return_db_url = function(finish){
 var TEST_APP_NAME = 'fhmbaas-accept-test-appname';
 exports.it_should_migrate_db = function(finish){
   var url = util.format('%s%s/%s/%s/%s/migratedb', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
-  console.log(url);
   var params = {
     url: url,
     headers:{
@@ -82,8 +91,7 @@ exports.it_should_migrate_db = function(finish){
   request.post(params, function(err, response){
     assert.equal(response.statusCode, 400);
 
-    params.json.cacheKey = 'testcachekey';
-    params.json.appGuid = 'testappguid';
+    _.extend(params.json, mockRequestData);
 
     request.post(params, function(err, response, body){
       assert.equal(response.statusCode, 200);
@@ -116,31 +124,89 @@ exports.it_should_return_app_envs = function(finish){
     },
     json:{}
   };
+  var appMigrateDbUrl = util.format('%s%s/%s/%s/%s/migratedb', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_envtest');
+  params.url = appMigrateDbUrl;
+
+  _.extend(params.json, mockRequestData);
+
   request.post(params, function(err, response){
     assert.ok(!err);
     assert.equal(200, response.statusCode);
 
-    var appMigrateDbUrl = util.format('%s%s/%s/%s/%s/migratedb', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_envtest');
-    params.url = appMigrateDbUrl;
-    params.json.cacheKey = 'testcachekey';
-    params.json.appGuid = 'testappguid';
-
-    request.post(params, function(err, response){
+    var appEnvUrl = util.format('%s%s/%s/%s/%s/env', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_envtest');
+    request.get({
+      url: appEnvUrl,
+      headers:{
+        'x-fh-service-key': 'testkey'
+      }
+    }, function(err, response, body){
       assert.ok(!err);
       assert.equal(200, response.statusCode);
 
-      var appEnvUrl = util.format('%s%s/%s/%s/%s/env', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_envtest');
-      request.get({
-        url: appEnvUrl,
-        headers:{
-          'x-fh-service-key': 'testkey'
-        },
-      }, function(err, response, body){
-        assert.ok(!err);
+      finish();
+    });
+  });
+};
+
+/**
+ * Testing that a deploy call to mbaas will store app specific information
+ * @param finish
+ */
+exports.it_should_deploy_app_to_env = function(finish){
+  var mbaasUrl = util.format('%s%s/%s/%s/db', common.baseUrl, 'api/mbaas', TEST_DOMAIN, TEST_ENV + '_appenvtest');
+  var params = {
+    url: mbaasUrl,
+    headers:{
+      'x-fh-service-key': 'testkey'
+    },
+    json: {},
+    body: {}
+  };
+  params.url = util.format('%s%s/%s/%s/%s/deploy', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_deploytest');
+  _.extend(params.json, mockRequestData);
+
+  request.post(params, function(err, response){
+    assert.ok(!err);
+    assert.equal(200, response.statusCode);
+
+    var appEnvUrl = util.format('%s%s/%s/%s/%s/env', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME + '_app_deploytest');
+    request.get({
+      url: appEnvUrl,
+      headers:{
+        'x-fh-service-key': 'testkey'
+      },
+      json: true
+    }, function(err, response, body){
+      assert.ok(!err);
+      assert.equal(200, response.statusCode);
+
+      assert.ok(body.env.FH_MBAAS_ENV_ACCESS_KEY.length === 24, "Expected A Valid Access Key");
+      assert.equal(body.env.FH_MBAAS_HOST, url.parse(mockRequestData.mbaasUrl).host);
+      assert.equal(body.env.FH_MBAAS_PROTOCOL, "https");
+
+      var firstAccessKey = body.env.FH_MBAAS_ENV_ACCESS_KEY;
+
+      params.body.coreHost = "some.other.core.host.com";
+
+      //Calling deploy again should not modify the access key
+
+      request.post(params, function(err, response){
+        assert.ok(!err, "Unexpected Error");
         assert.equal(200, response.statusCode);
 
-        finish();
+        request.get({
+          url: appEnvUrl,
+          headers:{
+            'x-fh-service-key': 'testkey'
+          },
+          json: true
+        }, function(err, response, body){
+          assert.ok(!err, "Unexpected Error");
+          assert.equal(firstAccessKey, body.env.FH_MBAAS_ENV_ACCESS_KEY);
+
+          finish();
+        });
       });
     });
   });
-}
+};

@@ -2,6 +2,9 @@
   "fhmbaas": {
     "port": 8819,
     "key": "mBqxpulwlj3Rw7EsHZq0YEQyrArq2tlIRCQ0pCmr5DRPPDZMAP4ZNb7U0E6bPSb3",
+    "protocol": "https",
+    "temp_forms_files_dest" : "/tmp/fh-mbaas",
+    "pdfExportDir": "/tmp/fh-mbaas",
     "code_coverage_enabled": false,
     "logger": {
       "name": "mbaas",
@@ -43,7 +46,8 @@
     "dynofarm": "http://localhost:9000",
     "username":"feedhenry",
     "_password": "feedhenry101",
-    "loglevel": "warn"
+    "loglevel": "warn",
+    "cache_timeout": 300000
   },
   "fhamqp":{
     "enabled": true,

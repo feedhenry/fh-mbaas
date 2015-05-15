@@ -1,4 +1,8 @@
 #Component: fh-mbaas
+
+## 2.0.0 - 2015-05-15 - Niall Donnelly
+* FH-42 - Added Forms APIs To Supercore For Core And Apps Functionality
+
 ## 1.0.7 - 2015-05-07 - Gerard Ryan
 * Fix some jshint errors
 * Clean up Gruntfile.js & use grunt-fh-build

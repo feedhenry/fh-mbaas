@@ -14,7 +14,8 @@ var dynofarmPort = 19002;
 var fhconfig = require('fh-config');
 fhconfig.setRawConfig({
   fhmbaas:{
-    key:'testkey'
+    key:'testkey',
+    protocol: "https"
   },
   mongo:{
     enabled: true,
@@ -79,14 +80,14 @@ fhconfig.setRawConfig({
 
 var auth = require('../../lib/middleware/auth');
 var dfutils = require('../../lib/util/dfutils');
-var models = require('../../lib/models')();
+var models = require('../../lib/models');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(bodyParser.json());
-app.use('/api', auth(fhconfig));
+app.use('/api', auth.admin(fhconfig));
 
 var server;
 
@@ -215,7 +216,7 @@ exports.setUp = function(finish){
               assert.ok(!err, 'Failed to init models : ' + util.inspect(err));
 
               app.use('/sys', require('../../lib/routes/sys.js')());
-              app.use('/api/mbaas', require('../../lib/routes/api')(models));
+              app.use('/api/mbaas', require('../../lib/routes/api'));
 
               var port = 18819;
               server = app.listen(port, function(){
@@ -232,7 +233,7 @@ exports.setUp = function(finish){
       });
     });
   });
-}
+};
 
 function removeAll(finish){
   connectDb(function(err, db){
