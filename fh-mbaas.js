@@ -15,6 +15,7 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var fhconfig = require('fh-config');
 var multer = require('multer');
+var forms = require('fh-forms');
 
 // args and usage
 function usage() {
@@ -56,6 +57,9 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
   }
 
   var logger = fhconfig.getLogger();
+
+  //Setting Logger For The Forms Middleware Functions
+  forms.core.setLogger(logger);
 
   // Get our version number from package.json
   var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
@@ -142,7 +146,6 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
       app.use('/sys', require('./lib/routes/sys.js')());
       app.use('/api/mbaas', require('./lib/routes/api.js'));
 
-      //TODO: The domain needs to be verified against the deployed apps.
       app.use('/api/app', require('./lib/routes/app.js'));
 
 
