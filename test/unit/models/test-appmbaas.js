@@ -224,7 +224,7 @@ exports.test_drop_db = function(finish){
   var appmbaas = new AppMbaas(_.extend(_.clone(mbaasConfig), {name: APPNAME + '_test_drop_db',  dbConf: {
     user: 'testuser',
     name: 'testdb'
-  }}));
+  }, migrated: true}));
   appmbaas.save(function(err, saved){
     assert.ok(!err, util.inspect(err));
 
@@ -247,7 +247,7 @@ exports.test_drop_db_error = function(finish){
   var appmbaas = new AppMbaas(_.extend(_.clone(mbaasConfig), {name: APPNAME + '_test_drop_db_error',  dbConf: {
     user: 'testuser',
     name: 'testdb'
-  }}));
+  }, migrated: true}));
   appmbaas.save(function(err, saved){
     assert.ok(!err, util.inspect(err));
 

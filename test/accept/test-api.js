@@ -104,7 +104,7 @@ exports.it_should_migrate_db = function(finish){
         request.post(params, function(err, response){
           assert.equal(response.statusCode, 200);
           
-          params.url = util.format('%s%s/%s/%s/%s/db', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
+          params.url = util.format('%s%s/%s/%s/%s', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
           request.del(params, function(err, response){
             assert.equal(response.statusCode, 200);
             finish();
