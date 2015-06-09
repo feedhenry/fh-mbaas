@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "1.0.6-BUILD-NUMBER",
+  "version": "1.0.6",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
