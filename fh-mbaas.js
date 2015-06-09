@@ -16,6 +16,9 @@ var bodyParser = require('body-parser');
 var fhconfig = require('fh-config');
 var multer = require('multer');
 var forms = require('fh-forms');
+var fhmbaasMiddleware = require('fh-mbaas-middleware');
+
+
 
 // args and usage
 function usage() {
@@ -135,9 +138,10 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
       dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
     }));
 
-    var models = require('./lib/models.js');
-    models.init(function (err) {
-      if (err) {
+    var models = fhmbaasMiddleware.models;
+   
+    models.init(fhconfig , function (err) {
+      if (err) { 
         console.error("FATAL: " + util.inspect(err));
         console.trace();
         return cleanShutdown(); // exit on uncaught exception
