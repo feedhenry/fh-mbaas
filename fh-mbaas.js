@@ -75,7 +75,7 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
   var workers = [];
 
   // clean shut down - note cb is optional here (used in testsuite)
-  var cleanShutdown = function(cb) {
+  var cleanShutdown = function() {
     logger.info("Shutting down server..");
     if (cluster.isMaster) {
       // shutdown all our workers
@@ -141,7 +141,7 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
       app.use('/api/mbaas', require('./lib/routes/api.js')(models));
 
       var port = fhconfig.int('fhmbaas.port');
-      var server = app.listen(port, function() {
+      server = app.listen(port, function() {
         console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
       });
     });
@@ -159,7 +159,7 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
       }
 
       // Handle workers exiting
-      cluster.on('exit', function(worker, code, signal) {
+      cluster.on('exit', function(worker) {
         if (worker.suicide === true) {
           console.log("Cleanly exiting..");
           process.exit(0);
