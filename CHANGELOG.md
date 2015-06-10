@@ -1,4 +1,6 @@
 #Component: fh-mbaas
+## 1.0.6 - 2015-04-08 - Bruno Oliveira
+* FH-136: Update fh-mbaas dependencies to mitigate vulnerabilities
 
 ## 1.0.5 - 2015-05-07 - Gerard Ryan
 * FH-96 - Remove fh-dfc from package.json, depend on it being globally installed
