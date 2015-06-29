@@ -1,6 +1,27 @@
-var common = require('lib/util/common.js');
 var util = require('util');
 var assert = require('assert');
+
+var cfg = {
+  mongo: {
+    host: 'localhost',
+    port: 8888,
+    admin_auth : {
+      user: 'admin',
+      pass: 'admin'
+    }
+  },
+  fhdfc: {
+    "dynofarm": "http://localhost:9000",
+    "username":"feedhenry",
+    "_password": "feedhenry101",
+    "loglevel": "warn"
+  }
+};
+
+var fhconfig = require('fh-config');
+fhconfig.setRawConfig(cfg);
+
+var common = require('lib/util/common.js');
 
 exports.it_should_handle_error = function(finish) {
   var req = {

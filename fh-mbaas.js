@@ -138,6 +138,7 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
       dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
     }));
 
+    fhmbaasMiddleware.init(fhconfig);
     var models = fhmbaasMiddleware.models;
    
     models.init(fhconfig , function (err) {

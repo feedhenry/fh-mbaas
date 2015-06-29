@@ -15,5 +15,4 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['fh:dist']);
 
   grunt.registerTask('coverage', ['fh:coverage']);
-  grunt.registerTask('dist', ['fh:default']);
 };

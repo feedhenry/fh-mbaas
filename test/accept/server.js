@@ -6,15 +6,36 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var async = require('async');
+var fhmbaasMiddleware = require('fh-mbaas-middleware');
 var ditchServer;
 var dynofarmServer;
 var testConfig = require('../setup.js');
 
+// used for the models init
+var cfg = {
+  mongoUrl: 'mongodb://localhost:27017/test-fhmbaas-accept',
+  mongo:{
+    host:'localhost',
+    port: 27017,
+    name: 'test-fhmbaas-accept',
+    admin_auth: {
+      user: 'admin',
+      pass: 'admin'
+    }
+  }
+};
+
+
 var fhconfig = require('fh-config');
 
-var auth = require('../../lib/middleware/auth');
-var dfutils = require('../../lib/util/dfutils');
-var models = require('../../lib/models');
+fhmbaasMiddleware.init(fhconfig);
+
+var auth = require('../../lib/middleware/auth.js'); 
+var models = fhmbaasMiddleware.models; 
+var dfutils = require('../../lib/util/dfutils.js');
+
+// set the new middleware with the mongo config json data
+//var envMongoDb = fhmbaasMiddleware.envMongoDb;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
@@ -27,7 +48,6 @@ var server;
 
 var deleteAmdinUser = false;
 var new_db_prefix = "fhmbaas-accept-test";
-
 
 
 function setupDitchServer(cb){
@@ -146,7 +166,7 @@ exports.setUp = function(finish){
       dropCollections(db, ['mbaas', 'appmbaas'], function(err, result){
         dropDbForDomain(db, function(err){
           db.close(true, function(){
-            models.init(function(err){
+            models.init(fhconfig,function(err){
               assert.ok(!err, 'Failed to init models : ' + util.inspect(err));
 
               app.use('/sys', require('../../lib/routes/sys.js')());
@@ -215,6 +235,7 @@ function closeDynoServer(cb){
 exports.tearDown = function(finish) {
   console.log('Running tearDown for acceptance tests...');
   dfutils.clearInterval();
+  console.log('Cleared Interval (cache) ');
   closeDitchServer(function(){
     closeDynoServer(function(){
       closeTestServer(function(){

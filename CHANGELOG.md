@@ -1,5 +1,8 @@
 #Component: fh-mbaas
 
+## 2.1.0 - 2015-06-10 - Luigi Zuccarelli
+* FH-42 - Implemented changes for mbaas as service
+
 ## 2.0.0 - 2015-05-15 - Niall Donnelly
 * FH-42 - Added Forms APIs To Supercore For Core And Apps Functionality
 
