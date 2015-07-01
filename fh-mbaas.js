@@ -158,7 +158,7 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
     var models = fhmbaasMiddleware.models;
    
     models.init(jsonConfig , function (err) {
-      if (err) { 
+      if(err){
         console.error("FATAL: " + util.inspect(err));
         console.trace();
         return cleanShutdown(); // exit on uncaught exception

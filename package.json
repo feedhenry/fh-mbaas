@@ -34,7 +34,7 @@
     "underscore": "^1.6.0",
     "fh-forms": "1.0.0",
     "multer": "0.1.8",
-    "fh-mbaas-middleware": "~1.0.2"
+    "fh-mbaas-middleware": "~1.0.3"
   },
   "devDependencies": {
     "grunt-fh-build": "~0.1.0",
