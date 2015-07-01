@@ -138,10 +138,24 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
       dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
     }));
 
-    fhmbaasMiddleware.init(fhconfig);
+    var conf = fhconfig.getConfig();
+    var jsonConfig = {
+      mongoUrl: fhconfig.mongoConnectionString(),
+      mongo : {
+        host: conf.rawConfig.mongo.host,
+        port: conf.rawConfig.mongo.port,
+        name: conf.rawConfig.mongo.name,
+        admin_auth: {
+          user: conf.rawConfig.mongo.admin_auth.user,
+          pass: conf.rawConfig.mongo.admin_auth.pass
+        }
+      }
+    };
+
+    fhmbaasMiddleware.init(jsonConfig);
     var models = fhmbaasMiddleware.models;
    
-    models.init(fhconfig , function (err) {
+    models.init(jsonConfig , function (err) {
       if (err) { 
         console.error("FATAL: " + util.inspect(err));
         console.trace();

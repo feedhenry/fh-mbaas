@@ -7,7 +7,6 @@ var APPNAME = "testappname";
 var mockdfc = function(){
   return {
     dynos : function(args, cb){
-      console.log('get dyno for ' + args[0]);
       if(args[0] === DOMAIN){
         return cb();
       } else {

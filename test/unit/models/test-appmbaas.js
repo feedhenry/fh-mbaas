@@ -3,48 +3,32 @@ var assert = require('assert');
 var util = require('util');
 var sinon = require('sinon');
 var _ = require('underscore');
+var fhmbaasMiddleware = require('fh-mbaas-middleware');
+
+var cfg = {
+  mongoUrl: 'http://somemongodb',
+  mongo: {
+    host: 'localhost',
+    port: 8888,
+    admin_auth : {
+      user: 'admin',
+      pass: 'admin'
+    }
+  },
+  fhdfc: {
+    "dynofarm": "http://localhost:9000",
+    "username":"feedhenry",
+    "_password": "feedhenry101",
+    "loglevel": "warn"
+  }
+};
 
 var fhconfig = require('fh-config');
+fhconfig.setRawConfig(cfg);
 
-//var dropDb = mockMongo.expects('dropDb');
+fhmbaasMiddleware.init(cfg);
 
 var dfutils = require('../../../lib/util/dfutils');
-//var ditchhelper = require('../../../lib/util/ditchhelper');
-
-//var mockDfutils = sinon.stub(dfutils, 'stopApp');
-//var mockDitch = sinon.mock(ditchhelper);
-//var doMigrate = mockDitch.expects('doMigrate');
-//var migrateComplete = mockDitch.expects('migrateComplete');
-//var common = require('../../../lib/util/common');
-
-//var mockCommon = sinon.mock(common);
-//var checkDbConf = mockCommon.expects('checkDbConf');
-
-//var AppMbaasSchema = proxyquire('fh-mbaas-middleware', { 'appMbaasSchema':{}, '../util/mongo': mockMongo, 'mongoose':mongoose  , '../util/dfutils':mockDfutils, '../util/ditchhelper': mockDitch});
-//var middleware = require('../../../lib/middleware/mbaasApp.js');
-
-/*
-var DOMAIN = "appmbaas_unittest_domain";
-var ENVIRONMENT = "appmbaas_unittest_env";
-var APPNAME = "appmbaas_unittest_app";
-var APPGUID = "appmbaasguid";
-var APPAPIKEY = "appapikey";
-var COREHOST = "https://some.core.host.com";
-var MBAASURL = "https://mbaas.somembaas.com";
-var APPTYPE = "feedhenry";
-
-var mbaasConfig = {
-  domain: DOMAIN,
-  environment: ENVIRONMENT,
-  fhconfig: fhconfig,
-  guid: APPGUID,
-  apiKey: APPAPIKEY,
-  coreHost: COREHOST,
-  mbaasUrl: MBAASURL,
-  type: APPTYPE,
-  accessKey: mongoose.Types.ObjectId()
-};
-*/
 
 function done(finish){
   dfutils.clearInterval();

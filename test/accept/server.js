@@ -28,14 +28,15 @@ var cfg = {
 
 var fhconfig = require('fh-config');
 
-fhmbaasMiddleware.init(fhconfig);
+fhmbaasMiddleware.init(cfg);
 
 var auth = require('../../lib/middleware/auth.js'); 
 var models = fhmbaasMiddleware.models; 
 var dfutils = require('../../lib/util/dfutils.js');
 
-// set the new middleware with the mongo config json data
-//var envMongoDb = fhmbaasMiddleware.envMongoDb;
+// could've used the logger from fhconfig - but wanted to ensure
+// that the middleware logger is working in our acceptance test
+var logger = fhmbaasMiddleware.logger;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
@@ -66,7 +67,7 @@ function setupDynofarm(cb){
   var dynoApp = express();
   dynoApp.use(bodyParser.json());
   dynoApp.use('*', function(req, res){
-    console.log('[dynofarm] got request, url = ' + req.url);
+    logger.info('[dynofarm] got request, url = ' + req.url);
     return res.json([]);
   });
   dynofarmServer = dynoApp.listen(testConfig.dynofarmPort, function(){
@@ -89,7 +90,7 @@ function createDBAdminUser(db, user, pass, cb){
     if(err){
       //create admin user, and mark for removal when test finishes
       adminDb.addUser(user, pass, function(err, result){
-        console.log('Creating admin db user');
+        logger.info('Creating admin db user');
         assert.ok(!err, 'can not create admin user : ' + util.inspect(err));
         deleteAmdinUser = true;
         cb();
@@ -104,7 +105,7 @@ function createDBAdminUser(db, user, pass, cb){
 function dropDBAdminUser(db, user, cb){
   if(deleteAmdinUser){
     var adminDb = db.admin();
-    console.log('Remove admin db user');
+    logger.info('Remove admin db user');
     adminDb.removeUser(user, function(err){
       cb();
     });
@@ -116,7 +117,7 @@ function dropDBAdminUser(db, user, cb){
 
 function dropCollections(db, collections, cb) {
   async.each(collections, function(collection, cb){
-    console.log('Drop db collection ' + collection);
+    logger.info('Drop db collection ' + collection);
     db.dropCollection(collection, function(err, results){
       cb();
     });
@@ -131,19 +132,19 @@ function dropDbForDomain(db, cb){
     var doDbRemove = ['fhmbaas-accept-test-domain_test_appenvtest', 'test-fhmbaas-accept']; 
     dbs = dbs.databases;
     for(var i=0;i<dbs.length;i++){
-      console.log('db name = ' + dbs[i].name);
+      logger.info('db name = ' + dbs[i].name);
       if(dbs[i].name.indexOf(new_db_prefix) >= 0){
         doDbRemove.push(dbs[i].name);
       }
     }
-    console.log('dbs to remove = ' + doDbRemove);
+    logger.info('dbs to remove = ' + doDbRemove);
     if(doDbRemove.length > 0){
       async.each(doDbRemove, function(dbname, callback){
-        console.log('Remove test db and its user : ' + dbname);
+        logger.info('Remove test db and its user : ' + dbname);
         var dbToRemove = db.db(dbname);
         dbToRemove.removeUser(dbname, function(err){
           if(err){
-            console.error('Failed to remove user :' + dbname);
+            logger.error('Failed to remove user :' + dbname);
           }
           dbToRemove.dropDatabase(function(err){
             assert.ok(!err, 'Failed to drop db : ' + util.inspect(err));
@@ -160,13 +161,13 @@ function dropDbForDomain(db, cb){
 }
 
 exports.setUp = function(finish){
-  console.log('Running setUp for acceptance tests...');
+  logger.info('Running setUp for acceptance tests...');
   connectDb(function(err, db){
     createDBAdminUser(db, fhconfig.value('mongo.admin_auth.user'), fhconfig.value('mongo.admin_auth.pass'), function(err){
       dropCollections(db, ['mbaas', 'appmbaas'], function(err, result){
         dropDbForDomain(db, function(err){
           db.close(true, function(){
-            models.init(fhconfig,function(err){
+            models.init(cfg,function(err){
               assert.ok(!err, 'Failed to init models : ' + util.inspect(err));
 
               app.use('/sys', require('../../lib/routes/sys.js')());
@@ -174,7 +175,7 @@ exports.setUp = function(finish){
 
               var port = 18819;
               server = app.listen(port, function(){
-                console.log("Test App started at: " + new Date() + " on port: " + port);
+                logger.info("Test App started at: " + new Date() + " on port: " + port);
                 setupDitchServer(function(){
                   setupDynofarm(function(){
                     finish();
@@ -206,7 +207,7 @@ function removeAll(finish){
 }
 
 function closeTestServer(cb){
-  console.log('close test server');
+  logger.info('close test server');
   if(server){
     server.close(cb);
   } else {
@@ -215,7 +216,7 @@ function closeTestServer(cb){
 }
 
 function closeDitchServer(cb){
-  console.log('close ditch server');
+  logger.info('close ditch server');
   if(ditchServer){
     ditchServer.close(cb);
   } else {
@@ -224,7 +225,7 @@ function closeDitchServer(cb){
 }
 
 function closeDynoServer(cb){
-  console.log('close dynofarm server');
+  logger.info('close dynofarm server');
   if(dynofarmServer){
     dynofarmServer.close(cb);
   } else {
@@ -233,9 +234,9 @@ function closeDynoServer(cb){
 }
 
 exports.tearDown = function(finish) {
-  console.log('Running tearDown for acceptance tests...');
+  logger.info('Running tearDown for acceptance tests...');
   dfutils.clearInterval();
-  console.log('Cleared Interval (cache) ');
+  logger.info('Cleared Interval (cache) ');
   closeDitchServer(function(){
     closeDynoServer(function(){
       closeTestServer(function(){
