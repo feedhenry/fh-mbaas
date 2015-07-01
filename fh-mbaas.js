@@ -152,6 +152,8 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
       }
     };
 
+    logger.debug('JSON Config ', jsonConfig);
+
     fhmbaasMiddleware.init(jsonConfig);
     var models = fhmbaasMiddleware.models;
    
