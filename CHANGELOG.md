@@ -1,11 +1,11 @@
 #Component: fh-mbaas
 
-## 2.1.0 - 2015-06-10 - Luigi Zuccarelli
+## 2.0.0 - 2015-05-15 - Niall Donnelly & Luigi Zuccarelli
 * FHMAP-666 unit testing update
 * FHMAP-667 acceptance test update
+* Refactored code for route api
+* Implemented changes middleware initialise
 * FH-42 - Implemented changes for mbaas as service
-
-## 2.0.0 - 2015-05-15 - Niall Donnelly
 * FH-42 - Added Forms APIs To Supercore For Core And Apps Functionality
 
 ## 1.0.7 - 2015-05-07 - Gerard Ryan

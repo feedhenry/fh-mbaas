@@ -93,12 +93,12 @@ exports.it_should_migrate_db = function(finish){
     assert.equal(response.statusCode, 400);
 
     _.extend(params.json, mockRequestData);
-
+    
     request.post(params, function(err, response, body){
       assert.equal(response.statusCode, 200);
 
       //request the same url again, we should get 423
-      request.post(params, function(err, response){
+      request.post(params, function(err, response, body){
         assert.equal(response.statusCode, 423);
         
         params.url = util.format('%s%s/%s/%s/%s/migrateComplete', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);

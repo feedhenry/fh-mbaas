@@ -28,15 +28,10 @@ var cfg = {
 
 var fhconfig = require('fh-config');
 
-fhmbaasMiddleware.init(cfg);
-
 var auth = require('../../lib/middleware/auth.js'); 
-var models = fhmbaasMiddleware.models; 
 var dfutils = require('../../lib/util/dfutils.js');
 
-// could've used the logger from fhconfig - but wanted to ensure
-// that the middleware logger is working in our acceptance test
-var logger = fhmbaasMiddleware.logger;
+var logger = fhconfig.getLogger();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
@@ -167,8 +162,8 @@ exports.setUp = function(finish){
       dropCollections(db, ['mbaas', 'appmbaas'], function(err, result){
         dropDbForDomain(db, function(err){
           db.close(true, function(){
-            models.init(cfg,function(err){
-              assert.ok(!err, 'Failed to init models : ' + util.inspect(err));
+            fhmbaasMiddleware.init(cfg,function(err){
+              assert.ok(!err, 'Failed to init middleware models : ' + util.inspect(err));
 
               app.use('/sys', require('../../lib/routes/sys.js')());
               app.use('/api/mbaas', require('../../lib/routes/api'));
@@ -196,7 +191,7 @@ function removeAll(finish){
       dropCollections(db, ['mbaas', 'appmbaas'], function(){
         dropDbForDomain(db, function(){
           db.close(true, function(){
-            models.disconnect(function(err){
+            fhmbaasMiddleware.models.disconnect(function(err){
               finish();
             });
           });

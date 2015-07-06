@@ -24,7 +24,7 @@ var mockdfc = function(){
       return cb();
     }
   }
-}
+};
 
 var dfutils = proxyquire('../../../lib/util/dfutils', {'fh-dfc': mockdfc});
 
@@ -34,4 +34,4 @@ exports.it_should_stop_app = function(finish){
     dfutils.clearInterval(); //need to call this otherwise the test runner will not finish
     finish();
   });
-}
+};

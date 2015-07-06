@@ -6,10 +6,11 @@ var _ = require('underscore');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 
 var cfg = {
-  mongoUrl: 'http://somemongodb',
+  mongoUrl: 'mongodb://localhost:27017/test-fhmbaas-accept',
   mongo: {
     host: 'localhost',
     port: 8888,
+    name: 'fh-mbaas-test',
     admin_auth : {
       user: 'admin',
       pass: 'admin'
@@ -19,14 +20,14 @@ var cfg = {
     "dynofarm": "http://localhost:9000",
     "username":"feedhenry",
     "_password": "feedhenry101",
-    "loglevel": "warn"
+    "loglevel": "warn",
+    "cache_timeout": 1234123
   }
 };
 
 var fhconfig = require('fh-config');
 fhconfig.setRawConfig(cfg);
 
-fhmbaasMiddleware.init(cfg);
 
 var dfutils = require('../../../lib/util/dfutils');
 
@@ -39,28 +40,45 @@ exports.tearDown = function(finish){
   done(finish);
 };
 
+
+exports.test_middleware_config = function(finish) {
+  fhmbaasMiddleware.setConfig(cfg, function(err) {
+    assert.ok(!err,'Error in middleware config');
+    finish();
+  });
+};
+
 exports.test_create_db = function(finish){
   var next = sinon.spy();
   var mockSave = sinon.stub();
   var createDb = sinon.stub();
+  var mockMod = sinon.spy();
 
-  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb}  } ).createDbMiddleware;
+  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} } ).createDbMiddleware;
 
   var req = {
-      params: {
-        appid: "someappguid",
-        domain: "somedomain",
-        environment: "someenvironment",
-        id: "somethemeid"
-      },
-      appMbaasModel: {save: mockSave, name: "unit-testing"}
+    params: {
+      appid: "someappguid",
+      domain: "somedomain",
+      environment: "someenvironment",
+      id: "somethemeid",
+    },
+    cacheKey: "2321312321",
+    body: {'cacheKey':'2321312321'},
+    appMbaasModel: {
+      save: mockSave, 
+      markModified: mockMod, 
+      name: "unit-testing", 
+      migrated: 'true'
+    }
   };
 
   mockSave.callsArg(0); 
   createDb.callsArg(4);
-  createDatabase(req, {}, next);
-
+  createDatabase(req, req, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(mockMod.calledWith('dbConf'));
+  assert.ok(createDb.calledOnce, "Expected createDb To Be Called Once");
   assert.ok(createDb.calledBefore(next));
   assert.ok(mockSave.calledBefore(next));
   finish();
@@ -70,6 +88,7 @@ exports.test_create_db_error = function(finish){
   var next = sinon.spy();
   var mockSave = sinon.stub();
   var createDb = sinon.stub();
+  var mockMod = sinon.spy();
 
   var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb}  } ).createDbMiddleware;
 
@@ -78,16 +97,18 @@ exports.test_create_db_error = function(finish){
         appid: "someappguid",
         domain: "somedomain",
         environment: "someenvironment",
-        id: "somethemeid"
+        id: "somethemeid",
+        cacheKey: "2321312321"
       },
-      appMbaasModel: {save: mockSave, name: "unit-testing"}
+      body: {'cacheKey':'2321312321'},
+      appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing"}
   };
 
   mockSave.callsArgWith(0,new Error('mock error')); 
   createDb.callsArg(4);
   createDatabase(req, {}, next);
-
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(mockMod.calledWith('dbConf'));
   assert.ok(createDb.calledBefore(next));
   assert.equal(next.args[0][0],'Error: mock error');
   finish();
@@ -141,7 +162,7 @@ exports.test_stop_app_error = function(finish){
   stopAppMiddle(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
   assert.ok(stopApp.calledBefore(next));
-  assert.equal(next.args[0][0],'Error: mock error');
+  assert.equal(next.args[0][0],'Error: Failed to stop app unit-testing');
   finish();
 };
 
@@ -163,7 +184,8 @@ exports.test_migrate_db = function(finish){
         domain: "somedomain",
         environment: "someenvironment",
         guid:"4562651426"
-      }
+      },
+      body: {'cacheKey':'2321312321'},
   };
   
   doMigrate.callsArg(5); 
@@ -184,7 +206,6 @@ exports.test_complete_migrate_db = function(finish){
   var req = {
       params: {
         appid: "someappguid",
-        cacheKey: "cahckey456",
         id: "somethemeid"
       },
       appMbaasModel: { 
@@ -201,8 +222,9 @@ exports.test_complete_migrate_db = function(finish){
   mockSave.callsArgWith(0, new Error('mock error'));
   migrateCompleteDb(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
-  assert.equal(next.args[0][0],'Error: mock error');
+  assert.equal(next.args[0][0],'Error: No cacheKey found for app unit-testing');
 
+  req.body = {'cacheKey':'2321312321' };
   next.reset();
   migrateComplete.reset();
   mockSave.reset();
@@ -211,47 +233,16 @@ exports.test_complete_migrate_db = function(finish){
   migrateCompleteDb(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
   assert.ok(migrateComplete.calledBefore(next));
-  //assert.ok(mockSave.migrated);
+  assert.equal(true,mockSave.thisValues[0].migrated);
   finish();
 };
 
 exports.test_drop_db = function(finish){
   var next = sinon.spy();
+  var mockRemove = sinon.stub();
   var dropDb = sinon.stub();
 
-  var dropDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {dropDb: dropDb}  } ).dropDbMiddleware;
-
-  var req = {
-      params: {
-        appid: "someappguid",
-        domain: "somedomain",
-        environment: "someenvironment",
-        id: "somethemeid"
-      },
-      appMbaasModel: { 
-        name: "unit-testing", 
-        migrated: false,
-        dbConf: {
-          user: 'user',
-          name: 'name'
-        }
-      }
-  };
-
-
-  dropDb.callsArg(3);
-  dropDatabase(req, {}, next);
-
-  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
-  //assert.ok(dropDb.calledBefore(next));
-  finish();
-};
-
-exports.test_drop_db_error = function(finish){
-  var next = sinon.spy();
-  var dropDb = sinon.stub();
-
-  var dropDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {dropDb: dropDb}  } ).dropDbMiddleware;
+  var removeDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {dropDb: dropDb}  } ).removeDbMiddleware;
 
   var req = {
       params: {
@@ -266,15 +257,139 @@ exports.test_drop_db_error = function(finish){
         dbConf: {
           user: 'user',
           name: 'name'
-        }
+        },
+        remove: mockRemove
       }
   };
 
 
-  dropDb.callsArgWith(3,new Error('mock error'));
-  dropDatabase(req, {}, next);
-
+  mockRemove.callsArg(0);
+  dropDb.callsArg(3);
+  removeDatabase(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
-  assert.equal(next.args[0][0],'Error: mock error');
+  assert.ok(dropDb.calledOnce, "Expected dropDb To Be Called Once" );
+  assert.ok(mockRemove.calledOnce, "Expected remove To Be Called Once" );
+  assert.ok(dropDb.calledBefore(next));
   finish();
 };
+
+exports.test_drop_db_error = function(finish){
+  var next = sinon.spy();
+  var mockRemove = sinon.stub();
+  var dropDb = sinon.stub();
+
+  var removeDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {dropDb: dropDb}  } ).removeDbMiddleware;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing", 
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        remove: mockRemove
+      }
+  };
+
+
+  mockRemove.callsArg(0);
+  dropDb.callsArgWith(3,new Error('mock error'));
+  removeDatabase(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.equal(next.args[0][0],'Error: Request to remove db for app unit-testing');
+  finish();
+};
+
+
+exports.test_get_models_info = function(finish){
+  var next = sinon.spy();
+  var createDb = sinon.stub();
+  var mockMbaas = sinon.stub();
+  var mockEnv = sinon.stub();
+  
+  var mockFind = function() { 
+    return {
+      findOne : function(args, cb) {
+        return cb();
+      }
+    }
+  }
+
+  var modelsinfo = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , 'fh-mbaas-middleware' : {mbaas: mockFind} , '../models/appEnv.js' : {appEnv: mockEnv} } ).modelsInfo;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing", 
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        type: 'feedhenry',
+        mbaasUrl: 'test-url'
+      },
+      originalUrl: 'testoriginalurl'
+  };
+
+  modelsinfo(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(req.resultData.env , "Should expect request object resultData to be populated");
+  finish();
+};
+
+exports.test_get_models_info_error = function(finish){
+  var next = sinon.spy();
+  var createDb = sinon.stub();
+  var mockMbaas = sinon.stub();
+  var mockEnv = sinon.stub();
+
+  var mockFind = function() {
+    return {
+      findOne : function(args, cb) {
+        return cb(new Error('Mock Error'));
+      }
+    }
+  }
+
+  var modelsinfo = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , 'fh-mbaas-middleware' : {mbaas: mockFind} , '../models/appEnv.js' : {appEnv: mockEnv} } ).modelsInfo;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing", 
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        type: 'feedhenry',
+        mbaasUrl: 'test-url'
+      },
+      originalUrl: 'testoriginalurl'
+  };
+
+  modelsinfo(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.equal(next.args[0][0], "Error: Failed to look up Mbaas/AppMbaas instance");
+  finish();
+};
+
+

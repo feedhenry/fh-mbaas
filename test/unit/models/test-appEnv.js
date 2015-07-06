@@ -16,9 +16,7 @@ exports.test_app_envs = function(finish){
     mbaas: {dbConf: dbConf},
     appMbaas: {
       dbConf: dbConf,
-      isDbMigrated: function(){
-        return true;
-      },
+      migrated: true,
       accessKey: "somembaasaccesskey",
       type: 'feedhenry',
       mbaasUrl: "https://mbaas.somembaas.com"

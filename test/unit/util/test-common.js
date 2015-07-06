@@ -14,7 +14,8 @@ var cfg = {
     "dynofarm": "http://localhost:9000",
     "username":"feedhenry",
     "_password": "feedhenry101",
-    "loglevel": "warn"
+    "loglevel": "warn",
+    "cache_timeout": 1234123
   }
 };
 

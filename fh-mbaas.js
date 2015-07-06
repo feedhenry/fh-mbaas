@@ -154,10 +154,8 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
 
     logger.debug('JSON Config ', jsonConfig);
 
-    fhmbaasMiddleware.init(jsonConfig);
-    var models = fhmbaasMiddleware.models;
-   
-    models.init(jsonConfig , function (err) {
+    // models are also initialised in this call
+    fhmbaasMiddleware.init(jsonConfig, function (err) {
       if(err){
         console.error("FATAL: " + util.inspect(err));
         console.trace();
