@@ -149,7 +149,8 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
           user: conf.rawConfig.mongo.admin_auth.user,
           pass: conf.rawConfig.mongo.admin_auth.pass
         }
-      }
+      },
+      logger: logger
     };
 
     logger.debug('JSON Config ', jsonConfig);

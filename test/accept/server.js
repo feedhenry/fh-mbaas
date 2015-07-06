@@ -7,22 +7,35 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var async = require('async');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
+var bunyan = require('bunyan');
 var ditchServer;
 var dynofarmServer;
 var testConfig = require('../setup.js');
+
+
+
+var log = bunyan.createLogger({
+  name: 'accept-test-logger',
+  streams:[ {
+    level: 'debug',
+    stream: process.stdout,
+    src: true
+  } ]
+});
 
 // used for the models init
 var cfg = {
   mongoUrl: 'mongodb://localhost:27017/test-fhmbaas-accept',
   mongo:{
-    host:'localhost',
+    host: 'localhost',
     port: 27017,
     name: 'test-fhmbaas-accept',
     admin_auth: {
       user: 'admin',
       pass: 'admin'
     }
-  }
+  },
+  logger: log
 };
 
 

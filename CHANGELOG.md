@@ -3,6 +3,7 @@
 ## 2.0.0 - 2015-05-15 - Niall Donnelly & Luigi Zuccarelli
 * FHMAP-666 unit testing update
 * FHMAP-667 acceptance test update
+* FHMAP-693 added to acceptance test to check middleware logger initialise
 * Refactored code for route api
 * Implemented changes middleware initialise
 * FH-42 - Implemented changes for mbaas as service
