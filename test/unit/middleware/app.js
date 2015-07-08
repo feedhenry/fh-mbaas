@@ -3,25 +3,7 @@ var proxyquire = require('proxyquire');
 var assert = require('assert');
 var _ = require('underscore');
 
-var cfg = {
-  mongo: {
-    host: 'localhost',
-    port: 8888,
-    admin_auth : {
-      user: 'admin',
-      pass: 'admin'
-    }
-  },
-  fhdfc: {
-    "dynofarm": "http://localhost:9000",
-    "username":"feedhenry",
-    "_password": "feedhenry101",
-    "loglevel": "warn"
-  }
-};
-
 var fhconfig = require('fh-config');
-fhconfig.setRawConfig(cfg);
 
 var mockRequest = {
   params: {

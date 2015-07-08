@@ -6,19 +6,8 @@ var mongoose = require('mongoose');
 var mockgoose = require('mockgoose');
 mockgoose(mongoose);
 
-var cfg = {
-  mongo: {
-    host: 'localhost',
-    port: 8888,
-    admin_auth: {
-      user: 'admin',
-      pass: 'admin'
-    }
-  }
-};
 
 var fhconfig = require('fh-config');
-fhconfig.setRawConfig(cfg);
 
 var MockMongo = function(success){
   this.success = success;
@@ -62,7 +51,7 @@ exports.it_should_create_mbaas_instance = function(finish){
     assert.equal(created.environment, TEST_ENV);
     assert.ok(null != created.dbConf);
     assert.equal(created.dbConf.host, 'localhost');
-    assert.equal(created.dbConf.port, 8888);
+    assert.equal(created.dbConf.port, 27017);
     assert.equal(created.dbConf.name, TEST_DOMAIN + '_' + TEST_ENV);
     assert.equal(created.dbConf.user, TEST_DOMAIN + '_' + TEST_ENV);
     assert.ok(null != created.dbConf.pass);

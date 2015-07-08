@@ -2,11 +2,11 @@ module.exports = function(grunt) {
   'use strict';
 
   grunt.initConfig({
-    unit: ['turbo test/unit/**/*.js'],
+    unit: ['turbo --setUp=test/setup.js test/unit/**/*.js'],
 
     accept: ['turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js'],
 
-    unit_cover: ['istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- test/unit/**/*.js'],
+    unit_cover: ['istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- --setUp=test/setup.js test/unit/**/*.js'],
 
     accept_cover: ['istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js']
   });

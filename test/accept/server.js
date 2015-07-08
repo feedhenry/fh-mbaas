@@ -7,76 +7,10 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var async = require('async');
 var ditchServer;
-var ditchPort = 19001;
 var dynofarmServer;
-var dynofarmPort = 19002;
+var testConfig = require('../setup.js');
 
 var fhconfig = require('fh-config');
-fhconfig.setRawConfig({
-  fhmbaas:{
-    key:'testkey',
-    protocol: "https"
-  },
-  mongo:{
-    enabled: true,
-    host: 'localhost',
-    port: 27017,
-    name: 'test-fhmbaas-accept',
-    auth: {
-      enabled: false
-    },
-    admin_auth: {
-      user: 'admin',
-      pass: 'admin'
-    }
-  },
-  fhditch:{
-    host:'localhost',
-    port:ditchPort,
-    protocol:'http'
-  },
-  fhdfc:{
-    "dynofarm":'http://localhost:' + dynofarmPort,
-    "username":"fh",
-    "_password": "fh",
-    "loglevel": "warn"
-  },
-  fhamqp:{
-    "enabled": false,
-    "max_connection_retry": 10,
-    "nodes":"localhost:5672",
-    "ssl": false,
-    "vhosts":{
-      "events":{
-        "name":"fhevents",
-        "user":"fheventuser",
-        "password":"fheventpassword"
-      }
-    },
-    "app":{
-      "enabled": false
-    }
-  },
-  fhmessaging:{
-    "enabled": false,
-    "host":"localhost",
-    "protocol":"http",
-    "port":8803,
-    "path":"msg/TOPIC",
-    "cluster":"development",
-    "realtime": false,
-    "files":{
-      "recovery_file":"../messages/recovery.log",
-      "backup_file":"../messages/backup.log"
-    }
-  },
-  fhstats:{
-    "enabled": false,
-    "host":"localhost",
-    "port": 8804,
-    "protocol": "http"
-  }
-});
 
 var auth = require('../../lib/middleware/auth');
 var dfutils = require('../../lib/util/dfutils');
@@ -102,8 +36,8 @@ function setupDitchServer(cb){
   ditchApp.use('*', function(req, res){
     return res.json({});
   });
-  ditchServer = ditchApp.listen(ditchPort, function(){
-    console.log('Ditch server is running on port ' + ditchPort);
+  ditchServer = ditchApp.listen(testConfig.ditchPort, function(){
+    console.log('Ditch server is running on port ' + testConfig.ditchPort);
     cb();
   });
 }
@@ -115,8 +49,8 @@ function setupDynofarm(cb){
     console.log('[dynofarm] got request, url = ' + req.url);
     return res.json([]);
   });
-  dynofarmServer = dynoApp.listen(dynofarmPort, function(){
-    console.log('Dynofarm server is running on port ' + dynofarmPort);
+  dynofarmServer = dynoApp.listen(testConfig.dynofarmPort, function(){
+    console.log('Dynofarm server is running on port ' + testConfig.dynofarmPort);
     cb();
   });
 }

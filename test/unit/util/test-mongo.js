@@ -12,7 +12,7 @@ exports.it_should_create_mongo_db = function(cb) {
           db: function(name) {
             return {
               authenticate: function(user, pass, opts, cb1) {
-                assert.equal(user, 'super');
+                assert.equal(user, 'admin');
                 return cb1();
               },
               addUser: function(user, pwd, cb) {
@@ -32,19 +32,7 @@ exports.it_should_create_mongo_db = function(cb) {
 
   var mongo = proxyquire('../../../lib/util/mongo.js', {'mongodb': mongodb});
   var fhconfig = require('fh-config');
-  fhconfig.setRawConfig({
-    mongo:{
-      host: 'dummyhost',
-      port: 8000,
-      auth:{
-        enabled: false
-      },
-      admin_auth:{
-        user: 'super',
-        pass: 'pass'
-      }
-    }
-  });
+
   mongo.createDb(fhconfig, 'a', 'b', 'bar', function(err) {
     assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
     
@@ -79,7 +67,7 @@ exports.it_should_drop_mongo_db = function(finish){
                 return cb();
               },
               authenticate: function(user, pass, opts, cb1) {
-                assert.equal(user, 'super');
+                assert.equal(user, 'admin');
                 return cb1();
               },
               close: function(){}
@@ -95,19 +83,6 @@ exports.it_should_drop_mongo_db = function(finish){
   var mongo = proxyquire('../../../lib/util/mongo.js', {'mongodb': mongodb});
 
   var fhconfig = require('fh-config');
-  fhconfig.setRawConfig({
-    mongo:{
-      host: 'dummyhost',
-      port: 8000,
-      auth:{
-        enabled: false
-      },
-      admin_auth:{
-        user: 'super',
-        pass: 'pass'
-      }
-    }
-  });
   mongo.dropDb(fhconfig, TEST_USER, TEST_DB, function(err) {
     assert.ok(!err, 'Unexpected error: ' + util.inspect(err));
     finish();

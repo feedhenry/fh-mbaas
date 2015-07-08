@@ -7,71 +7,6 @@ var dbConf = {
 };
 
 var fhconfig = require('fh-config');
-fhconfig.setRawConfig({
-  fhmbaas:{
-    key:'testkey',
-    protocol: 'https'
-  },
-  mongo:{
-    enabled: true,
-    host: 'localhost',
-    port: 27017,
-    name: 'test-fhmbaas-accept',
-    auth: {
-      enabled: false
-    },
-    admin_auth: {
-      user: 'admin',
-      pass: 'admin'
-    }
-  },
-  fhditch:{
-    host:'localhost',
-    port:8803,
-    protocol:'http'
-  },
-  fhdfc:{
-    "dynofarm":'http://localhost:9000',
-    "username":"fh",
-    "_password": "fh",
-    "loglevel": "warn"
-  },
-  fhamqp:{
-    "enabled": false,
-    "max_connection_retry": 10,
-    "nodes":"localhost:5672",
-    "ssl": false,
-    "vhosts":{
-      "events":{
-        "name":"fhevents",
-        "user":"fheventuser",
-        "password":"fheventpassword"
-      }
-    },
-    "app":{
-      "enabled": false
-    }
-  },
-  fhmessaging:{
-    "enabled": false,
-    "host":"localhost",
-    "protocol":"http",
-    "port":8803,
-    "path":"msg/TOPIC",
-    "cluster":"development",
-    "realtime": false,
-    "files":{
-      "recovery_file":"../messages/recovery.log",
-      "backup_file":"../messages/backup.log"
-    }
-  },
-  fhstats:{
-    "enabled": false,
-    "host":"localhost",
-    "port": 8804,
-    "protocol": "http"
-  }
-});
 
 var appEnv = require('../../../lib/models/appEnv');
 var assert = require('assert');
@@ -100,7 +35,7 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_AMQP_PASS, 'fheventpassword');
   
   assert.equal(envs.FH_DITCH_HOST, 'localhost');
-  assert.equal(envs.FH_DITCH_PORT, 8803);
+  assert.equal(envs.FH_DITCH_PORT, 19001);
   assert.equal(envs.FH_DITCH_PROTOCOL, 'http');
 
   assert.equal(envs.FH_MESSAGING_BACKUP_FILE, '../messages/backup.log');

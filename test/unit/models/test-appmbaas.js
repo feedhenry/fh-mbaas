@@ -8,25 +8,7 @@ var mockgoose = require('mockgoose');
 var _ = require('underscore');
 mockgoose(mongoose);
 
-var cfg = {
-  mongo: {
-    host: 'localhost',
-    port: 8888,
-    admin_auth : {
-      user: 'admin',
-      pass: 'admin'
-    }
-  },
-  fhdfc: {
-    "dynofarm": "http://localhost:9000",
-    "username":"feedhenry",
-    "_password": "feedhenry101",
-    "loglevel": "warn"
-  }
-};
-
 var fhconfig = require('fh-config');
-fhconfig.setRawConfig(cfg);
 
 var mongo = require('../../../lib/util/mongo');
 var mockMongo = sinon.mock(mongo);
