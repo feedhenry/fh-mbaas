@@ -1,4 +1,43 @@
 #Component: fh-mbaas
+## 2.1.0 - 2015-07-19 - Craig Brookes, Graham Hillis
+* add config for crash monitor
+* wire up fh-mbaas-notifications
+
+Change to config for amqp (auto for fhcap)
+
+fhamqp.vhosts now needs to look like:
+
+"vhosts": {
+      "events": {
+        "clusterNodes": [
+          "amqp://fheventuser:fheventpassword@node1.feedhenry.local:5672/fhevents"
+        ]
+      },
+      "internal":{
+        "clusterNodes": [
+          "amqp://fhinternal:Jdxbf9f4hkJvs7T@node1.feedhenry.local:5672/fhinternal"
+        ]
+      }
+      
+two new sections to the config have been added also:
+      
+      "crash_monitor":{
+          "enabled":true,
+          "min_num_crashes":5,
+          "max_num_crashes":40,
+          "tolerance":1,
+          "base_time_seconds":60,
+          "sample_time_hrs":1
+        },
+        "email":{
+          "service": "",
+          "auth_user": "",
+          "auth_pass": "",
+          "alert_email_from": "no-reply@feedhenry.com",
+          "alert_email_bcc": ""
+        }
+
+More can be read about the crash monitor at docs/CrashMonitor.md
 
 ## 2.0.9 - 2015-10-01 - Gerard Ryan
 * FH-1825 - Handle MongoDB not being ready on startup with exponential backoff

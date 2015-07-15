@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "2.0.9-BUILD-NUMBER",
+  "version": "2.1.0-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -22,10 +22,11 @@
     "cors": "^2.3.1",
     "cuid": "^1.2.4",
     "express": "^4.4.5",
+    "fh-amqp-js": "^0.5.0",
     "fh-config": "^0.1.2",
     "fh-forms": "1.1.7",
     "fh-health": "0.0.6",
-    "fh-mbaas-middleware": "^1.0.11",
+    "fh-mbaas-middleware": "^1.1.2",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",
@@ -35,6 +36,7 @@
     "multer": "0.1.8",
     "optimist": "^0.6.1",
     "rc": "^0.4.0",
+    "redis": "0.8.2",
     "request": "^2.45.0",
     "underscore": "^1.6.0"
   },

@@ -178,8 +178,8 @@ exports.setUp = function(finish){
             fhmbaasMiddleware.init(cfg,function(err){
               assert.ok(!err, 'Failed to init middleware models : ' + util.inspect(err));
 
-              app.use('/sys', require('../../lib/routes/sys.js')());
-              app.use('/api/mbaas', require('../../lib/routes/api'));
+              app.use('/sys', require('../../lib/handlers/sys.js')());
+              app.use('/api/mbaas', require('../../lib/handlers/api'));
 
               var port = 18819;
               server = app.listen(port, function(){
