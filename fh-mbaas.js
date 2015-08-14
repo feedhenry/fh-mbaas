@@ -131,7 +131,7 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
     }));
 
     // Parse JSON payloads
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({limit: fhconfig.value('fhmbaas.maxpayloadsize') || "20mb"}));
 
     //Multipart Form Request Parser
     app.use(multer({
