@@ -6,93 +6,57 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var async = require('async');
+var fhmbaasMiddleware = require('fh-mbaas-middleware');
+var bunyan = require('bunyan');
 var ditchServer;
-var ditchPort = 19001;
 var dynofarmServer;
-var dynofarmPort = 19002;
+var testConfig = require('../setup.js');
 
-var fhconfig = require('fh-config');
-fhconfig.setRawConfig({
-  fhmbaas:{
-    key:'testkey'
-  },
+
+
+var log = bunyan.createLogger({
+  name: 'accept-test-logger',
+  streams:[ {
+    level: 'debug',
+    stream: process.stdout,
+    src: true
+  } ]
+});
+
+// used for the models init
+var cfg = {
+  mongoUrl: 'mongodb://localhost:27017/test-fhmbaas-accept',
   mongo:{
-    enabled: true,
     host: 'localhost',
     port: 27017,
     name: 'test-fhmbaas-accept',
-    auth: {
-      enabled: false
-    },
     admin_auth: {
       user: 'admin',
       pass: 'admin'
     }
   },
-  fhditch:{
-    host:'localhost',
-    port:ditchPort,
-    protocol:'http'
-  },
-  fhdfc:{
-    "dynofarm":'http://localhost:' + dynofarmPort,
-    "username":"fh",
-    "_password": "fh",
-    "loglevel": "warn"
-  },
-  fhamqp:{
-    "enabled": false,
-    "max_connection_retry": 10,
-    "nodes":"localhost:5672",
-    "ssl": false,
-    "vhosts":{
-      "events":{
-        "name":"fhevents",
-        "user":"fheventuser",
-        "password":"fheventpassword"
-      }
-    },
-    "app":{
-      "enabled": false
-    }
-  },
-  fhmessaging:{
-    "enabled": false,
-    "host":"localhost",
-    "protocol":"http",
-    "port":8803,
-    "path":"msg/TOPIC",
-    "cluster":"development",
-    "realtime": false,
-    "files":{
-      "recovery_file":"../messages/recovery.log",
-      "backup_file":"../messages/backup.log"
-    }
-  },
-  fhstats:{
-    "enabled": false,
-    "host":"localhost",
-    "port": 8804,
-    "protocol": "http"
-  }
-});
+  logger: log
+};
 
-var auth = require('../../lib/middleware/auth');
-var dfutils = require('../../lib/util/dfutils');
-var models = require('../../lib/models')();
+
+var fhconfig = require('fh-config');
+
+var auth = require('../../lib/middleware/auth.js'); 
+var dfutils = require('../../lib/util/dfutils.js');
+
+var logger = fhconfig.getLogger();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(bodyParser.json());
-app.use('/api', auth(fhconfig));
+app.use('/api', auth.admin(fhconfig));
 
 var server;
 
 var deleteAmdinUser = false;
 var new_db_prefix = "fhmbaas-accept-test";
-
 
 
 function setupDitchServer(cb){
@@ -101,8 +65,8 @@ function setupDitchServer(cb){
   ditchApp.use('*', function(req, res){
     return res.json({});
   });
-  ditchServer = ditchApp.listen(ditchPort, function(){
-    console.log('Ditch server is running on port ' + ditchPort);
+  ditchServer = ditchApp.listen(testConfig.ditchPort, function(){
+    console.log('Ditch server is running on port ' + testConfig.ditchPort);
     cb();
   });
 }
@@ -111,11 +75,11 @@ function setupDynofarm(cb){
   var dynoApp = express();
   dynoApp.use(bodyParser.json());
   dynoApp.use('*', function(req, res){
-    console.log('[dynofarm] got request, url = ' + req.url);
+    logger.info('[dynofarm] got request, url = ' + req.url);
     return res.json([]);
   });
-  dynofarmServer = dynoApp.listen(dynofarmPort, function(){
-    console.log('Dynofarm server is running on port ' + dynofarmPort);
+  dynofarmServer = dynoApp.listen(testConfig.dynofarmPort, function(){
+    console.log('Dynofarm server is running on port ' + testConfig.dynofarmPort);
     cb();
   });
 }
@@ -134,7 +98,7 @@ function createDBAdminUser(db, user, pass, cb){
     if(err){
       //create admin user, and mark for removal when test finishes
       adminDb.addUser(user, pass, function(err, result){
-        console.log('Creating admin db user');
+        logger.info('Creating admin db user');
         assert.ok(!err, 'can not create admin user : ' + util.inspect(err));
         deleteAmdinUser = true;
         cb();
@@ -149,7 +113,7 @@ function createDBAdminUser(db, user, pass, cb){
 function dropDBAdminUser(db, user, cb){
   if(deleteAmdinUser){
     var adminDb = db.admin();
-    console.log('Remove admin db user');
+    logger.info('Remove admin db user');
     adminDb.removeUser(user, function(err){
       cb();
     });
@@ -161,7 +125,7 @@ function dropDBAdminUser(db, user, cb){
 
 function dropCollections(db, collections, cb) {
   async.each(collections, function(collection, cb){
-    console.log('Drop db collection ' + collection);
+    logger.info('Drop db collection ' + collection);
     db.dropCollection(collection, function(err, results){
       cb();
     });
@@ -176,19 +140,19 @@ function dropDbForDomain(db, cb){
     var doDbRemove = ['fhmbaas-accept-test-domain_test_appenvtest', 'test-fhmbaas-accept']; 
     dbs = dbs.databases;
     for(var i=0;i<dbs.length;i++){
-      console.log('db name = ' + dbs[i].name);
+      logger.info('db name = ' + dbs[i].name);
       if(dbs[i].name.indexOf(new_db_prefix) >= 0){
         doDbRemove.push(dbs[i].name);
       }
     }
-    console.log('dbs to remove = ' + doDbRemove);
+    logger.info('dbs to remove = ' + doDbRemove);
     if(doDbRemove.length > 0){
       async.each(doDbRemove, function(dbname, callback){
-        console.log('Remove test db and its user : ' + dbname);
+        logger.info('Remove test db and its user : ' + dbname);
         var dbToRemove = db.db(dbname);
         dbToRemove.removeUser(dbname, function(err){
           if(err){
-            console.error('Failed to remove user :' + dbname);
+            logger.error('Failed to remove user :' + dbname);
           }
           dbToRemove.dropDatabase(function(err){
             assert.ok(!err, 'Failed to drop db : ' + util.inspect(err));
@@ -205,21 +169,21 @@ function dropDbForDomain(db, cb){
 }
 
 exports.setUp = function(finish){
-  console.log('Running setUp for acceptance tests...');
+  logger.info('Running setUp for acceptance tests...');
   connectDb(function(err, db){
     createDBAdminUser(db, fhconfig.value('mongo.admin_auth.user'), fhconfig.value('mongo.admin_auth.pass'), function(err){
       dropCollections(db, ['mbaas', 'appmbaas'], function(err, result){
         dropDbForDomain(db, function(err){
           db.close(true, function(){
-            models.init(function(err){
-              assert.ok(!err, 'Failed to init models : ' + util.inspect(err));
+            fhmbaasMiddleware.init(cfg,function(err){
+              assert.ok(!err, 'Failed to init middleware models : ' + util.inspect(err));
 
               app.use('/sys', require('../../lib/routes/sys.js')());
-              app.use('/api/mbaas', require('../../lib/routes/api')(models));
+              app.use('/api/mbaas', require('../../lib/routes/api'));
 
               var port = 18819;
               server = app.listen(port, function(){
-                console.log("Test App started at: " + new Date() + " on port: " + port);
+                logger.info("Test App started at: " + new Date() + " on port: " + port);
                 setupDitchServer(function(){
                   setupDynofarm(function(){
                     finish();
@@ -232,7 +196,7 @@ exports.setUp = function(finish){
       });
     });
   });
-}
+};
 
 function removeAll(finish){
   connectDb(function(err, db){
@@ -240,7 +204,7 @@ function removeAll(finish){
       dropCollections(db, ['mbaas', 'appmbaas'], function(){
         dropDbForDomain(db, function(){
           db.close(true, function(){
-            models.disconnect(function(err){
+            fhmbaasMiddleware.models.disconnect(function(err){
               finish();
             });
           });
@@ -251,7 +215,7 @@ function removeAll(finish){
 }
 
 function closeTestServer(cb){
-  console.log('close test server');
+  logger.info('close test server');
   if(server){
     server.close(cb);
   } else {
@@ -260,7 +224,7 @@ function closeTestServer(cb){
 }
 
 function closeDitchServer(cb){
-  console.log('close ditch server');
+  logger.info('close ditch server');
   if(ditchServer){
     ditchServer.close(cb);
   } else {
@@ -269,7 +233,7 @@ function closeDitchServer(cb){
 }
 
 function closeDynoServer(cb){
-  console.log('close dynofarm server');
+  logger.info('close dynofarm server');
   if(dynofarmServer){
     dynofarmServer.close(cb);
   } else {
@@ -278,8 +242,9 @@ function closeDynoServer(cb){
 }
 
 exports.tearDown = function(finish) {
-  console.log('Running tearDown for acceptance tests...');
+  logger.info('Running tearDown for acceptance tests...');
   dfutils.clearInterval();
+  logger.info('Cleared Interval (cache) ');
   closeDitchServer(function(){
     closeDynoServer(function(){
       closeTestServer(function(){

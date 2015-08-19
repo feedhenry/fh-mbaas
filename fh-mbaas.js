@@ -10,12 +10,15 @@ var args = require('optimist').argv;
 var fs = require('fs');
 var path = require('path');
 var cluster = require('cluster');
-var server;
 var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
-var auth = require('./lib/middleware/auth');
 var fhconfig = require('fh-config');
+var multer = require('multer');
+var forms = require('fh-forms');
+var fhmbaasMiddleware = require('fh-mbaas-middleware');
+
+
 
 // args and usage
 function usage() {
@@ -30,6 +33,7 @@ if (args.h) {
 if (args._.length < 1) {
   usage();
 }
+
 
 // Show 'starting' message
 var workerId = process.env.NODE_WORKER_ID || 0;
@@ -56,6 +60,9 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
   }
 
   var logger = fhconfig.getLogger();
+
+  //Setting Logger For The Forms Middleware Functions
+  forms.core.setLogger(logger);
 
   // Get our version number from package.json
   var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
@@ -124,24 +131,46 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
     }));
 
     // Parse JSON payloads
-    app.use(bodyParser.json());
-    
-    //add authentication to the /api path
-    app.use('/api', auth(fhconfig));
+    app.use(bodyParser.json({limit: fhconfig.value('fhmbaas.maxpayloadsize') || "20mb"}));
 
-    var models = require('./lib/models.js')();
-    models.init(function(err) {
-      if (err) {
+    //Multipart Form Request Parser
+    app.use(multer({
+      dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
+    }));
+
+    var conf = fhconfig.getConfig();
+    var jsonConfig = {
+      mongoUrl: fhconfig.mongoConnectionString(),
+      mongo : {
+        host: conf.rawConfig.mongo.host,
+        port: conf.rawConfig.mongo.port,
+        name: conf.rawConfig.mongo.name,
+        admin_auth: {
+          user: conf.rawConfig.mongo.admin_auth.user,
+          pass: conf.rawConfig.mongo.admin_auth.pass
+        }
+      },
+      logger: logger
+    };
+
+    logger.debug('JSON Config ', jsonConfig);
+
+    // models are also initialised in this call
+    fhmbaasMiddleware.init(jsonConfig, function (err) {
+      if(err){
         console.error("FATAL: " + util.inspect(err));
         console.trace();
         return cleanShutdown(); // exit on uncaught exception
       }
 
       app.use('/sys', require('./lib/routes/sys.js')());
-      app.use('/api/mbaas', require('./lib/routes/api.js')(models));
+      app.use('/api/mbaas', require('./lib/routes/api.js'));
+
+      app.use('/api/app', require('./lib/routes/app.js'));
+
 
       var port = fhconfig.int('fhmbaas.port');
-      server = app.listen(port, function() {
+      app.listen(port, function () {
         console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
       });
     });

@@ -7,7 +7,6 @@ var APPNAME = "testappname";
 var mockdfc = function(){
   return {
     dynos : function(args, cb){
-      console.log('get dyno for ' + args[0]);
       if(args[0] === DOMAIN){
         return cb();
       } else {
@@ -25,7 +24,7 @@ var mockdfc = function(){
       return cb();
     }
   }
-}
+};
 
 var dfutils = proxyquire('../../../lib/util/dfutils', {'fh-dfc': mockdfc});
 
@@ -35,4 +34,4 @@ exports.it_should_stop_app = function(finish){
     dfutils.clearInterval(); //need to call this otherwise the test runner will not finish
     finish();
   });
-}
+};

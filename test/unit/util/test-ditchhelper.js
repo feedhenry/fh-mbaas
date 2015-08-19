@@ -3,13 +3,7 @@ var assert = require('assert');
 var sinon = require('sinon');
 var request = require('request');
 var fhconfig = require('fh-config');
-fhconfig.setRawConfig({
-  fhditch: {
-    host: 'localhost',
-    protocol: 'http',
-    port: 9999
-  }
-});
+
 
 var DOMAIN = 'test';
 var ENVIRONMENT = 'test';

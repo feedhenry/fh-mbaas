@@ -1,4 +1,14 @@
 #Component: fh-mbaas
+
+## 2.0.0 - 2015-05-15 - Niall Donnelly & Luigi Zuccarelli
+* FHMAP-666 unit testing update
+* FHMAP-667 acceptance test update
+* FHMAP-693 added to acceptance test to check middleware logger initialise
+* Refactored code for route api
+* Implemented changes middleware initialise
+* FH-42 - Implemented changes for mbaas as service
+* FH-42 - Added Forms APIs To Supercore For Core And Apps Functionality
+
 ## 1.0.7 - 2015-05-07 - Gerard Ryan
 * Fix some jshint errors
 * Clean up Gruntfile.js & use grunt-fh-build

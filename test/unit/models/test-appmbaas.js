@@ -2,15 +2,15 @@ var proxyquire = require('proxyquire');
 var assert = require('assert');
 var util = require('util');
 var sinon = require('sinon');
-
-var mongoose = require('mongoose');
-var mockgoose = require('mockgoose');
-mockgoose(mongoose);
+var _ = require('underscore');
+var fhmbaasMiddleware = require('fh-mbaas-middleware');
 
 var cfg = {
+  mongoUrl: 'mongodb://localhost:27017/test-fhmbaas-accept',
   mongo: {
     host: 'localhost',
     port: 8888,
+    name: 'fh-mbaas-test',
     admin_auth : {
       user: 'admin',
       pass: 'admin'
@@ -20,255 +20,376 @@ var cfg = {
     "dynofarm": "http://localhost:9000",
     "username":"feedhenry",
     "_password": "feedhenry101",
-    "loglevel": "warn"
+    "loglevel": "warn",
+    "cache_timeout": 1234123
   }
 };
 
 var fhconfig = require('fh-config');
 fhconfig.setRawConfig(cfg);
 
-var mongo = require('../../../lib/util/mongo');
-var mockMongo = sinon.mock(mongo);
-var createDb = mockMongo.expects('createDb');
-var dropDb = mockMongo.expects('dropDb');
 
 var dfutils = require('../../../lib/util/dfutils');
-var ditchhelper = require('../../../lib/util/ditchhelper');
-
-var mockDfutils = sinon.stub(dfutils, 'stopApp');
-var mockDitch = sinon.mock(ditchhelper);
-var doMigrate = mockDitch.expects('doMigrate');
-var migrateComplete = mockDitch.expects('migrateComplete');
-
-var AppMbaasSchema = proxyquire('../../../lib/models/appMbaas', {'../util/mongo': mockMongo, '../util/dfutils':mockDfutils, '../util/ditchhelper': mockDitch});
-
-var DOMAIN = "appmbaas_unittest_domain";
-var ENVIRONMENT = "appmbaas_unittest_env";
-var APPNAME = "appmbaas_unittest_app";
-
 
 function done(finish){
   dfutils.clearInterval();
   finish();
 }
 
-exports.it_should_create = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  AppMbaas.createModel(APPNAME, DOMAIN, ENVIRONMENT, fhconfig, function(err, created){
-    assert.ok(!err, util.inspect(err));
-
-    assert.equal(created.domain, DOMAIN, 'app mbaas instance domain does not match');
-    assert.equal(created.environment, ENVIRONMENT, 'app mbaas instance environment does not match');
-
-    assert.ok(null != created.dbConf);
-    assert.ok(null != created.dbConf.host);
-    assert.ok(null != created.dbConf.port);
-    assert.ok(null != created.dbConf.name);
-    assert.ok(null != created.dbConf.user);
-    assert.ok(null != created.dbConf.pass);
-
-    AppMbaas.createModel(APPNAME, DOMAIN, ENVIRONMENT, fhconfig, function(err){
-      assert.ok(err);
-      done(finish);
-    });
-  });
+exports.tearDown = function(finish){
+  done(finish);
 };
 
-exports.test_stop_app = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_stop_app',
-    domain: DOMAIN,
-    environment: ENVIRONMENT
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
-    var cb = sinon.spy();
-    mockDfutils.callsArg(3);
-    saved.stopApp(cb);
-    mockDfutils.calledWith(DOMAIN, ENVIRONMENT, APPNAME + '_test_lock');
-    assert(cb.calledOnce);
 
-    mockDfutils.reset();
-    var error = new Error('mock error');
-    mockDfutils.callsArgWith(3, error);
-    saved.stopApp(cb);
-
-    assert.ok(cb.calledWith(error));
-    done(finish);
-  });
-};
-
-exports.test_migrate_db = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_migrate_db',
-    domain: DOMAIN,
-    environment: ENVIRONMENT
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
-    var cb = sinon.spy();
-    var cacheKey = 'tetscachekey';
-    var appGuid = 'testappguid';
-
-    cb.reset();
-    doMigrate.reset();
-    doMigrate.callsArg(5);
-    saved.migrateDb(cacheKey, appGuid, function(){
-      assert.equal(doMigrate.callCount, 1);
-      doMigrate.withArgs(DOMAIN, ENVIRONMENT, APPNAME + '_test_migrate_db', cacheKey, appGuid);
-      doMigrate.verify();
-      done(finish);
-    });
-  });
-};
-
-exports.test_complete_migrate = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_complete_migrate',
-    domain: DOMAIN,
-    environment: ENVIRONMENT
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
-
-    var cb = sinon.spy();
-
-    var cacheKey = 'tetscachekey';
-    var appGuid = 'testappguid';
-
-    cb.reset();
-    migrateComplete.reset();
-    migrateComplete.callsArg(5);
-    saved.completeMigrate(cacheKey, appGuid, function(){
-      assert.ok(saved.migrated);
-      assert.equal(migrateComplete.callCount, 1);
-      migrateComplete.withArgs(DOMAIN, ENVIRONMENT, APPNAME + '_test_complete_migrate', cacheKey, appGuid);
-      migrateComplete.verify();
-
-      done(finish);
-    });
+exports.test_middleware_config = function(finish) {
+  fhmbaasMiddleware.setConfig(cfg, function(err) {
+    assert.ok(!err,'Error in middleware config');
+    finish();
   });
 };
 
 exports.test_create_db = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_create_db',
-    domain: DOMAIN,
-    environment: ENVIRONMENT,
-    dbConf:{
-      host:'localhost',
-      port:8888,
-      name:'testdb',
-      user:'testuser'
+  var next = sinon.spy();
+  var mockSave = sinon.stub();
+  var createDb = sinon.stub();
+  var mockMod = sinon.spy();
+
+  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} } ).createDbMiddleware;
+
+  var req = {
+    params: {
+      appid: "someappguid",
+      domain: "somedomain",
+      environment: "someenvironment",
+      id: "somethemeid",
+    },
+    cacheKey: "2321312321",
+    body: {'cacheKey':'2321312321'},
+    appMbaasModel: {
+      save: mockSave, 
+      markModified: mockMod, 
+      name: "unit-testing", 
+      migrated: 'true'
     }
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
+  };
 
-    createDb.reset();
-    createDb.callsArg(4);
-    saved.createDb(fhconfig, function(err, conf){
-      assert.ok(err);
-
-      saved.dbConf.pass = 'testpass';
-      saved.save(function(err, newsaved){
-
-        newsaved.createDb(fhconfig, function(err,conf){
-          assert.ok(!err, util.inspect(err));
-          assert.ok(null != conf);
-
-          assert.equal(createDb.callCount, 1);
-          createDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'});
-
-          done(finish);
-        });
-      });
-    });
-  });
+  mockSave.callsArg(0); 
+  createDb.callsArg(4);
+  createDatabase(req, req, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(mockMod.calledWith('dbConf'));
+  assert.ok(createDb.calledOnce, "Expected createDb To Be Called Once");
+  assert.ok(createDb.calledBefore(next));
+  assert.ok(mockSave.calledBefore(next));
+  finish();
 };
 
 exports.test_create_db_error = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_create_db_error',
-    domain: DOMAIN,
-    environment: ENVIRONMENT,
-    dbConf:{
-      host:'localhost',
-      port:8888,
-      name:'testdb',
-      user:'testuser'
-    }
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
+  var next = sinon.spy();
+  var mockSave = sinon.stub();
+  var createDb = sinon.stub();
+  var mockMod = sinon.spy();
 
-    createDb.reset();
+  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb}  } ).createDbMiddleware;
 
-    saved.createDb(fhconfig, function(err, conf){
-      assert.ok(err);
-      done(finish);
-    });
-  });
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid",
+        cacheKey: "2321312321"
+      },
+      body: {'cacheKey':'2321312321'},
+      appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing"}
+  };
+
+  mockSave.callsArgWith(0,new Error('mock error')); 
+  createDb.callsArg(4);
+  createDatabase(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(mockMod.calledWith('dbConf'));
+  assert.ok(createDb.calledBefore(next));
+  assert.equal(next.args[0][0],'Error: mock error');
+  finish();
+};
+
+
+exports.test_stop_app = function(finish){
+  var next = sinon.spy();
+  var stopApp = sinon.stub();
+  var createDb = sinon.stub();
+
+  var stopAppMiddle = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , '../util/dfutils.js': {stopApp: stopApp} } ).stopAppMiddleware;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { name: "unit-testing"}
+  };
+  
+  stopApp.callsArg(3); 
+  stopAppMiddle(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(stopApp.calledBefore(next));
+  finish();
+};
+
+exports.test_stop_app_error = function(finish){
+  var next = sinon.spy();
+  var stopApp = sinon.stub();
+  var createDb = sinon.stub();
+
+  var stopAppMiddle = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , '../util/dfutils.js': {stopApp: stopApp} } ).stopAppMiddleware;
+
+  var req = {
+      params: {
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing",
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+      }
+  };
+  
+  stopApp.callsArgWith(3, new Error('mock error')); 
+  stopAppMiddle(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(stopApp.calledBefore(next));
+  assert.equal(next.args[0][0],'Error: Failed to stop app unit-testing');
+  finish();
+};
+
+exports.test_migrate_db = function(finish){
+  var next = sinon.spy();
+  var doMigrate = sinon.stub();
+  var createDb = sinon.stub();
+
+  var migrateDbMiddle = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , '../util/ditchhelper.js': {doMigrate: doMigrate} } ).migrateDbMiddleware;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        cacheKey: "cahckey456",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing",
+        domain: "somedomain",
+        environment: "someenvironment",
+        guid:"4562651426"
+      },
+      body: {'cacheKey':'2321312321'},
+  };
+  
+  doMigrate.callsArg(5); 
+  migrateDbMiddle(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(doMigrate.calledBefore(next));
+  finish();
+};
+
+exports.test_complete_migrate_db = function(finish){
+  var next = sinon.spy();
+  var migrateComplete = sinon.stub();
+  var mockSave = sinon.stub();
+  var createDb = sinon.stub();
+
+  var migrateCompleteDb = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , '../util/ditchhelper.js': {migrateComplete: migrateComplete} } ).completeMigrateDbMiddleware;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing",
+        domain: "somedomain",
+        environment: "someenvironment",
+        guid:"4562651426",
+        save : mockSave
+      }
+  };
+  
+  migrateComplete.callsArg(5);
+  // first save with error
+  mockSave.callsArgWith(0, new Error('mock error'));
+  migrateCompleteDb(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.equal(next.args[0][0],'Error: No cacheKey found for app unit-testing');
+
+  req.body = {'cacheKey':'2321312321' };
+  next.reset();
+  migrateComplete.reset();
+  mockSave.reset();
+  migrateComplete.callsArg(5);
+  mockSave.callsArg(0);
+  migrateCompleteDb(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(migrateComplete.calledBefore(next));
+  assert.equal(true,mockSave.thisValues[0].migrated);
+  finish();
 };
 
 exports.test_drop_db = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_drop_db',
-    domain: DOMAIN,
-    environment: ENVIRONMENT,
-    dbConf: {
-      user: 'testuser',
-      name: 'testdb'
-    }
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
+  var next = sinon.spy();
+  var mockRemove = sinon.stub();
+  var dropDb = sinon.stub();
 
-    dropDb.reset();
-    dropDb.callsArg(3);
-    saved.removeDb(fhconfig, function(err){
-      assert.ok(!err, util.inspect(err));
-      assert.equal(dropDb.callCount, 1);
-      dropDb.calledWith({host: 'localhost', port: 8888, user: 'admin', pass: 'admin'}, 'testuser', 'testdb');
-      
-      done(finish);
-    });
-  });
+  var removeDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {dropDb: dropDb}  } ).removeDbMiddleware;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing", 
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        remove: mockRemove
+      }
+  };
+
+
+  mockRemove.callsArg(0);
+  dropDb.callsArg(3);
+  removeDatabase(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(dropDb.calledOnce, "Expected dropDb To Be Called Once" );
+  assert.ok(mockRemove.calledOnce, "Expected remove To Be Called Once" );
+  assert.ok(dropDb.calledBefore(next));
+  finish();
 };
 
 exports.test_drop_db_error = function(finish){
-  mockgoose.reset();
-  var AppMbaas = mongoose.model('AppMbaas', AppMbaasSchema);
-  var appmbaas = new AppMbaas({
-    name: APPNAME + '_test_drop_db_error',
-    domain: DOMAIN,
-    environment: ENVIRONMENT,
-    dbConf: {
-      user: 'testuser',
-      name: 'testdb'
-    }
-  });
-  appmbaas.save(function(err, saved){
-    assert.ok(!err, util.inspect(err));
+  var next = sinon.spy();
+  var mockRemove = sinon.stub();
+  var dropDb = sinon.stub();
 
-    dropDb.reset();
-    dropDb.callsArgWith(3, new Error('mock error'));
-    saved.removeDb(fhconfig, function(err){
-      assert.ok(err);
-      done(finish);
-    });
-  });
+  var removeDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {dropDb: dropDb}  } ).removeDbMiddleware;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing", 
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        remove: mockRemove
+      }
+  };
+
+
+  mockRemove.callsArg(0);
+  dropDb.callsArgWith(3,new Error('mock error'));
+  removeDatabase(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.equal(next.args[0][0],'Error: Request to remove db for app unit-testing');
+  finish();
 };
+
+
+exports.test_get_models_info = function(finish){
+  var next = sinon.spy();
+  var createDb = sinon.stub();
+  var mockMbaas = sinon.stub();
+  var mockEnv = sinon.stub();
+  
+  var mockFind = function() { 
+    return {
+      findOne : function(args, cb) {
+        return cb();
+      }
+    }
+  }
+
+  var modelsinfo = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , 'fh-mbaas-middleware' : {mbaas: mockFind} , '../models/appEnv.js' : {appEnv: mockEnv} } ).modelsInfo;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing", 
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        type: 'feedhenry',
+        mbaasUrl: 'test-url'
+      },
+      originalUrl: 'testoriginalurl'
+  };
+
+  modelsinfo(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.ok(req.resultData.env , "Should expect request object resultData to be populated");
+  finish();
+};
+
+exports.test_get_models_info_error = function(finish){
+  var next = sinon.spy();
+  var createDb = sinon.stub();
+  var mockMbaas = sinon.stub();
+  var mockEnv = sinon.stub();
+
+  var mockFind = function() {
+    return {
+      findOne : function(args, cb) {
+        return cb(new Error('Mock Error'));
+      }
+    }
+  }
+
+  var modelsinfo = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , 'fh-mbaas-middleware' : {mbaas: mockFind} , '../models/appEnv.js' : {appEnv: mockEnv} } ).modelsInfo;
+
+  var req = {
+      params: {
+        appid: "someappguid",
+        domain: "somedomain",
+        environment: "someenvironment",
+        id: "somethemeid"
+      },
+      appMbaasModel: { 
+        name: "unit-testing", 
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        type: 'feedhenry',
+        mbaasUrl: 'test-url'
+      },
+      originalUrl: 'testoriginalurl'
+  };
+
+  modelsinfo(req, {}, next);
+  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+  assert.equal(next.args[0][0], "Error: Failed to look up Mbaas/AppMbaas instance");
+  finish();
+};
+
+
