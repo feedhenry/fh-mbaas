@@ -1,5 +1,8 @@
 #Component: fh-mbaas
 
+## 2.0.1 - 2015-08-24 - Luigi Zuccarelli
+* Updated for new fh-config functionality
+
 ## 2.0.0 - 2015-05-15 - Niall Donnelly & Luigi Zuccarelli
 * FHMAP-666 unit testing update
 * FHMAP-667 acceptance test update
