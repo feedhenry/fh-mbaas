@@ -2,6 +2,7 @@
 
 ## 2.0.1 - 2015-08-24 - Luigi Zuccarelli
 * Updated for new fh-config functionality
+* FH-1893 - fh-mbaas should work even if fh-dfc is absent
 
 ## 2.0.0 - 2015-05-15 - Niall Donnelly & Luigi Zuccarelli
 * FHMAP-666 unit testing update
