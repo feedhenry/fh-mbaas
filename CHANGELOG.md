@@ -15,6 +15,7 @@
 ## 2.0.3 - 2015-08-24 - Niall Donnelly
 
 * FH-1466 - Added Form Submission Name To PDF Generation
+* FH-1924 - Removed Submission Data From Logging.
 
 ## 2.0.2 - 2015-08-24 - Niall Donnelly
 
