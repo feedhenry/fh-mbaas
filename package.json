@@ -8,7 +8,8 @@
   "scripts": {
     "install": "scripts/install.sh",
     "preinstall": "node scripts/preinstallvalidate.js",
-    "postinstall": "scripts/postinstall.sh"
+    "postinstall": "scripts/postinstall.sh",
+    "start": "node fh-mbaas.js config/conf.json"
   },
   "bin": {
     "fh-mbaas": "./fh-mbaas.js"
