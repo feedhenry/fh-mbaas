@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "2.0.1-BUILD-NUMBER",
+  "version": "2.0.2-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -39,7 +39,7 @@
     "underscore": "^1.6.0"
   },
   "devDependencies": {
-    "grunt-fh-build": "~0.1.0",
+    "grunt-fh-build": "~0.2.0",
     "istanbul": "0.2.16",
     "mocha": "^2.2.5",
     "mockgoose": "^1.10.7",
