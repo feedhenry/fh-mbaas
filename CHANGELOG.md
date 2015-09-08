@@ -1,5 +1,9 @@
 #Component: fh-mbaas
 
+## 2.0.2 - 2015-09-08 - Gerard Ryan
+* FH-1954 - Add an openshift3 property to appEnv model
+* FH-1946 - Fix security vulnerabilities: handlebars and mongoose-validator
+
 ## 2.0.1 - 2015-08-24 - Luigi Zuccarelli
 * Updated for new fh-config functionality
 * FH-1893 - fh-mbaas should work even if fh-dfc is absent

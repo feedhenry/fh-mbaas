@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "2.0.1-BUILD-NUMBER",
+  "version": "2.0.2-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -23,9 +23,9 @@
     "cuid": "^1.2.4",
     "express": "^4.4.5",
     "fh-config": "0.1.0",
-    "fh-forms": "1.1.0",
+    "fh-forms": "^1.1.5",
     "fh-health": "0.0.6",
-    "fh-mbaas-middleware": "^1.0.8",
+    "fh-mbaas-middleware": "^1.0.9",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",
@@ -39,7 +39,7 @@
     "underscore": "^1.6.0"
   },
   "devDependencies": {
-    "grunt-fh-build": "~0.1.0",
+    "grunt-fh-build": "~0.2.0",
     "istanbul": "0.2.16",
     "mocha": "^2.2.5",
     "mockgoose": "^1.10.7",
