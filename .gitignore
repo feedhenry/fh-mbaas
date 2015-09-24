@@ -13,3 +13,7 @@ conf-docker.json
 man/
 *~
 TAGS
+fh-log
+-*.o
+-cov-*
+-plato

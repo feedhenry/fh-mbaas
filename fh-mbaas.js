@@ -17,7 +17,7 @@ var fhconfig = require('fh-config');
 var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
-var requiredvalidation = require('./config/requiredvalidation.js');
+var requiredvalidation = require('./lib/util/requiredvalidation.js');
 
 
 // args and usage
