@@ -17,7 +17,7 @@ var fhconfig = require('fh-config');
 var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
-
+var requiredvalidation = require('./config/requiredvalidation.js');
 
 
 // args and usage
@@ -43,9 +43,8 @@ console.log(starting);
 
 // read our config file
 var configFile = process.env.conf_file || args._[0];
-var configvalidate = require('./lib/util/configvalidation');
 
-fhconfig.init(configFile, configvalidate.configvalidation, function(err){
+fhconfig.init(configFile, requiredvalidation, function(err){
   if(err){
     console.error("Problems reading config file: " + configFile);
     console.error(err);

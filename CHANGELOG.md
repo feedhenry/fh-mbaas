@@ -1,5 +1,9 @@
 #Component: fh-mbaas
 
+## 2.0.3 - 2015-09-08 - Luigi Zuccarelli
+* FH-2058 - Add conf-docker.json artifact
+* FH-2057 - Update validation check
+
 ## 2.0.2 - 2015-09-08 - Gerard Ryan
 * FH-1954 - Add an openshift3 property to appEnv model
 * FH-1946 - Fix security vulnerabilities: handlebars and mongoose-validator

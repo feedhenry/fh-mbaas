@@ -1,13 +1,12 @@
 {
   "name": "fh-mbaas",
-  "version": "2.0.2-BUILD-NUMBER",
+  "version": "2.0.3-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
   "license": "Copyright (c) 2014 FeedHenry Ltd, All Rights Reserved.",
   "scripts": {
     "install": "scripts/install.sh",
-    "preinstall": "node scripts/preinstallvalidate.js",
     "postinstall": "scripts/postinstall.sh",
     "start": "node fh-mbaas.js config/conf.json"
   },
@@ -22,7 +21,7 @@
     "cors": "^2.3.1",
     "cuid": "^1.2.4",
     "express": "^4.4.5",
-    "fh-config": "0.1.0",
+    "fh-config": "^0.1.2",
     "fh-forms": "^1.1.5",
     "fh-health": "0.0.6",
     "fh-mbaas-middleware": "^1.0.9",
