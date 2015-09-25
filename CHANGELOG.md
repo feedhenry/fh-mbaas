@@ -1,5 +1,8 @@
 #Component: fh-mbaas
 
+## 2.0.8 - 2015-09-25 - Niall Donnelly
+* FH-2140 - Bumped fh-mbaas-middleware version
+
 ## 2.0.7 - 2015-09-30 - Gerard Ryan
 * Fix config files used for openshift3 config
 

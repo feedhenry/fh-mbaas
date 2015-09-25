@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "2.0.7-BUILD-NUMBER",
+  "version": "2.0.8-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -24,7 +24,7 @@
     "fh-config": "^0.1.2",
     "fh-forms": "^1.1.5",
     "fh-health": "0.0.6",
-    "fh-mbaas-middleware": "^1.0.9",
+    "fh-mbaas-middleware": "^1.0.11",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",
