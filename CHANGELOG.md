@@ -1,16 +1,29 @@
 #Component: fh-mbaas
 
-## 2.0.3 - 2015-09-08 - Luigi Zuccarelli
+## 2.0.6 - 2015-09-08 - Luigi Zuccarelli
 * FH-2058 - Add conf-docker.json artifact
 * FH-2057 - Update validation check
 
-## 2.0.2 - 2015-09-08 - Gerard Ryan
+## 2.0.5 - 2015-09-08 - Gerard Ryan
 * FH-1954 - Add an openshift3 property to appEnv model
 * FH-1946 - Fix security vulnerabilities: handlebars and mongoose-validator
 
-## 2.0.1 - 2015-08-24 - Luigi Zuccarelli
+## 2.0.4 - 2015-08-24 - Luigi Zuccarelli
 * Updated for new fh-config functionality
 * FH-1893 - fh-mbaas should work even if fh-dfc is absent
+
+## 2.0.3 - 2015-08-24 - Niall Donnelly
+
+* FH-1466 - Added Form Submission Name To PDF Generation
+* FH-1924 - Removed Submission Data From Logging.
+
+## 2.0.2 - 2015-08-24 - Niall Donnelly
+
+* FH-1464 - Bumped fh-forms version to create new forms config if it does not exist
+
+## 2.0.1 - 2015-08-21 - Niall Donnelly
+
+* FH-1820 Remove Protocol Property
 
 ## 2.0.0 - 2015-05-15 - Niall Donnelly & Luigi Zuccarelli
 * FHMAP-666 unit testing update
