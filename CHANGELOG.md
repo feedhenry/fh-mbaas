@@ -1,5 +1,8 @@
 #Component: fh-mbaas
 
+## 2.0.7 - 2015-09-30 - Gerard Ryan
+* Fix config files used for openshift3 config
+
 ## 2.0.6 - 2015-09-08 - Luigi Zuccarelli
 * FH-2058 - Add conf-docker.json artifact
 * FH-2057 - Update validation check
