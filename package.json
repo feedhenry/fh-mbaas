@@ -23,7 +23,7 @@
     "cuid": "^1.2.4",
     "express": "^4.4.5",
     "fh-config": "^0.1.2",
-    "fh-forms": "^1.1.5",
+    "fh-forms": "1.1.7",
     "fh-health": "0.0.6",
     "fh-mbaas-middleware": "^1.0.11",
     "mongodb": "^1.4.18",

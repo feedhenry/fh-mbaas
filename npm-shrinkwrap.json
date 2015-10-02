@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "2.0.7-BUILD-NUMBER",
+  "version": "2.0.9-BUILD-NUMBER",
   "dependencies": {
     "async": {
       "version": "0.9.2",
@@ -9,12 +9,12 @@
     },
     "backoff": {
       "version": "2.4.1",
-      "from": "backoff@*",
+      "from": "https://registry.npmjs.org/backoff/-/backoff-2.4.1.tgz",
       "resolved": "https://registry.npmjs.org/backoff/-/backoff-2.4.1.tgz",
       "dependencies": {
         "precond": {
           "version": "0.2.3",
-          "from": "precond@>=0.2.0 <0.3.0",
+          "from": "https://registry.npmjs.org/precond/-/precond-0.2.3.tgz",
           "resolved": "https://registry.npmjs.org/precond/-/precond-0.2.3.tgz"
         }
       }
@@ -646,9 +646,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.1.5",
-      "from": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.1.5.tgz",
-      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.1.5.tgz",
+      "version": "1.1.7",
+      "from": "fh-forms@1.1.7",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.1.7.tgz",
       "dependencies": {
         "archiver": {
           "version": "0.14.3",
@@ -1212,26 +1212,19 @@
           }
         },
         "phantom": {
-          "version": "0.5.7",
-          "from": "https://registry.npmjs.org/phantom/-/phantom-0.5.7.tgz",
-          "resolved": "https://registry.npmjs.org/phantom/-/phantom-0.5.7.tgz",
+          "version": "0.8.0",
+          "from": "git://github.com/fheng/phantomjs-node.git#514c855834056d08d9d60fddcd2d4243254c1955",
+          "resolved": "git://github.com/fheng/phantomjs-node.git#514c855834056d08d9d60fddcd2d4243254c1955",
           "dependencies": {
             "dnode": {
-              "version": "1.0.5",
-              "from": "https://registry.npmjs.org/dnode/-/dnode-1.0.5.tgz",
-              "resolved": "https://registry.npmjs.org/dnode/-/dnode-1.0.5.tgz",
+              "version": "1.2.2",
+              "from": "https://registry.npmjs.org/dnode/-/dnode-1.2.2.tgz",
+              "resolved": "https://registry.npmjs.org/dnode/-/dnode-1.2.2.tgz",
               "dependencies": {
                 "dnode-protocol": {
                   "version": "0.2.2",
                   "from": "https://registry.npmjs.org/dnode-protocol/-/dnode-protocol-0.2.2.tgz",
-                  "resolved": "https://registry.npmjs.org/dnode-protocol/-/dnode-protocol-0.2.2.tgz",
-                  "dependencies": {
-                    "traverse": {
-                      "version": "0.6.6",
-                      "from": "https://registry.npmjs.org/traverse/-/traverse-0.6.6.tgz",
-                      "resolved": "https://registry.npmjs.org/traverse/-/traverse-0.6.6.tgz"
-                    }
-                  }
+                  "resolved": "https://registry.npmjs.org/dnode-protocol/-/dnode-protocol-0.2.2.tgz"
                 },
                 "jsonify": {
                   "version": "0.0.0",
@@ -1239,14 +1232,19 @@
                   "resolved": "https://registry.npmjs.org/jsonify/-/jsonify-0.0.0.tgz"
                 },
                 "weak": {
-                  "version": "0.2.2",
-                  "from": "https://registry.npmjs.org/weak/-/weak-0.2.2.tgz",
-                  "resolved": "https://registry.npmjs.org/weak/-/weak-0.2.2.tgz",
+                  "version": "1.0.0",
+                  "from": "https://registry.npmjs.org/weak/-/weak-1.0.0.tgz",
+                  "resolved": "https://registry.npmjs.org/weak/-/weak-1.0.0.tgz",
                   "dependencies": {
                     "bindings": {
                       "version": "1.2.1",
                       "from": "https://registry.npmjs.org/bindings/-/bindings-1.2.1.tgz",
                       "resolved": "https://registry.npmjs.org/bindings/-/bindings-1.2.1.tgz"
+                    },
+                    "nan": {
+                      "version": "2.0.9",
+                      "from": "https://registry.npmjs.org/nan/-/nan-2.0.9.tgz",
+                      "resolved": "https://registry.npmjs.org/nan/-/nan-2.0.9.tgz"
                     }
                   }
                 }
@@ -1254,8 +1252,8 @@
             },
             "shoe": {
               "version": "0.0.15",
-              "from": "https://registry.npmjs.org/shoe/-/shoe-0.0.15.tgz",
-              "resolved": "https://registry.npmjs.org/shoe/-/shoe-0.0.15.tgz",
+              "from": "git://github.com/fheng/shoe.git#45429420fece517b6df9ffc856aa5ba661a10741",
+              "resolved": "git://github.com/fheng/shoe.git#45429420fece517b6df9ffc856aa5ba661a10741",
               "dependencies": {
                 "sockjs": {
                   "version": "0.3.7",
@@ -1278,6 +1276,16 @@
                   "version": "0.0.0-unreleasable"
                 }
               }
+            },
+            "win-spawn": {
+              "version": "2.0.0",
+              "from": "https://registry.npmjs.org/win-spawn/-/win-spawn-2.0.0.tgz",
+              "resolved": "https://registry.npmjs.org/win-spawn/-/win-spawn-2.0.0.tgz"
+            },
+            "traverse": {
+              "version": "0.6.6",
+              "from": "https://registry.npmjs.org/traverse/-/traverse-0.6.6.tgz",
+              "resolved": "https://registry.npmjs.org/traverse/-/traverse-0.6.6.tgz"
             }
           }
         },
@@ -1641,7 +1649,7 @@
     },
     "fh-mbaas-middleware": {
       "version": "1.0.11",
-      "from": "fh-mbaas-middleware@^1.0.11",
+      "from": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.0.11.tgz",
       "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.0.11.tgz",
       "dependencies": {
         "bunyan": {
