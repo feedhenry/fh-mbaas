@@ -18,6 +18,7 @@ var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 var requiredvalidation = require('./lib/util/requiredvalidation.js');
+var backoff = require('backoff');
 
 
 // args and usage
@@ -137,42 +138,71 @@ fhconfig.init(configFile, requiredvalidation, function(err){
       dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
     }));
 
-    var conf = fhconfig.getConfig();
-    var jsonConfig = {
-      mongoUrl: fhconfig.mongoConnectionString(),
-      mongo : {
-        host: conf.rawConfig.mongo.host,
-        port: conf.rawConfig.mongo.port,
-        name: conf.rawConfig.mongo.name,
-        admin_auth: {
-          user: conf.rawConfig.mongo.admin_auth.user,
-          pass: conf.rawConfig.mongo.admin_auth.pass
-        }
-      },
-      logger: logger
-    };
+    var jsonConfig;
+    function refreshJsonConfig(cb) {
+      var conf = fhconfig.getConfig();
+      jsonConfig = {
+        mongoUrl: fhconfig.mongoConnectionString(),
+        mongo : {
+          host: conf.rawConfig.mongo.host,
+          port: conf.rawConfig.mongo.port,
+          name: conf.rawConfig.mongo.name,
+          admin_auth: {
+            user: conf.rawConfig.mongo.admin_auth.user,
+            pass: conf.rawConfig.mongo.admin_auth.pass
+          }
+        },
+        logger: logger
+      };
+      logger.debug('JSON Config ', jsonConfig);
 
-    logger.debug('JSON Config ', jsonConfig);
+      return cb();
+    }
 
     // models are also initialised in this call
-    fhmbaasMiddleware.init(jsonConfig, function (err) {
-      if(err){
-        console.error("FATAL: " + util.inspect(err));
-        console.trace();
-        return cleanShutdown(); // exit on uncaught exception
+    function initializeMiddlewareModule(number) {
+      if (jsonConfig.mongo && jsonConfig.mongo.host) {
+        fhmbaasMiddleware.init(jsonConfig, function(err, cb) {
+          if (err) {
+            exponentialBackoff.backoff(err);
+          } else {
+            logger.info('Successfully initialized after', number, 'attempts');
+            app.use('/sys', require('./lib/routes/sys.js')());
+            app.use('/api/mbaas', require('./lib/routes/api.js'));
+            app.use('/api/app', require('./lib/routes/app.js'));
+
+            var port = fhconfig.int('fhmbaas.port');
+            app.listen(port, function () {
+              console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
+            });
+          }
+        });
+      } else {
+        exponentialBackoff.backoff('No mongo hosts found');
       }
+    }
 
-      app.use('/sys', require('./lib/routes/sys.js')());
-      app.use('/api/mbaas', require('./lib/routes/api.js'));
+    var exponentialBackoff = backoff.exponential({
+      initialDelay: 500,
+      maxDelay: 30000
+    });
 
-      app.use('/api/app', require('./lib/routes/app.js'));
-
-
-      var port = fhconfig.int('fhmbaas.port');
-      app.listen(port, function () {
-        console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
+    exponentialBackoff.on('ready', function(number, delay) {
+      fhconfig.reload([], function() {
+        refreshJsonConfig(function() {
+          initializeMiddlewareModule(number);
+        });
       });
     });
+
+    exponentialBackoff.on('backoff', function(number, delay, err) {
+      if (err) {
+        console.error('Initialization error:', err);
+      }
+      console.log('Will retry in', delay, 'ms');
+    });
+
+    exponentialBackoff.backoff();
   }
 
   // start: note we use one master and one worker, so any uncaught exceptions in worker
@@ -217,4 +247,3 @@ fhconfig.init(configFile, requiredvalidation, function(err){
     }
   }
 });
-
