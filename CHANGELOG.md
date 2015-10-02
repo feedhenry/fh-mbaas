@@ -2,6 +2,7 @@
 
 ## 2.0.9 - 2015-10-01 - Gerard Ryan
 * FH-1825 - Handle MongoDB not being ready on startup with exponential backoff
+* FH-2205 - Use fh-forms@1.1.7 to fix shrinkwrap-ability
 
 ## 2.0.8 - 2015-09-25 - Niall Donnelly
 * FH-2140 - Bumped fh-mbaas-middleware version
