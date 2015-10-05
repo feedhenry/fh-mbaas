@@ -1,5 +1,9 @@
 #Component: fh-mbaas
 
+## 2.1.0 - 2015-10-03 - Niall Donnelly
+
+* FH-2097: Added Data Source Mbaas APIs
+
 ## 2.0.2 - 2015-09-08 - Gerard Ryan
 * FH-1954 - Add an openshift3 property to appEnv model
 * FH-1946 - Fix security vulnerabilities: handlebars and mongoose-validator
