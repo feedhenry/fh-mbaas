@@ -21,6 +21,7 @@ var requiredvalidation = require('./lib/util/requiredvalidation.js');
 var backoff = require('backoff');
 
 
+
 // args and usage
 function usage() {
   console.log("Usage: " + args.$0 + " <config file> [-d] (debug)");
@@ -152,6 +153,9 @@ fhconfig.init(configFile, requiredvalidation, function(err){
             pass: conf.rawConfig.mongo.admin_auth.pass
           }
         },
+        "crash_monitor":conf.rawConfig.crash_monitor,
+        "email":conf.rawConfig.email,
+        "fhamqp" : conf.rawConfig.fhamqp,
         logger: logger
       };
       logger.debug('JSON Config ', jsonConfig);
@@ -167,9 +171,9 @@ fhconfig.init(configFile, requiredvalidation, function(err){
             exponentialBackoff.backoff(err);
           } else {
             logger.info('Successfully initialized after', number, 'attempts');
-            app.use('/sys', require('./lib/routes/sys.js')());
-            app.use('/api/mbaas', require('./lib/routes/api.js'));
-            app.use('/api/app', require('./lib/routes/app.js'));
+            app.use('/sys', require('./lib/handlers/sys.js')());
+            app.use('/api/mbaas', require('./lib/handlers/api.js'));
+            app.use('/api/app', require('./lib/handlers/app.js'));
 
             var port = fhconfig.int('fhmbaas.port');
             app.listen(port, function () {
