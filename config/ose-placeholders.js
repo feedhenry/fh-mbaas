@@ -1,4 +1,6 @@
 var placeholders = {
+  "crash_monitor.enabled": false,
+  "fhamqp.enabled": false,
   "fhmbaas.port": 8080,
   "fhmbaas.key": "$(FHMBAAS_KEY)",
   "mongo.name": "$(MONGODB_FHMBAAS_DATABASE)",
