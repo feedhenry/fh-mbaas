@@ -17,6 +17,7 @@ var fhconfig = require('fh-config');
 var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
+var fhServiceAuth = require('fh-service-auth');
 
 
 
@@ -163,15 +164,25 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
         return cleanShutdown(); // exit on uncaught exception
       }
 
-      app.use('/sys', require('./lib/routes/sys.js')());
-      app.use('/api/mbaas', require('./lib/routes/api.js'));
+      //Initialising The Service Auth Module. Only a single mongoose connection.
+      fhServiceAuth.init({
+        logger: logger
+      }, function(err){
+        if(err){
+          console.error("FATAL: " + util.inspect(err));
+          console.trace();
+          return cleanShutdown(); // exit on uncaught exception
+        }
+        app.use('/sys', require('./lib/routes/sys.js')());
+        app.use('/api/mbaas', require('./lib/routes/api.js'));
 
-      app.use('/api/app', require('./lib/routes/app.js'));
+        app.use('/api/app', require('./lib/routes/app.js'));
 
 
-      var port = fhconfig.int('fhmbaas.port');
-      app.listen(port, function () {
-        console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
+        var port = fhconfig.int('fhmbaas.port');
+        app.listen(port, function () {
+          console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
+        });
       });
     });
   }
