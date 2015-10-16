@@ -34,58 +34,41 @@ if (args._.length < 1) {
   usage();
 }
 
-// read our config file
-var configFile = process.env.conf_file || args._[0];
-
-fhconfig.init(configFile, requiredvalidation, function(err) {
-  if (err) {
-    console.error("Problems reading config file: " + configFile);
-    console.error(err);
-    process.exit(-1);
+if (args.d === true) {
+  console.log("STARTING ONE WORKER FOR DEBUG PURPOSES");
+  startWorker();
+} else {
+  // Note: if required as a module, its up to the user to call start();
+  if (require.main === module) {
+    fhcluster(startWorker);
   }
+}
 
-  // Note: location/order of these requires for istanbul code coverage is important.
-  if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
-    var coverage = require('istanbul-middleware');
-    coverage.hookLoader(__dirname);
-  }
+function startWorker(clusterWorker) {
 
-  var logger = getFhConfigLogger(fhconfig);
-  setupUncaughtExceptionHandler(logger);
-  setupFhconfigReloadHandler(fhconfig);
+  // read our config file
+  var configFile = process.env.conf_file || args._[0];
 
-  if (args.d === true) {
-    console.log("STARTING ONE WORKER FOR DEBUG PURPOSES");
-    startWorker();
-  } else {
-    // Note: if required as a module, its up to the user to call start();
-    if (require.main === module) {
-      fhcluster(startWorker);
+  fhconfig.init(configFile, requiredvalidation, function(err) {
+    if (err) {
+      console.error("Problems reading config file: " + configFile);
+      console.error(err);
+      process.exit(-1);
     }
-  }
-});
 
-function startWorker() {
-  var app = express();
+    // Note: location/order of these requires for istanbul code coverage is important.
+    if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
+      var coverage = require('istanbul-middleware');
+      coverage.hookLoader(__dirname);
+    }
 
-  // Enable CORS for all requests
-  app.use(cors());
+    var logger = getFhConfigLogger(fhconfig);
+    setupUncaughtExceptionHandler(logger);
+    setupFhconfigReloadHandler(fhconfig);
 
-  // Parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({
-    extended: false
-  }));
-
-  // Parse JSON payloads
-  app.use(bodyParser.json({limit: fhconfig.value('fhmbaas.maxpayloadsize') || "20mb"}));
-
-  //Multipart Form Request Parser
-  app.use(multer({
-    dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
-  }));
-
-  refreshJsonConfig(fhconfig, function(jsonConfig) {
-    initializeMiddlewareModule(app, jsonConfig);
+    refreshJsonConfig(fhconfig, function(jsonConfig) {
+      initializeMiddlewareModule(clusterWorker, jsonConfig);
+    });
   });
 }
 
@@ -114,25 +97,49 @@ function refreshJsonConfig(fhconfig, cb) {
 }
 
 
-function initializeMiddlewareModule(app, jsonConfig) {
+function initializeMiddlewareModule(clusterWorker, jsonConfig) {
   // models are also initialised in this call
-  fhmbaasMiddleware.init(jsonConfig, function(err, cb) {
+  fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
-      return err;
+      jsonConfig.logger.error(err);
+      clusterWorker.kill();
     } else {
-      app.use('/sys', require('./lib/handlers/sys.js')());
-      app.use('/api/mbaas', require('./lib/handlers/api.js'));
-      app.use('/api/app', require('./lib/handlers/app.js'));
-
-      var port = fhconfig.int('fhmbaas.port');
-      app.listen(port, function () {
-        // Get our version number from package.json
-        var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
-        console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
-      });
+      startApp();
     }
   });
 }
+
+function startApp() {
+  var app = express();
+
+  // Enable CORS for all requests
+  app.use(cors());
+
+  // Parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }));
+
+  // Parse JSON payloads
+  app.use(bodyParser.json({limit: fhconfig.value('fhmbaas.maxpayloadsize') || "20mb"}));
+
+  //Multipart Form Request Parser
+  app.use(multer({
+    dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
+  }));
+
+  app.use('/sys', require('./lib/handlers/sys.js')());
+  app.use('/api/mbaas', require('./lib/handlers/api.js'));
+  app.use('/api/app', require('./lib/handlers/app.js'));
+
+  var port = fhconfig.int('fhmbaas.port');
+  app.listen(port, function () {
+    // Get our version number from package.json
+    var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
+    console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
+  });
+}
+
 function getFhConfigLogger(fhconfig) {
   var logger = fhconfig.getLogger();
   forms.core.setLogger(logger);
@@ -160,5 +167,6 @@ function setupUncaughtExceptionHandler(logger) {
       logger.error(util.inspect(err.stack));
     }
     console.trace();
+    process.exit(1);
   });
 }
