@@ -120,9 +120,9 @@ function initializeMiddlewareModule(app, jsonConfig) {
     if (err) {
       return err;
     } else {
-      app.use('/sys', require('./lib/routes/sys.js')());
-      app.use('/api/mbaas', require('./lib/routes/api.js'));
-      app.use('/api/app', require('./lib/routes/app.js'));
+      app.use('/sys', require('./lib/handlers/sys.js')());
+      app.use('/api/mbaas', require('./lib/handlers/api.js'));
+      app.use('/api/app', require('./lib/handlers/app.js'));
 
       var port = fhconfig.int('fhmbaas.port');
       app.listen(port, function () {
