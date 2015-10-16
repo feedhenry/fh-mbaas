@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "2.1.0-BUILD-NUMBER",
+  "version": "2.2.0-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -16,13 +16,13 @@
   "preferGlobal": true,
   "dependencies": {
     "async": "^0.9.0",
-    "backoff": "^2.4.1",
     "body-parser": "^1.4.3",
     "bunyan": "^1.4.0",
     "cors": "^2.3.1",
     "cuid": "^1.2.4",
     "express": "^4.4.5",
     "fh-amqp-js": "^0.5.0",
+    "fh-cluster": "0.1.0",
     "fh-config": "^0.1.2",
     "fh-forms": "1.1.7",
     "fh-health": "0.0.6",

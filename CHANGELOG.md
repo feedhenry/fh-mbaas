@@ -1,4 +1,8 @@
-#Component: fh-mbaas
+# Component: fh-mbaas
+
+## 2.2.0 - 2015-10-15 - Gerard Ryan
+* RHMAP-2459 - Cleanup entrypoint file with fh-cluster & functions
+
 ## 2.1.0 - 2015-07-19 - Craig Brookes, Graham Hillis
 * add config for crash monitor
 * wire up fh-mbaas-notifications
@@ -18,9 +22,9 @@ fhamqp.vhosts now needs to look like:
           "amqp://fhinternal:Jdxbf9f4hkJvs7T@node1.feedhenry.local:5672/fhinternal"
         ]
       }
-      
+
 two new sections to the config have been added also:
-      
+
       "crash_monitor":{
           "enabled":true,
           "min_num_crashes":5,
