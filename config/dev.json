@@ -70,6 +70,12 @@
       }
     }
   },
+  "fhmetrics" :{
+    "host":"127.0.0.1",
+    "port":"8813",
+    "protocol":"http",
+    "apikey":"somekey"
+  },
   "fhmessaging":{
     "enabled": true,
     "host":"localhost",
