@@ -1,4 +1,7 @@
 #Component: fh-mbaas
+## 2.4.0 - 2015-11-04 - Craig Brookes
+* RHMAP-2202-mbaas-route-for-app-messages
+
 ## 2.3.0 - 2015-10-21 - Craig Brookes
 * RHMAP-2114 add metrics route to mbaas
 
