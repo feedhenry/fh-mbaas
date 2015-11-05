@@ -75,7 +75,7 @@ function getMessage(){
 exports.it_should_fail_with_401 = function (finish){
   var app = defineRoute();
   supertest(app)
-    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/" + TEST_APP_NAME + "/message/fhact")
+    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/"+TEST_APP_NAME+"/" + TEST_APP_NAME + "/message/fhact")
     .set("Content-Type","application/json")
     .expect(401)
     .end(function(err, res){
@@ -96,7 +96,7 @@ exports.it_should_complete_ok_with_single_message = function (finish){
     }
   });
   supertest(app)
-    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/" + TEST_APP_NAME + "/message/fhact")
+    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/"+TEST_APP_NAME+"/" + TEST_APP_NAME + "/message/fhact")
     .set("Content-Type","application/json")
     .set("x-fh-env-access-key",mbaasApp.accessKey)
     .set("x-fh-auth-app",TEST_API_KEY)
@@ -121,7 +121,7 @@ exports.it_should_complete_ok_with_array_of_messages = function (finish){
     }
   });
   supertest(app)
-    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/" + TEST_APP_NAME + "/message/fhact")
+    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/"+TEST_APP_NAME+"/" + TEST_APP_NAME + "/message/fhact")
     .set("Content-Type","application/json")
     .set("x-fh-env-access-key",mbaasApp.accessKey)
     .set("x-fh-auth-app",TEST_API_KEY)
@@ -145,7 +145,7 @@ exports.it_should_complete_ok_even_error_with_client = function (finish){
     }
   });
   supertest(app)
-    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/" + TEST_APP_NAME + "/message/fhact")
+    .post("/"+TEST_DOMAIN + "/" + TEST_ENV + "/"+TEST_APP_NAME+"/" + TEST_APP_NAME + "/message/fhact")
     .set("Content-Type","application/json")
     .set("x-fh-env-access-key",mbaasApp.accessKey)
     .set("x-fh-auth-app",TEST_API_KEY)
