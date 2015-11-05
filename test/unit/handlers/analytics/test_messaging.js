@@ -6,7 +6,16 @@ var sinon = require('sinon');
 var undertest = '../../../../lib/handlers/analytics/messaging';
 
 var mockMessageClient = {
-  createAppMessage:function(topic,message,cb){
+  createAppMessage:function(topic,messages,cb){
+    assert.ok(Array.isArray(messages));
+    var lastId;
+    messages.forEach(function (m){
+      if(lastId) assert.ok(m.guid === lastId,"expected all id to be the same")
+      else{
+        lastId = m.guid;
+      }
+    });
+    
     return cb()
   }
 };
@@ -27,7 +36,7 @@ exports.test_create_app_message_fail = function(finish){
 
 exports.test_create_app_message_ok = function(finish){
   var handler = proxyquire(undertest,{});
-  var req = {"body":{},"params":{"topic":"fhact"}};
+  var req = {"body":[{"guid":"testid"},{"guid":"notmeid"},{"guid":"testid"}],"params":{"topic":"fhact","appid":"testid"}};
   var res = {};
   res.end = sinon.stub();
 

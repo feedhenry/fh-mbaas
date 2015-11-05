@@ -4,11 +4,14 @@ var assert = require('assert');
 var common = require('./common');
 var url = require('url');
 var _ = require('underscore');
-var server = require('./server');
 var express = require('express');
 var fhMiddleWare = require('fh-mbaas-middleware');
 var supertest = require('supertest');
 var proxyquire = require('proxyquire');
+var cors = require('cors');
+var bodyParser = require('body-parser');
+
+
 var TEST_DOMAIN = 'fhmbaas-accept-test-domain';
 var TEST_ENV = 'test';
 var TEST_APP_NAME= "pe4g7d7nx2if5jhbjeiwh6bl";
@@ -34,7 +37,17 @@ function defineRoute(mocks){
   var app= new express();
   
   var testRoute = proxyquire('../../lib/handlers/app',mocks || {});
+  app.use(cors());
+
+  // Parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }));
+
+  // Parse JSON payloads
+  app.use(bodyParser.json({limit: "20mb"}));
   app.use(testRoute);
+  
   return app;
 }
 
