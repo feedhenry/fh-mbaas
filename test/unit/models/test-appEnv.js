@@ -1,3 +1,5 @@
+var fixtures = require('../../fixtures');
+
 var dbConf = {
   host: 'localhost',
   port: 27017,
@@ -7,11 +9,14 @@ var dbConf = {
 };
 
 var fhconfig = require('fh-config');
+fhconfig.setRawConfig(fixtures.config);
+
 
 var appEnv = require('../../../lib/models/appEnv');
 var assert = require('assert');
 
 exports.test_app_envs = function(finish){
+  fhconfig.setRawConfig(fixtures.config);
   var params = {
     mbaas: {dbConf: dbConf},
     appMbaas: {
@@ -19,7 +24,9 @@ exports.test_app_envs = function(finish){
       migrated: true,
       accessKey: "somembaasaccesskey",
       type: 'feedhenry',
-      mbaasUrl: "https://mbaas.somembaas.com"
+      mbaasUrl: "https://mbaas.somembaas.com",
+      isServiceApp: true,
+      serviceAccessKey: '1234'
     },
     fhconfig: fhconfig
   };
@@ -33,7 +40,7 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_AMQP_PASS, 'fheventpassword');
   
   assert.equal(envs.FH_DITCH_HOST, 'localhost');
-  assert.equal(envs.FH_DITCH_PORT, 19001);
+  assert.equal(envs.FH_DITCH_PORT, 8802);
   assert.equal(envs.FH_DITCH_PROTOCOL, 'http');
 
   assert.equal(envs.FH_MESSAGING_BACKUP_FILE, '../messages/backup.log');
@@ -57,6 +64,8 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_MBAAS_HOST, "mbaas.somembaas.com");
   assert.equal(envs.FH_MBAAS_PROTOCOL, "https");
   assert.equal(envs.FH_MBAAS_ENV_ACCESS_KEY, "somembaasaccesskey");
+
+  assert.equal(params.appMbaas.serviceAccessKey, envs.FH_SERVICE_ACCESS_KEY);
 
   finish();
 };

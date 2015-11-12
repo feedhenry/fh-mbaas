@@ -23,9 +23,9 @@
     "cuid": "^1.2.4",
     "express": "^4.4.5",
     "fh-config": "0.1.0",
-    "fh-forms": "1.2.0-161",
+    "fh-forms": "1.2.0-165",
     "fh-health": "0.0.6",
-    "fh-mbaas-middleware": "^1.0.9",
+    "fh-mbaas-middleware": "1.1.0-73",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",
@@ -36,17 +36,18 @@
     "optimist": "^0.6.1",
     "rc": "^0.4.0",
     "request": "^2.45.0",
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "fh-service-auth": "0.1.0-1"
   },
   "devDependencies": {
-    "grunt-fh-build": "~0.2.0",
+    "grunt-fh-build": "^0.3.2",
     "istanbul": "0.2.16",
     "mocha": "^2.2.5",
     "mockgoose": "^1.10.7",
-    "proxyquire": "0.5.3",
+    "proxyquire": "^1.4.0",
     "should": "2.1.1",
     "sinon": "^1.10.3",
-    "supertest": "0.8.2",
+    "supertest": "^0.15.0",
     "turbo-test-runner": "0.3.3"
   }
 }
