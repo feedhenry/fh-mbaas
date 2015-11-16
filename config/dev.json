@@ -89,5 +89,13 @@
     "host": "127.0.0.1",
     "port": 6379,
     "password":""
+  },
+  "agenda": {
+    "enabled": true,
+    "jobs": {
+      "data_source_update": {
+        "schedule": "5 seconds"
+      }
+    }
   }
 }

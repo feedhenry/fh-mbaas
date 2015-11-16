@@ -9,7 +9,6 @@ var util = require('util');
 var args = require('optimist').argv;
 var fs = require('fs');
 var path = require('path');
-var cluster = require('cluster');
 var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
@@ -18,8 +17,11 @@ var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 var fhServiceAuth = require('fh-service-auth');
+var async = require('async');
 
+var fhCluster = require('fh-cluster');
 
+var formsUpdater = require('./lib/formsUpdater');
 
 // args and usage
 function usage() {
@@ -68,60 +70,36 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
   // Get our version number from package.json
   var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
 
-  // handle uncaught exceptions
-  process.on('uncaughtException', function(err) {
-    logger.error("FATAL: UncaughtException, please report: " + util.inspect(err));
-    console.error(new Date().toString() + " FATAL: UncaughtException, please report: " + util.inspect(err));
-    if (err !== undefined && err.stack !== undefined) {
-      logger.error(util.inspect(err.stack));
-    }
-    console.trace();
-    cleanShutdown(); // exit on uncaught exception
-  });
-
-  // Array of Worker processes
-  var workers = [];
-
-  // clean shut down - note cb is optional here (used in testsuite)
-  var cleanShutdown = function() {
-    logger.info("Shutting down server..");
-    if (cluster.isMaster) {
-      // shutdown all our workers
-      // we exit when all workers have exited..
-      for (var i = 0; i < workers.length; i++) {
-        var worker = workers[i];
-        if (worker.destroy) worker.destroy();
-        else if (worker.kill) worker.kill();
-        else if (worker.process && worker.process.kill) worker.process.kill();
-      }
-    }
+  var cleanShutdown = function(clusterWorker) {
+    logger.info("Shutting down server..", clusterWorker.id, clusterWorker.process.pid);
 
     process.exit(1);
   };
 
-  module.exports.cleanShutdown = cleanShutdown;
-  module.exports.start = start;
-  module.exports.startWorker = startWorker;
-
-  // handle process signals
-  process.on('SIGTERM', cleanShutdown);
-  process.on('SIGHUP', cleanShutdown);
-  process.on('INT', cleanShutdown);
-
-  process.on(fhconfig.RELOAD_CONFIG_SIGNAL, function(){
-    fhconfig.reload(workers, function(err){
-      if(err){
-        console.error("Config not reloaded");
-        console.error(err);
-        console.error("Please fix and try again!!");
-      }
-    });
-  });
-
 
   // start worker
-  function startWorker() {
+  function startWorker(clusterWorker) {
     var app = express();
+    var scheduler;
+
+    // clean shut down - note cb is optional here (used in testsuite)
+    // Handle workers exiting
+    clusterWorker.on('exit', function() {
+      logger.info("Cleanly exiting..", this.id);
+      cleanShutdown(clusterWorker);
+    });
+
+    clusterWorker.on('disconnect', function() {
+      var self = this;
+      logger.info("Worker Disconnected..", self.id);
+      // Worker has disconnected
+      if(scheduler){
+        logger.info("Shutting down scheduler..", self.id, self.process.pid);
+        scheduler.tearDown(function(){
+          logger.info("Scheduler Shut Down..", self.id, self.process.pid);
+        });
+      }
+    });
 
     // Enable CORS for all requests
     app.use(cors());
@@ -140,93 +118,58 @@ fhconfig.init(configFile, configvalidate.configvalidation, function(err){
     }));
 
     var conf = fhconfig.getConfig();
-    var jsonConfig = {
-      mongoUrl: fhconfig.mongoConnectionString(),
-      mongo : {
-        host: conf.rawConfig.mongo.host,
-        port: conf.rawConfig.mongo.port,
-        name: conf.rawConfig.mongo.name,
-        admin_auth: {
-          user: conf.rawConfig.mongo.admin_auth.user,
-          pass: conf.rawConfig.mongo.admin_auth.pass
-        }
+
+    logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
+    scheduler = formsUpdater.scheduler(logger, conf.rawConfig, fhconfig.mongoConnectionString());
+    logger.info("Initialised scheduler", scheduler);
+
+    async.parallel([
+      function initFhMbaasMiddleware(cb){
+        var mbaasMiddlewareConfig = {
+          mongoUrl: fhconfig.mongoConnectionString(),
+          mongo : {
+            host: conf.rawConfig.mongo.host,
+            port: conf.rawConfig.mongo.port,
+            name: conf.rawConfig.mongo.name,
+            admin_auth: {
+              user: conf.rawConfig.mongo.admin_auth.user,
+              pass: conf.rawConfig.mongo.admin_auth.pass
+            }
+          },
+          logger: logger
+        };
+
+        fhmbaasMiddleware.init(mbaasMiddlewareConfig, cb);
       },
-      logger: logger
-    };
-
-    logger.debug('JSON Config ', jsonConfig);
-
-    // models are also initialised in this call
-    fhmbaasMiddleware.init(jsonConfig, function (err) {
+      function initFhServicAuth(cb){
+        fhServiceAuth.init({
+          logger: logger
+        }, cb);
+      }
+    ], function(err){
       if(err){
         console.error("FATAL: " + util.inspect(err));
         console.trace();
-        return cleanShutdown(); // exit on uncaught exception
+        return cleanShutdown(clusterWorker); // exit on uncaught exception
       }
+      app.use('/sys', require('./lib/routes/sys.js')());
+      app.use('/api/mbaas', require('./lib/routes/api.js'));
 
-      //Initialising The Service Auth Module. Only a single mongoose connection.
-      fhServiceAuth.init({
-        logger: logger
-      }, function(err){
-        if(err){
-          console.error("FATAL: " + util.inspect(err));
-          console.trace();
-          return cleanShutdown(); // exit on uncaught exception
-        }
-        app.use('/sys', require('./lib/routes/sys.js')());
-        app.use('/api/mbaas', require('./lib/routes/api.js'));
-
-        app.use('/api/app', require('./lib/routes/app.js'));
+      app.use('/api/app', require('./lib/routes/app.js'));
 
 
-        var port = fhconfig.int('fhmbaas.port');
-        app.listen(port, function () {
-          console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
-        });
+      var port = fhconfig.int('fhmbaas.port');
+      app.listen(port, function () {
+        console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
       });
     });
-  }
-
-  // start: note we use one master and one worker, so any uncaught exceptions in worker
-  // will result in the worker process being restarted by the master.
-  function start() {
-    if (cluster.isMaster) {
-      var numCPUs = require('os').cpus().length;
-      // Fork workers.
-      for (var i = 0; i < numCPUs; i++) {
-        var worker = cluster.fork();
-        workers.push(worker);
-      }
-
-      // Handle workers exiting
-      cluster.on('exit', function(worker) {
-        if (worker.suicide === true) {
-          console.log("Cleanly exiting..");
-          process.exit(0);
-        } else {
-          var msg = "Worker: " + worker.process.pid + " has died!! Respawning..";
-          logger.error(msg);
-          console.error(msg);
-          var newWorker = cluster.fork();
-          for (var i = 0; i < workers.length; i++) {
-            if (workers[i] && workers[i].id === worker.id) workers.splice(i);
-          }
-          workers.push(newWorker);
-        }
-      });
-    } else {
-      startWorker();
-    }
   }
 
   if (args.d === true) {
     console.log("STARING ONE WORKER FOR DEBUG PURPOSES");
     startWorker();
   } else {
-    // Note: if required as a module, its up to the user to call start();
-    if (require.main === module) {
-      start();
-    }
+    fhCluster(startWorker);
   }
 });
 
