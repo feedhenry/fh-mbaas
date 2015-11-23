@@ -1,6 +1,8 @@
 
 
 module.exports = {
-  forms: require('./forms'),
+  forms: require('./fhForms'),
+  services: require('./services'),
+  dataSourceUpdater: require('./dataSourceUpdater'),
   fhServiceAuth: require('./fhServiceAuth')
 };
