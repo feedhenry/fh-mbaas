@@ -1,5 +1,8 @@
 # Component: fh-mbaas
 
+## 2.2.1 - 2015-11-24 - Craig Brookes
+* bump fh-mbaas-middleware to 1.1.3
+
 ## 2.2.0 - 2015-10-15 - Gerard Ryan
 * RHMAP-2459 - Cleanup entrypoint file with fh-cluster & functions
 
