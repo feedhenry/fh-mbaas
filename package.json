@@ -41,7 +41,7 @@
     "underscore": "^1.6.0"
   },
   "devDependencies": {
-    "grunt-fh-build": "~0.2.0",
+    "grunt-fh-build": "~0.3.2",
     "istanbul": "0.2.16",
     "mocha": "^2.3.3",
     "mockgoose": "^1.10.7",
