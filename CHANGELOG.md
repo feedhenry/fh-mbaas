@@ -1,5 +1,11 @@
 # Component: fh-mbaas
 
+## 2.3.1 - 2015-12-02 - Graham Hillis
+* RHMAP-3070 - Improve the email regular expression and use MBaaS when available for email. fh-mbaas-middleware version bump
+
+## 2.3.0 - 2015-11-24 - Graham Hillis
+* RHMAP-3070 - Improve the email regular expression and use MBaaS when available for email
+
 ## 2.2.0 - 2015-10-15 - Gerard Ryan
 * RHMAP-2459 - Cleanup entrypoint file with fh-cluster & functions
 
