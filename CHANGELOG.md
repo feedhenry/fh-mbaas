@@ -1,7 +1,8 @@
 #Component: fh-mbaas
+## 2.0.11 - 2015-11-25 - Wei Li
+* RHMAP-2640 - Fix error handler
 
 ## 2.0.10 - 2015-11-20 - Niall Donnelly
-
 * RHMAP-2844 - Fixed deleteAppReferences function name error in fh-forms
 
 ## 2.0.9 - 2015-10-01 - Gerard Ryan
