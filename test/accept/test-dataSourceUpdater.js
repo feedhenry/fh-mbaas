@@ -30,9 +30,7 @@ module.exports = {
       domain: fixtures.mockDomain,
       environment: fixtures.mockEnv,
       isServiceApp: true
-    }), sinon.match({
-      lean: true
-    }), sinon.match.func).callsArgWith(2, undefined, [mockDeployedService]);
+    }), sinon.match.func).callsArgWith(1, undefined, [mockDeployedService]);
 
     appMbaasFindStub.throws("Invalid Arguments");
 
