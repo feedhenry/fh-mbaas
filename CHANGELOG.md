@@ -4,6 +4,7 @@
 
 * FH-2097: Added Data Source Mbaas APIs
 * RHMAP-2395: Added agenda scheduler. 
+* RHMAP-2394 - Bump fh-forms version
 
 ## 2.0.2 - 2015-09-08 - Gerard Ryan
 * FH-1954 - Add an openshift3 property to appEnv model
