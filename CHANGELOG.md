@@ -1,3 +1,10 @@
+#Component: fh-mbaas
+## 2.4.0 - 2015-11-04 - Craig Brookes
+* RHMAP-2202-mbaas-route-for-app-messages
+
+## 2.3.0 - 2015-10-21 - Craig Brookes
+* RHMAP-2114 add metrics route to mbaas
+
 # Component: fh-mbaas
 
 ## 2.2.0 - 2015-10-15 - Gerard Ryan
@@ -56,6 +63,7 @@ More can be read about the crash monitor at docs/CrashMonitor.md
 ## 2.0.6 - 2015-09-08 - Luigi Zuccarelli
 * FH-2058 - Add conf-docker.json artifact
 * FH-2057 - Update validation check
+
 
 ## 2.0.5 - 2015-09-08 - Gerard Ryan
 * FH-1954 - Add an openshift3 property to appEnv model

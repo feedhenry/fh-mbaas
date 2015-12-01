@@ -9,7 +9,13 @@ var placeholders = {
   "mongo.auth.user": "$(MONGODB_FHMBAAS_USER)",
   "mongo.auth.pass": "$(MONGODB_FHMBAAS_PASSWORD)",
   "mongo.admin_auth.pass": "$(MONGODB_ADMIN_PASSWORD)",
-  "fhredis.host": "$(REDIS_SERVICE_SERVICE_HOST)"
+  "fhredis.host": "$(REDIS_SERVICE_SERVICE_HOST)",
+  "fhmetrics.host": "$(FH_METRICS_SERVICE_SERVICE_HOST)",
+  "fhmetrics.port":"$(FH_METRICS_SERVICE_SERVICE_PORT)",
+  "fhmetrics.apikey":"$(FH_METRICS_API_KEY)",
+  "fhmessaging.host":"$(FH_MESSAGING_SERVICE_SERVICE_HOST)",
+  "fh-messaging.port":"$(FH_MESSAGING_SERVICE_SERVICE_PORT)",
+  "fh-messaging.apikey":"$(FH_MESSAGING_API_KEY)"
 }
 
 module.exports = placeholders;
