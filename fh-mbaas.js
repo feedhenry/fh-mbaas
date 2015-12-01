@@ -18,8 +18,11 @@ var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 var fhServiceAuth = require('fh-service-auth');
 var async = require('async');
+var requiredvalidation = require('./lib/util/requiredvalidation.js');
+var logger;
+var scheduler;
 
-var fhCluster = require('fh-cluster');
+var fhcluster = require('fh-cluster');
 
 var formsUpdater = require('./lib/formsUpdater');
 
@@ -37,139 +40,150 @@ if (args._.length < 1) {
   usage();
 }
 
-
-// Show 'starting' message
-var workerId = process.env.NODE_WORKER_ID || 0;
-var starting = "Starting " + TITLE;
-if (workerId !== 0) starting += " Worker: " + workerId;
-console.log(starting);
-
-// read our config file
-var configFile = process.env.conf_file || args._[0];
-var configvalidate = require('./lib/util/configvalidation');
-
-fhconfig.init(configFile, configvalidate.configvalidation, function(err){
-  if(err){
-    console.error("Problems reading config file: " + configFile);
-    console.error(err);
-    process.exit(-1);
+if (args.d === true) {
+  console.log("STARTING ONE WORKER FOR DEBUG PURPOSES");
+  startWorker();
+} else {
+  // Note: if required as a module, its up to the user to call start();
+  if (require.main === module) {
+    fhcluster(startWorker);
   }
+}
 
-  var coverage;
-  // Note: location/order of these requires for istanbul code coverage is important.
-  if(fhconfig.bool('fhmbaas.code_coverage_enabled')){
-    coverage = require('istanbul-middleware');
-    coverage.hookLoader(__dirname);
-  }
+function startWorker(clusterWorker) {
 
-  var logger = fhconfig.getLogger();
+  // read our config file
+  var configFile = process.env.conf_file || args._[0];
 
-  //Setting Logger For The Forms Middleware Functions
-  forms.core.setLogger(logger);
+  fhconfig.init(configFile, requiredvalidation, function(err) {
+    if (err) {
+      console.error("Problems reading config file: " + configFile);
+      console.error(err);
+      process.exit(-1);
+    }
 
-  // Get our version number from package.json
-  var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
+    // Note: location/order of these requires for istanbul code coverage is important.
+    if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
+      var coverage = require('istanbul-middleware');
+      coverage.hookLoader(__dirname);
+    }
 
-  var cleanShutdown = function(clusterWorker) {
-    logger.info("Shutting down server..", clusterWorker.id, clusterWorker.process.pid);
+    var logger = getFhConfigLogger(fhconfig);
+    setupUncaughtExceptionHandler(logger);
+    setupFhconfigReloadHandler(fhconfig);
 
-    process.exit(1);
+    refreshJsonConfig(fhconfig, function(jsonConfig) {
+      initializeScheduler(clusterWorker);
+      initializeMiddlewareModule(clusterWorker, jsonConfig);
+    });
+  });
+}
+
+function refreshJsonConfig(fhconfig, cb) {
+  var conf = fhconfig.getConfig();
+  logger = getFhConfigLogger(fhconfig);
+  var jsonConfig = {
+    mongoUrl: fhconfig.mongoConnectionString(),
+    mongo : {
+      host: conf.rawConfig.mongo.host,
+      port: conf.rawConfig.mongo.port,
+      name: conf.rawConfig.mongo.name,
+      admin_auth: {
+        user: conf.rawConfig.mongo.admin_auth.user,
+        pass: conf.rawConfig.mongo.admin_auth.pass
+      }
+    },
+    crash_monitor: conf.rawConfig.crash_monitor,
+    email: conf.rawConfig.email,
+    fhamqp: conf.rawConfig.fhamqp,
+    logger: logger
   };
+  logger.debug('JSON Config ', jsonConfig);
+
+  return cb(jsonConfig);
+}
+
+function initializeScheduler(clusterWorker){
+  var conf = fhconfig.getConfig();
+  logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
+  scheduler = formsUpdater.scheduler(logger, conf.rawConfig, fhconfig.mongoConnectionString());
+  logger.info("Initialised scheduler", scheduler);
+}
 
 
-  // start worker
-  function startWorker(clusterWorker) {
-    var app = express();
-    var scheduler;
+function initializeMiddlewareModule(clusterWorker, jsonConfig) {
+  // models are also initialised in this call
 
-    // clean shut down - note cb is optional here (used in testsuite)
-    // Handle workers exiting
-    clusterWorker.on('exit', function() {
-      logger.info("Cleanly exiting..", this.id);
-      cleanShutdown(clusterWorker);
-    });
+  fhmbaasMiddleware.init(jsonConfig, function(err) {
+    if (err) {
+      jsonConfig.logger.error(err);
+      clusterWorker.kill();
+    } else {
+      fhServiceAuth.init({
+        logger: logger
+      }, startApp);
+    }
+  });
+}
 
-    clusterWorker.on('disconnect', function() {
-      var self = this;
-      logger.info("Worker Disconnected..", self.id);
-      // Worker has disconnected
-      if(scheduler){
-        logger.info("Shutting down scheduler..", self.id, self.process.pid);
-        scheduler.tearDown(function(){
-          logger.info("Scheduler Shut Down..", self.id, self.process.pid);
-        });
+function startApp() {
+  var app = express();
+
+  // Enable CORS for all requests
+  app.use(cors());
+
+  // Parse application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }));
+
+  // Parse JSON payloads
+  app.use(bodyParser.json({limit: fhconfig.value('fhmbaas.maxpayloadsize') || "20mb"}));
+
+  //Multipart Form Request Parser
+  app.use(multer({
+    dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
+  }));
+
+  app.use('/sys', require('./lib/handlers/sys.js')());
+  app.use('/api/mbaas', require('./lib/handlers/api.js'));
+  app.use('/api/app', require('./lib/handlers/app.js'));
+
+  var port = fhconfig.int('fhmbaas.port');
+  app.listen(port, function () {
+    // Get our version number from package.json
+    var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
+    console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
+  });
+}
+
+function getFhConfigLogger(fhconfig) {
+  var logger = fhconfig.getLogger();
+  forms.core.setLogger(logger);
+  return logger;
+}
+
+function setupFhconfigReloadHandler(fhconfig) {
+  process.on(fhconfig.RELOAD_CONFIG_SIGNAL, function() {
+    fhconfig.reload(cluster.workers, function(err) {
+      if (err) {
+        console.error("Config not reloaded");
+        console.error(err);
+        console.error("Please fix and try again!!");
       }
     });
+  });
+}
 
-    // Enable CORS for all requests
-    app.use(cors());
-
-    // Parse application/x-www-form-urlencoded
-    app.use(bodyParser.urlencoded({
-      extended: false
-    }));
-
-    // Parse JSON payloads
-    app.use(bodyParser.json({limit: fhconfig.value('fhmbaas.maxpayloadsize') || "20mb"}));
-
-    //Multipart Form Request Parser
-    app.use(multer({
-      dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
-    }));
-
-    var conf = fhconfig.getConfig();
-
-    logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
-    scheduler = formsUpdater.scheduler(logger, conf.rawConfig, fhconfig.mongoConnectionString());
-    logger.info("Initialised scheduler", scheduler);
-
-    async.parallel([
-      function initFhMbaasMiddleware(cb){
-        var mbaasMiddlewareConfig = {
-          mongoUrl: fhconfig.mongoConnectionString(),
-          mongo : {
-            host: conf.rawConfig.mongo.host,
-            port: conf.rawConfig.mongo.port,
-            name: conf.rawConfig.mongo.name,
-            admin_auth: {
-              user: conf.rawConfig.mongo.admin_auth.user,
-              pass: conf.rawConfig.mongo.admin_auth.pass
-            }
-          },
-          logger: logger
-        };
-
-        fhmbaasMiddleware.init(mbaasMiddlewareConfig, cb);
-      },
-      function initFhServicAuth(cb){
-        fhServiceAuth.init({
-          logger: logger
-        }, cb);
-      }
-    ], function(err){
-      if(err){
-        console.error("FATAL: " + util.inspect(err));
-        console.trace();
-        return cleanShutdown(clusterWorker); // exit on uncaught exception
-      }
-      app.use('/sys', require('./lib/routes/sys.js')());
-      app.use('/api/mbaas', require('./lib/routes/api.js'));
-
-      app.use('/api/app', require('./lib/routes/app.js'));
-
-
-      var port = fhconfig.int('fhmbaas.port');
-      app.listen(port, function () {
-        console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
-      });
-    });
-  }
-
-  if (args.d === true) {
-    console.log("STARING ONE WORKER FOR DEBUG PURPOSES");
-    startWorker();
-  } else {
-    fhCluster(startWorker);
-  }
-});
-
+function setupUncaughtExceptionHandler(logger) {
+  // handle uncaught exceptions
+  process.on('uncaughtException', function(err) {
+    logger.error("FATAL: UncaughtException, please report: " + util.inspect(err));
+    console.error(new Date().toString() + " FATAL: UncaughtException, please report: " + util.inspect(err));
+    if (err !== undefined && err.stack !== undefined) {
+      logger.error(util.inspect(err.stack));
+    }
+    console.trace();
+    process.exit(1);
+  });
+}

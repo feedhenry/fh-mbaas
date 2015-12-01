@@ -24,3 +24,4 @@ fh-log
 cov-*
 plato
 .idea
+conf-docker.json
