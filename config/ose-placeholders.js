@@ -15,8 +15,8 @@ var placeholders = {
   "fhmetrics.port":"$(FH_METRICS_SERVICE_SERVICE_PORT)",
   "fhmetrics.apikey":"$(FH_METRICS_API_KEY)",
   "fhmessaging.host":"$(FH_MESSAGING_SERVICE_SERVICE_HOST)",
-  "fh-messaging.port":"$(FH_MESSAGING_SERVICE_SERVICE_PORT)",
-  "fh-messaging.apikey":"$(FH_MESSAGING_API_KEY)"
+  "fhmessaging.port":"$(FH_MESSAGING_SERVICE_SERVICE_PORT)",
+  "fhmessaging.apikey":"$(FH_MESSAGING_API_KEY)"
 }
 
 module.exports = placeholders;
