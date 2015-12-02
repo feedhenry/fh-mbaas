@@ -3,6 +3,7 @@
 * RHMAP-2202-mbaas-route-for-app-messages
 * RHMAP-2114 add metrics route to mbaas
 * RHMAP-3175 - Use default mongo admin user of 'admin' for openshift config
+* RHMAP-3216 - Fix ose placholders for messaging config
 
 ## 2.2.0 - 2015-10-15 - Gerard Ryan
 * RHMAP-2459 - Cleanup entrypoint file with fh-cluster & functions
