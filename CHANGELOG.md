@@ -1,11 +1,18 @@
 #Component: fh-mbaas
-## 2.4.0 - 2015-11-04 - Craig Brookes
+## 3.0.0 - 2015-11-04 - Craig Brookes
 * RHMAP-2202-mbaas-route-for-app-messages
-
-## 2.3.0 - 2015-10-21 - Craig Brookes
 * RHMAP-2114 add metrics route to mbaas
+* RHMAP-3175 - Use default mongo admin user of 'admin' for openshift config
+* RHMAP-3216 - Fix ose placholders for messaging config
 
-# Component: fh-mbaas
+## 2.4.0 - 2015-12-03 - Graham Hillis
+* RHMAP-3066 - Change the app crash event timestamp in message
+
+## 2.3.1 - 2015-12-02 - Graham Hillis
+* RHMAP-3070 - Improve the email regular expression and use MBaaS when available for email. fh-mbaas-middleware version bump
+
+## 2.3.0 - 2015-11-24 - Graham Hillis
+* RHMAP-3070 - Improve the email regular expression and use MBaaS when available for email
 
 ## 2.2.0 - 2015-10-15 - Gerard Ryan
 * RHMAP-2459 - Cleanup entrypoint file with fh-cluster & functions
