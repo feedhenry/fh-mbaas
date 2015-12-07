@@ -6,6 +6,7 @@
 * RHMAP-2395: Added agenda scheduler. 
 * RHMAP-2394 - Bump fh-forms version
 * RHMAP-2782: Added Data Source Update Logic For An Mbaas
+* RHMAP-3242 - Fixed Deploying A Form Containing A Data Source Not Associating Correctly. 
 
 ## 2.2.0 - 2015-10-15 - Gerard Ryan
 * RHMAP-2459 - Cleanup entrypoint file with fh-cluster & functions
