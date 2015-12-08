@@ -1,25 +1,26 @@
 {
+  "logger": {
+    "name": "mbaas",
+    "type": "bunyan",
+    "streams": [{
+      "type": "stream",
+      "src": true,
+      "level": "trace",
+      "stream": "process.stdout"
+    }, {
+      "type": "raw",
+      "src": true,
+      "level": "trace",
+      "stream": "ringBuffer"
+    }]
+  },
   "fhmbaas": {
     "port": 8819,
     "key": "mBqxpulwlj3Rw7EsHZq0YEQyrArq2tlIRCQ0pCmr5DRPPDZMAP4ZNb7U0E6bPSb3",
     "maxpayloadsize": "100mb",
     "temp_forms_files_dest" : "/tmp/fh-mbaas",
     "pdfExportDir": "/tmp/fh-mbaas",
-    "code_coverage_enabled": false,
-    "logger": {
-      "name": "mbaas",
-      "streams": [{
-        "type": "stream",
-        "src": true,
-        "level": "trace",
-        "stream": "process.stdout"
-      }, {
-        "type": "raw",
-        "src": true,
-        "level": "trace",
-        "stream": "ringBuffer"
-      }]
-    }
+    "code_coverage_enabled": false
   },
   "mongo": {
     "enabled": true,
