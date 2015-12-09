@@ -27,7 +27,7 @@
     "fh-forms": "1.1.7",
     "fh-health": "0.0.6",
     "fh-mbaas-middleware": "^1.1.7",
-    "fh-metrics-client": "^1.0.0",
+    "fh-metrics-client": "1.0.1-pre1",
     "mongodb": "^1.4.18",
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",

@@ -2594,9 +2594,9 @@
       }
     },
     "fh-metrics-client": {
-      "version": "1.0.0",
-      "from": "fh-metrics-client@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/fh-metrics-client/-/fh-metrics-client-1.0.0.tgz",
+      "version": "1.0.1-pre1",
+      "from": "https://registry.npmjs.org/fh-metrics-client/-/fh-metrics-client-1.0.1-pre1.tgz",
+      "resolved": "https://registry.npmjs.org/fh-metrics-client/-/fh-metrics-client-1.0.1-pre1.tgz",
       "dependencies": {
         "request": {
           "version": "2.65.0",
