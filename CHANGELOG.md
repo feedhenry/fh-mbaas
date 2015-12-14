@@ -1,12 +1,25 @@
 # Component: fh-mbaas
 
-## 2.3.0 - 2015-10-03 - Niall Donnelly
+## 2.6.0 - 2015-10-03 - Niall Donnelly
 
 * FH-2097: Added Data Source Mbaas APIs
 * RHMAP-2395: Added agenda scheduler. 
 * RHMAP-2394 - Bump fh-forms version
 * RHMAP-2782: Added Data Source Update Logic For An Mbaas
 * RHMAP-3242 - Fixed Deploying A Form Containing A Data Source Not Associating Correctly. 
+
+## 2.5.0 - 2015-11-25 - Wei Li, Niall Donnelly
+* RHMAP-2640 - Fix error handler
+* RHMAP-2844 - Fixed deleteAppReferences function name error in fh-forms
+
+## 2.4.0 - 2015-12-03 - Graham Hillis
+* RHMAP-3066 - Change the app crash event timestamp in message
+
+## 2.3.1 - 2015-12-02 - Graham Hillis
+* RHMAP-3070 - Improve the email regular expression and use MBaaS when available for email. fh-mbaas-middleware version bump
+
+## 2.3.0 - 2015-11-24 - Graham Hillis
+* RHMAP-3070 - Improve the email regular expression and use MBaaS when available for email
 
 ## 2.2.0 - 2015-10-15 - Gerard Ryan
 * RHMAP-2459 - Cleanup entrypoint file with fh-cluster & functions
