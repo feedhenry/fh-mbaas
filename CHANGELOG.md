@@ -5,6 +5,10 @@
 * RHMAP-3175 - Use default mongo admin user of 'admin' for openshift config
 * RHMAP-3216 - Fix ose placholders for messaging config
 
+## 2.5.0 - 2015-11-25 - Wei Li, Niall Donnelly
+* RHMAP-2640 - Fix error handler
+* RHMAP-2844 - Fixed deleteAppReferences function name error in fh-forms
+
 ## 2.4.0 - 2015-12-03 - Graham Hillis
 * RHMAP-3066 - Change the app crash event timestamp in message
 
