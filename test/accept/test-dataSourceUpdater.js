@@ -84,7 +84,7 @@ module.exports = {
 
     var dataSourceUpdater = proxyquire('../../lib/dataSourceUpdater', mocks);
 
-    dataSourceUpdater.handlers.updateAllEnvDataSourceCache({}, function(err){
+    dataSourceUpdater(fhConfig.getLogger()).handlers.updateAllEnvDataSourceCache({}, function(err){
       assert.ok(!err, "Expected No Error");
 
       done();

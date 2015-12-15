@@ -4,6 +4,15 @@ var assert = require('assert');
 var fixtures = require('../../../fixtures');
 var fhConfig = require('fh-config');
 fhConfig.setRawConfig(fixtures.config);
+var logger = fhConfig.getLogger();
+
+var mockLogger = {
+  getLogger: function(){
+    return {
+      logger: logger
+    };
+  }
+};
 
 module.exports = {
   "It Should Request A Data Source Data Set": function(done){
@@ -37,7 +46,8 @@ module.exports = {
     var mocks = {
       'request': {
         get: getStub
-      }
+      },
+      '../logger': mockLogger
     };
 
     var requestEnvDataSources = proxyquire('../../../../lib/dataSourceUpdater/lib/handlers/requestEndpointData', mocks);

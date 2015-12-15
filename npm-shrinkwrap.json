@@ -1,7 +1,55 @@
 {
   "name": "fh-mbaas",
-  "version": "2.5.0-BUILD-NUMBER",
+  "version": "2.6.0-BUILD-NUMBER",
   "dependencies": {
+    "agenda": {
+      "version": "0.6.28",
+      "from": "agenda@>=0.6.28 <0.7.0",
+      "resolved": "https://registry.npmjs.org/agenda/-/agenda-0.6.28.tgz",
+      "dependencies": {
+        "human-interval": {
+          "version": "0.1.5",
+          "from": "human-interval@>=0.1.3 <0.2.0",
+          "resolved": "https://registry.npmjs.org/human-interval/-/human-interval-0.1.5.tgz"
+        },
+        "date.js": {
+          "version": "0.2.1",
+          "from": "date.js@>=0.2.0 <0.3.0",
+          "resolved": "https://registry.npmjs.org/date.js/-/date.js-0.2.1.tgz",
+          "dependencies": {
+            "debug": {
+              "version": "0.7.4",
+              "from": "debug@>=0.7.2 <0.8.0",
+              "resolved": "https://registry.npmjs.org/debug/-/debug-0.7.4.tgz"
+            }
+          }
+        },
+        "mongoskin": {
+          "version": "1.4.13",
+          "from": "mongoskin@>=1.4.1 <1.5.0",
+          "resolved": "https://registry.npmjs.org/mongoskin/-/mongoskin-1.4.13.tgz"
+        },
+        "cron": {
+          "version": "1.0.9",
+          "from": "cron@>=1.0.1 <1.1.0",
+          "resolved": "https://registry.npmjs.org/cron/-/cron-1.0.9.tgz",
+          "dependencies": {
+            "moment-timezone": {
+              "version": "0.3.1",
+              "from": "moment-timezone@>=0.3.0 <0.4.0",
+              "resolved": "https://registry.npmjs.org/moment-timezone/-/moment-timezone-0.3.1.tgz",
+              "dependencies": {
+                "moment": {
+                  "version": "2.10.6",
+                  "from": "moment@>=2.6.0",
+                  "resolved": "https://registry.npmjs.org/moment/-/moment-2.10.6.tgz"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "async": {
       "version": "0.9.2",
       "from": "async@>=0.9.0 <0.10.0",
@@ -581,9 +629,9 @@
       }
     },
     "fh-cluster": {
-      "version": "0.1.0",
-      "from": "fh-cluster@0.1.0",
-      "resolved": "https://registry.npmjs.org/fh-cluster/-/fh-cluster-0.1.0.tgz",
+      "version": "0.2.0",
+      "from": "fh-cluster@>=0.2.0 <0.3.0",
+      "resolved": "https://registry.npmjs.org/fh-cluster/-/fh-cluster-0.2.0.tgz",
       "dependencies": {
         "backoff": {
           "version": "2.4.1",
@@ -714,7 +762,7 @@
                             },
                             "spdx-license-ids": {
                               "version": "1.1.0",
-                              "from": "spdx-license-ids@>=1.0.2 <2.0.0",
+                              "from": "spdx-license-ids@>=1.0.0 <2.0.0",
                               "resolved": "https://registry.npmjs.org/spdx-license-ids/-/spdx-license-ids-1.1.0.tgz"
                             }
                           }
@@ -929,7 +977,7 @@
             },
             "isstream": {
               "version": "0.1.2",
-              "from": "isstream@>=0.1.2 <0.2.0",
+              "from": "isstream@>=0.1.0 <0.2.0",
               "resolved": "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz"
             },
             "pkginfo": {
@@ -947,9 +995,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.1.9",
-      "from": "fh-forms@1.1.9",
-      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.1.9.tgz",
+      "version": "1.3.0-179",
+      "from": "fh-forms@1.3.0-179",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.3.0-179.tgz",
       "dependencies": {
         "archiver": {
           "version": "0.14.3",
@@ -1931,7 +1979,7 @@
             },
             "isstream": {
               "version": "0.1.2",
-              "from": "isstream@>=0.1.2 <0.2.0",
+              "from": "isstream@>=0.1.0 <0.2.0",
               "resolved": "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz"
             },
             "pkginfo": {
@@ -1949,9 +1997,9 @@
       }
     },
     "fh-mbaas-middleware": {
-      "version": "1.1.7",
-      "from": "fh-mbaas-middleware@>=1.1.7 <2.0.0",
-      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.1.7.tgz",
+      "version": "1.2.0-104",
+      "from": "fh-mbaas-middleware@1.2.0-104",
+      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.2.0-104.tgz",
       "dependencies": {
         "bunyan": {
           "version": "1.4.0",
@@ -2593,6 +2641,18 @@
         }
       }
     },
+    "fh-service-auth": {
+      "version": "0.1.0-1",
+      "from": "fh-service-auth@0.1.0-1",
+      "resolved": "https://registry.npmjs.org/fh-service-auth/-/fh-service-auth-0.1.0-1.tgz",
+      "dependencies": {
+        "async": {
+          "version": "1.5.0",
+          "from": "https://registry.npmjs.org/async/-/async-1.5.0.tgz",
+          "resolved": "https://registry.npmjs.org/async/-/async-1.5.0.tgz"
+        }
+      }
+    },
     "mongodb": {
       "version": "1.4.39",
       "from": "mongodb@>=1.4.18 <2.0.0",
@@ -2660,6 +2720,11 @@
           }
         }
       }
+    },
+    "mongodb-uri": {
+      "version": "0.9.7",
+      "from": "mongodb-uri@>=0.9.7 <0.10.0",
+      "resolved": "https://registry.npmjs.org/mongodb-uri/-/mongodb-uri-0.9.7.tgz"
     },
     "mongoose": {
       "version": "3.8.16",
@@ -2980,7 +3045,7 @@
         },
         "minimist": {
           "version": "0.0.10",
-          "from": "minimist@>=0.0.7 <0.1.0",
+          "from": "minimist@>=0.0.1 <0.1.0",
           "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
         }
       }
@@ -3100,7 +3165,7 @@
         },
         "mime-types": {
           "version": "2.1.8",
-          "from": "mime-types@>=2.1.8 <2.2.0",
+          "from": "mime-types@>=2.1.7 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.8.tgz",
           "dependencies": {
             "mime-db": {

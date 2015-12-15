@@ -5,6 +5,15 @@ var stubs = require('../../../stubs');
 var fixtures = require('../../../fixtures');
 var fhConfig = require('fh-config');
 fhConfig.setRawConfig(fixtures.config);
+var logger = fhConfig.getLogger();
+
+var mockLogger = {
+  getLogger: function(){
+    return {
+      logger: logger
+    };
+  }
+};
 
 module.exports = {
   "It Should Update Data Source Cache No Error": function (done) {
@@ -21,7 +30,8 @@ module.exports = {
             updateCache: updateCacheStub
           }
         }
-      }
+      },
+      '../logger': mockLogger
     };
 
     var updateDataSourceCache = proxyquire('../../../../lib/dataSourceUpdater/lib/handlers/updateDataSourceCache', mocks);
@@ -55,7 +65,8 @@ module.exports = {
             updateCache: updateCacheStub
           }
         }
-      }
+      },
+      '../logger': mockLogger
     };
 
     var updateDataSourceCache = proxyquire('../../../../lib/dataSourceUpdater/lib/handlers/updateDataSourceCache', mocks);

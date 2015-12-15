@@ -65,7 +65,8 @@ module.exports = {
           ), sinon.match(
             [sinon.match({
               _id: dsWithData._id,
-              data: sinon.match.array
+              data: sinon.match.array,
+              dataError: sinon.match.falsy
             })]
           ), sinon.match({
             currentTime: sinon.match.date
@@ -85,6 +86,7 @@ module.exports = {
           ), sinon.match(
             [sinon.match({
               _id: dsWithError._id,
+              data: sinon.match.array,
               dataError: sinon.match(dsWithError.currentStatus.error)
             })]
           ), sinon.match({

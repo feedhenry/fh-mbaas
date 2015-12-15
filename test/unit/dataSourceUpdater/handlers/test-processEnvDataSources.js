@@ -6,6 +6,16 @@ var stubs = require('../../../stubs');
 var fhConfig = require('fh-config');
 fhConfig.setRawConfig(fixtures.config);
 
+var logger = fhConfig.getLogger();
+
+var mockLogger = {
+  getLogger: function(){
+    return {
+      logger: logger
+    };
+  }
+};
+
 module.exports = {
   "It Should Process Data Sources For An Environment": function(done){
     var mockEnvConfig = fixtures.envConfig();
@@ -21,7 +31,8 @@ module.exports = {
         listForUpdate: dsListForUpdate
       },
       './updateSingleDataSource': updateSingleDataSourceStub,
-      '../../../services/appmbaas/listDeployedServices': listDeployedServices
+      '../../../services/appmbaas/listDeployedServices': listDeployedServices,
+      '../logger': mockLogger
     };
 
     var processEnvDataSources = proxyquire('../../../../lib/dataSourceUpdater/lib/handlers/processEnvDataSources', mocks);
@@ -56,7 +67,8 @@ module.exports = {
         listForUpdate: dsListStub
       },
       './updateSingleDataSource': updateSingleDataSourceStub,
-      '../../../services/appmbaas/listDeployedServices': listDeployedServices
+      '../../../services/appmbaas/listDeployedServices': listDeployedServices,
+      '../logger': mockLogger
     };
 
     var processEnvDataSources = proxyquire('../../../../lib/dataSourceUpdater/lib/handlers/processEnvDataSources', mocks);
