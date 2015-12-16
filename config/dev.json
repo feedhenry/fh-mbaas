@@ -112,6 +112,7 @@
   },
   "agenda": {
     "enabled": true,
+    "preferredWorkerId": 1,
     "jobs": {
       "data_source_update": {
         "schedule": "5 seconds"

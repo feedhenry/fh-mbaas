@@ -4,8 +4,8 @@
   "dependencies": {
     "agenda": {
       "version": "0.6.28",
-      "from": "agenda@>=0.6.28 <0.7.0",
-      "resolved": "https://registry.npmjs.org/agenda/-/agenda-0.6.28.tgz",
+      "from": "git+https://github.com/nialldonnellyfh/agenda.git#fix_concurrency_bug",
+      "resolved": "git+https://github.com/nialldonnellyfh/agenda.git#2b6145845b5730795a05aadea0ce8f3efb1c4ee3",
       "dependencies": {
         "human-interval": {
           "version": "0.1.5",
@@ -340,7 +340,7 @@
           "dependencies": {
             "mime-types": {
               "version": "2.1.8",
-              "from": "mime-types@>=2.1.8 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.8.tgz",
               "dependencies": {
                 "mime-db": {
@@ -541,7 +541,7 @@
             },
             "mime-types": {
               "version": "2.1.8",
-              "from": "mime-types@>=2.1.8 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.8.tgz",
               "dependencies": {
                 "mime-db": {
@@ -629,9 +629,9 @@
       }
     },
     "fh-cluster": {
-      "version": "0.2.0",
-      "from": "fh-cluster@>=0.2.0 <0.3.0",
-      "resolved": "https://registry.npmjs.org/fh-cluster/-/fh-cluster-0.2.0.tgz",
+      "version": "0.3.0-15",
+      "from": "fh-cluster@0.3.0-15",
+      "resolved": "https://registry.npmjs.org/fh-cluster/-/fh-cluster-0.3.0-15.tgz",
       "dependencies": {
         "backoff": {
           "version": "2.4.1",
@@ -762,7 +762,7 @@
                             },
                             "spdx-license-ids": {
                               "version": "1.1.0",
-                              "from": "spdx-license-ids@>=1.0.0 <2.0.0",
+                              "from": "spdx-license-ids@>=1.0.2 <2.0.0",
                               "resolved": "https://registry.npmjs.org/spdx-license-ids/-/spdx-license-ids-1.1.0.tgz"
                             }
                           }
@@ -2918,9 +2918,9 @@
           }
         },
         "sanitizer": {
-          "version": "0.1.2",
+          "version": "0.1.3",
           "from": "sanitizer@>=0.1.0 <0.2.0",
-          "resolved": "https://registry.npmjs.org/sanitizer/-/sanitizer-0.1.2.tgz"
+          "resolved": "https://registry.npmjs.org/sanitizer/-/sanitizer-0.1.3.tgz"
         }
       }
     },
