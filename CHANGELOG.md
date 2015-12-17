@@ -1,5 +1,9 @@
 # Component: fh-mbaas
 
+## 2.5.1 - 2015-12-14 - Gerard Ryan
+* Update fh-forms version for productization
+* Remove unspecifiers (^,~) from production dependency versions (and align with shrinkwrap)
+
 ## 2.5.0 - 2015-11-25 - Wei Li, Niall Donnelly
 * RHMAP-2640 - Fix error handler
 * RHMAP-2844 - Fixed deleteAppReferences function name error in fh-forms
