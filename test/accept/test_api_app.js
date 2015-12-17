@@ -86,7 +86,7 @@ exports.it_should_fail_with_401 = function (finish){
 
 exports.it_should_complete_ok_with_single_message = function (finish){
   var app = defineRoute({
-    '../clients/messaging/index':function (config){
+    'fh-messaging-client':function (config){
       return {
         "createAppMessage": function (topic,msg,callback) {
           assert.ok(topic === "fhact","expected the topic to be fhact");
@@ -111,7 +111,7 @@ exports.it_should_complete_ok_with_single_message = function (finish){
 
 exports.it_should_complete_ok_with_array_of_messages = function (finish){
   var app = defineRoute({
-    '../clients/messaging/index':function (config){
+    'fh-messaging-client':function (config){
       return {
         "createAppMessage": function (topic,msg,callback) {
           assert.ok(topic === "fhact","expected the topic to be fhact");
@@ -135,7 +135,7 @@ exports.it_should_complete_ok_with_array_of_messages = function (finish){
 
 exports.it_should_complete_ok_even_error_with_client = function (finish){
   var app = defineRoute({
-    '../clients/messaging/index':function (config){
+    'fh-messaging-client':function (config){
       return {
         "createAppMessage": function (topic,msg,callback) {
           

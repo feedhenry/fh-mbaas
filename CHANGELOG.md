@@ -1,5 +1,6 @@
 #Component: fh-mbaas
 ## 3.0.0 - 2015-11-04 - Craig Brookes
+* RHMAP-3548-update-mbaas-clients
 * RHMAP-2202-mbaas-route-for-app-messages
 * RHMAP-2114 add metrics route to mbaas
 * RHMAP-3175 - Use default mongo admin user of 'admin' for openshift config
