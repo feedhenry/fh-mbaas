@@ -5,6 +5,8 @@
 * RHMAP-2114 add metrics route to mbaas
 * RHMAP-3175 - Use default mongo admin user of 'admin' for openshift config
 * RHMAP-3216 - Fix ose placholders for messaging config
+* RHMAP-3567 - overide placeholder for realtime enabled
+
 
 ## 2.5.1 - 2015-12-14 - Gerard Ryan
 * Update fh-forms version for productization
