@@ -2,10 +2,10 @@
   "name": "fh-mbaas",
   "version": "2.6.0-BUILD-NUMBER",
   "dependencies": {
-    "agenda": {
-      "version": "0.6.28",
-      "from": "git+https://github.com/nialldonnellyfh/agenda.git#fix_concurrency_bug",
-      "resolved": "git+https://github.com/nialldonnellyfh/agenda.git#2b6145845b5730795a05aadea0ce8f3efb1c4ee3",
+    "fh-agenda": {
+      "version": "0.1.0",
+      "from": "fh-agenda@0.1.0",
+      "resolved": "http://registry.npmjs.org/fh-agenda/-/fh-agenda-0.1.0.tgz",
       "dependencies": {
         "human-interval": {
           "version": "0.1.5",
@@ -629,9 +629,9 @@
       }
     },
     "fh-cluster": {
-      "version": "0.3.0-15",
-      "from": "fh-cluster@0.3.0-15",
-      "resolved": "https://registry.npmjs.org/fh-cluster/-/fh-cluster-0.3.0-15.tgz",
+      "version": "0.3.0",
+      "from": "fh-cluster@0.3.0",
+      "resolved": "https://registry.npmjs.org/fh-cluster/-/fh-cluster-0.3.0.tgz",
       "dependencies": {
         "backoff": {
           "version": "2.4.1",
