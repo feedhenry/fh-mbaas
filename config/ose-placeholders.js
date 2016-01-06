@@ -11,14 +11,17 @@ var placeholders = {
   "mongo.admin_auth.user": "admin",
   "mongo.admin_auth.pass": "$(MONGODB_ADMIN_PASSWORD)",
   "fhredis.host": "$(REDIS_SERVICE_SERVICE_HOST)",
+  "fhredis.port": "$(REDIS_SERVICE_SERVICE_PORT)",
   "fhmetrics.host": "$(FH_METRICS_SERVICE_SERVICE_HOST)",
-  "fhmetrics.port":"$(FH_METRICS_SERVICE_SERVICE_PORT)",
-  "fhmetrics.apikey":"$(FH_METRICS_API_KEY)",
-  "fhmessaging.host":"$(FH_MESSAGING_SERVICE_SERVICE_HOST)",
-  "fhmessaging.port":"$(FH_MESSAGING_SERVICE_SERVICE_PORT)",
-  "fhmessaging.apikey":"$(FH_MESSAGING_API_KEY)",
-  "fhmessaging.realtime":true,
-  "fhmessaging.cluster":"$(FH_CLUSTER)"
+  "fhmetrics.port": "$(FH_METRICS_SERVICE_SERVICE_PORT)",
+  "fhmetrics.apikey": "$(FH_METRICS_API_KEY)",
+  "fhmessaging.host": "$(FH_MESSAGING_SERVICE_SERVICE_HOST)",
+  "fhmessaging.port": "$(FH_MESSAGING_SERVICE_SERVICE_PORT)",
+  "fhmessaging.apikey": "$(FH_MESSAGING_API_KEY)",
+  "fhmessaging.realtime": true,
+  "fhmessaging.cluster":"$(FH_CLUSTER)",
+  "fhstats.host": "$(FH_STATSD_SERVICE_SERVICE_HOST)",
+  "fhstats.port": "$(FH_STATSD_SERVICE_SERVICE_PORT)"
 };
 
 module.exports = placeholders;
