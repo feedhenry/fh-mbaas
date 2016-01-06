@@ -39,7 +39,7 @@ module.exports = {
 
     var app = express();
 
-    app.use(function(req, res, next){
+    app.use(function (req, res, next) {
       req.mongoUrl = fixtures.mockMongoUrl;
       next();
     });
@@ -55,7 +55,7 @@ module.exports = {
         assert.equal(res.body[0].serviceGuid, mockServiceDetails.guid);
       })
       .end(function (err) {
-        if(err){
+        if (err) {
           console.error(err);
         }
         assert.ok(!err, "Expected No Error " + util.inspect(err));
@@ -89,7 +89,7 @@ module.exports = {
 
     var app = express();
 
-    app.use(function(req, res, next){
+    app.use(function (req, res, next) {
       req.mongoUrl = fixtures.mockMongoUrl;
       next();
     });
@@ -148,7 +148,7 @@ module.exports = {
 
     app.use(bodyParser.json());
 
-    app.use(function(req, res, next){
+    app.use(function (req, res, next) {
       req.mongoUrl = fixtures.mockMongoUrl;
       next();
     });
@@ -209,7 +209,7 @@ module.exports = {
 
     var app = express();
 
-    app.use(function(req, res, next){
+    app.use(function (req, res, next) {
       req.mongoUrl = fixtures.mockMongoUrl;
       next();
     });
@@ -226,6 +226,146 @@ module.exports = {
         assert.equal(1, mockSericeModel.callCount);
         assert.equal(1, mockRemoveDSStub.callCount);
         assert.equal(1, dsGetStub.callCount);
+
+        done();
+      });
+  },
+  "It Should Force A Refresh Of A Single Data Source": function (done) {
+    var mockDs = fixtures.forms.dataSources.withData();
+    var mockServiceDetails = fixtures.services.get();
+    var mockDSGet = stubs.forms.core.dataSources.get();
+    var mockGetDeployedService = stubs.services.appmbaas.getDeployedService();
+    mockGetDeployedService['@global'] = true;
+    var mockUpdateSingleDataSource = stubs.dataSourceUpdater.handlers.updateSingleDataSource();
+
+    var dataSourceUpdaterModule = function () {
+      return {
+        handlers: {
+          updateSingleDataSource: mockUpdateSingleDataSource
+        }
+      };
+    };
+    dataSourceUpdaterModule['@global'] = true;
+
+
+    var mocks = {
+      'fh-forms': {
+        '@global': true,
+        core: {
+          dataSources: {
+            get: mockDSGet
+          }
+        }
+      },
+      '../../../services/appmbaas/getDeployedService': mockGetDeployedService,
+      'fh-config': {
+        '@global': true,
+        getLogger: sinon.stub().returns(logger)
+      },
+      '../../../dataSourceUpdater': dataSourceUpdaterModule
+    };
+
+    var dsRouter = proxyquire('../../../../lib/routes/forms/dataSources/router.js', mocks);
+
+    var app = express();
+
+    app.use(bodyParser.json());
+
+    app.use(function (req, res, next) {
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    });
+
+    app.use(baseRoutePath, dsRouter);
+
+    supertest(app)
+      .post(baseUrl + '/' + mockDs._id + "/refresh")
+      .send(mockDs)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function (res) {
+        assert.equal(res.body._id, mockDs._id);
+        assert.equal(res.body.serviceGuid, mockServiceDetails.guid);
+        assert.equal(res.body.currentStatus.status, 'ok');
+      })
+      .end(function (err) {
+        assert.ok(!err, "Expected No Error " + err);
+
+        sinon.assert.calledTwice(mockDSGet);
+        sinon.assert.calledOnce(mockUpdateSingleDataSource);
+        sinon.assert.calledOnce(mockGetDeployedService);
+
+        done();
+      });
+  },
+  "It Should Validate A Single Data Source": function (done) {
+
+    var mockDs = fixtures.forms.dataSources.get();
+    var mockServiceDetails = fixtures.services.get();
+    var mockDSValidate = stubs.forms.core.dataSources.validate();
+    var mockGetDeployedService = stubs.services.appmbaas.getDeployedService();
+    mockGetDeployedService['@global'] = true;
+    var mockRequestEndpointData = stubs.dataSourceUpdater.handlers.requestEndpointData();
+
+    var dataSourceUpdaterModule = function () {
+      return {
+        handlers: {
+          requestEndpointData: mockRequestEndpointData
+        }
+      };
+    };
+    dataSourceUpdaterModule['@global'] = true;
+
+    var mocks = {
+      'fh-forms': {
+        '@global': true,
+        core: {
+          dataSources: {
+            validate: mockDSValidate
+          }
+        }
+      },
+      '../../../services/appmbaas/getDeployedService': mockGetDeployedService,
+      'fh-config': {
+        '@global': true,
+        getLogger: sinon.stub().returns(logger)
+      },
+      '../../../dataSourceUpdater': dataSourceUpdaterModule
+    };
+
+    var dsRouter = proxyquire('../../../../lib/routes/forms/dataSources/router.js', mocks);
+
+    var app = express();
+
+    app.use(bodyParser.json());
+
+    app.use(function (req, res, next) {
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    });
+
+    app.use(baseRoutePath, dsRouter);
+
+    supertest(app)
+      .post(baseUrl + "/validate")
+      .send(mockDs)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function (res) {
+        assert.equal(res.body._id, mockDs._id);
+        assert.equal(res.body.serviceGuid, mockServiceDetails.guid);
+        assert.equal(res.body.validationResult.valid, true);
+        assert.ok(res.body.data[0], "Expected A Data Set");
+      })
+      .end(function (err) {
+        if (err) {
+          logger.error(err);
+        }
+        assert.ok(!err, "Expected No Error " + err);
+
+        sinon.assert.calledOnce(mockDSValidate);
+        sinon.assert.calledOnce(mockRequestEndpointData);
+        sinon.assert.calledOnce(mockGetDeployedService);
 
         done();
       });

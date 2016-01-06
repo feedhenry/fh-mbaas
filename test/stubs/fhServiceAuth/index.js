@@ -73,7 +73,7 @@ function findOneOrCreate(stubs) {
 
 function findOne(stubs) {
   stubs = stubs || {};
-  var mockService = fixtures.services.get();
+  var mockService = fixtures.services.deployedService();
   var mockDs = fixtures.forms.dataSources.get();
   var stub = sinon.stub();
 

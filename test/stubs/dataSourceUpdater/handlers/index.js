@@ -30,7 +30,7 @@ module.exports = {
           accessKey: sinon.match.string
         }
       ), sinon.match.func
-    ).callsArgWith(1, fixtures.forms.dataSources.dsDataSet());
+    ).callsArgWith(1, undefined, fixtures.forms.dataSources.dsDataSet());
 
     stub.throws("Invalid Arguments");
 
@@ -89,7 +89,7 @@ module.exports = {
         }
       ),
       sinon.match.func
-    ).callsArgWith(1, undefined, dsWithData);
+    ).callsArgWith(1, undefined);
 
     stub.withArgs(
       sinon.match(
@@ -106,9 +106,9 @@ module.exports = {
         }
       ),
       sinon.match.func
-    ).callsArgWith(1, undefined, dsWithError);
+    ).callsArgWith(1, undefined);
 
-    stub.throws("Invalid Arguments");
+    stub.throws(new Error("Invalid Arguments"));
 
     return stub;
   }
