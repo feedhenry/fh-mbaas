@@ -1,5 +1,6 @@
 var sinon = require('sinon');
 var fixtures = require('../../fixtures');
+var _ = require('underscore');
 
 var mockMongoUrl = fixtures.mockMongoUrl;
 
@@ -7,7 +8,7 @@ module.exports = {
   core: {
     dataSources: {
       get: function () {
-        var mockDataSource = fixtures.forms.dataSources.get();
+        var mockDataSource = fixtures.forms.dataSources.withData();
         var stub = sinon.stub();
 
         stub.withArgs(sinon.match.has('uri', mockMongoUrl), sinon.match.has("_id", mockDataSource._id), sinon.match.func).callsArgWith(2, undefined, mockDataSource);
@@ -21,7 +22,7 @@ module.exports = {
         var mockDataSource = fixtures.forms.dataSources.get();
         var stub = sinon.stub();
 
-        stub.withArgs(sinon.match.has('uri', sinon.match(function(val){
+        stub.withArgs(sinon.match.has('uri', sinon.match(function (val) {
           return val.indexOf("mongodb://") > -1;
         })), sinon.match.object, sinon.match.func).callsArgWith(2, undefined, [mockDataSource]);
 
@@ -49,6 +50,33 @@ module.exports = {
         stub.throws("Invalid Arguments");
 
         return stub;
+      },
+      validate: function () {
+        var validateDataSourceStub = sinon.stub();
+
+        var dsWithData = fixtures.forms.dataSources.withData();
+
+        validateDataSourceStub.withArgs(
+          sinon.match(
+            {
+              uri: fixtures.envConfig().dbConf.expectedMongoUrl
+            }
+          ),  sinon.match({
+            _id: dsWithData._id,
+            data: sinon.match.array
+          }),
+          sinon.match.func
+          )
+          .callsArgWith(2, undefined, _.extend(dsWithData, {
+            validationResult: {
+              valid: true,
+              message: "Data Is Valid"
+            }
+          }));
+
+        validateDataSourceStub.throws("Invalid Arguments");
+
+        return validateDataSourceStub;
       },
       updateCache: function () {
         var updateCacheStub = sinon.stub();

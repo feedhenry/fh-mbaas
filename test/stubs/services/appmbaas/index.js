@@ -14,5 +14,18 @@ module.exports = {
     stub.throws("Invalid Arguments");
 
     return stub;
+  },
+  getDeployedService: function () {
+    var stub = sinon.stub();
+
+    stub.withArgs(sinon.match({
+      domain: fixtures.mockDomain,
+      environment: fixtures.mockEnv,
+      guid: fixtures.services.get().guid
+    }), sinon.match.func).callsArgWith(1, undefined, fixtures.services.deployedService());
+
+    stub.throws("Invalid Arguments");
+
+    return stub;
   }
 };

@@ -17,14 +17,17 @@ var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 var fhServiceAuth = require('fh-service-auth');
-var async = require('async');
 var requiredvalidation = require('./lib/util/requiredvalidation.js');
 var logger;
 var scheduler;
+var _ = require('underscore');
+var async = require('async');
 
 var fhcluster = require('fh-cluster');
-
+var cluster = require('cluster');
 var formsUpdater = require('./lib/formsUpdater');
+
+var START_AGENDA = "startAgenda";
 
 // args and usage
 function usage() {
@@ -40,48 +43,78 @@ if (args._.length < 1) {
   usage();
 }
 
-if (args.d === true) {
-  console.log("STARTING ONE WORKER FOR DEBUG PURPOSES");
-  startWorker();
-} else {
-  // Note: if required as a module, its up to the user to call start();
-  if (require.main === module) {
-    fhcluster(startWorker);
+//Loading The Config First
+loadConfig(function(){
+  if (args.d === true) {
+    console.log("STARTING ONE WORKER FOR DEBUG PURPOSES");
+    startWorker();
+  } else {
+    var preferredWorkerId = fhconfig.value('agenda.preferredWorkerId');
+    // Note: if required as a module, its up to the user to call start();
+    if (require.main === module) {
+      fhcluster(startWorker, undefined, undefined, [
+        {
+          workerFunction: initializeScheduler,
+          startEventId: START_AGENDA,
+          preferredWorkerId: preferredWorkerId
+        }
+      ]);
+    }
   }
-}
+});
 
-function startWorker(clusterWorker) {
-
+/**
+ * Loading Mondule Config From File System
+ * @param cb
+ */
+function loadConfig(cb){
   // read our config file
   var configFile = process.env.conf_file || args._[0];
 
-  fhconfig.init(configFile, requiredvalidation, function(err) {
-    if (err) {
+  fhconfig.init(configFile, requiredvalidation, function(err){
+    if(err){
       console.error("Problems reading config file: " + configFile);
       console.error(err);
       process.exit(-1);
     }
 
-    // Note: location/order of these requires for istanbul code coverage is important.
-    if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
-      var coverage = require('istanbul-middleware');
-      coverage.hookLoader(__dirname);
+    if(!logger){
+      logger = getFhConfigLogger(fhconfig);
     }
 
-    var logger = getFhConfigLogger(fhconfig);
-    setupUncaughtExceptionHandler(logger);
-    setupFhconfigReloadHandler(fhconfig);
-
-    refreshJsonConfig(fhconfig, function(jsonConfig) {
-      initializeScheduler(clusterWorker);
-      initializeMiddlewareModule(clusterWorker, jsonConfig);
-    });
+    cb();
   });
 }
 
-function refreshJsonConfig(fhconfig, cb) {
+/**
+ * Initialising The Scheduler. This is bound to a single worker using fh-cluster.
+ * @param clusterWorker
+ */
+function initializeScheduler(clusterWorker){
+  //Ensuring that the config is loaded.
+  initModules(clusterWorker, getMbaasMiddlewareConfig(), function(){
+    logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
+    scheduler = formsUpdater.scheduler(logger, fhconfig.getConfig().rawConfig, fhconfig.mongoConnectionString());
+    logger.info("Initialised scheduler", scheduler);
+  });
+}
+
+function startWorker(clusterWorker) {
+
+  // Note: location/order of these requires for istanbul code coverage is important.
+  if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
+    var coverage = require('istanbul-middleware');
+    coverage.hookLoader(__dirname);
+  }
+
+  setupUncaughtExceptionHandler(logger);
+  setupFhconfigReloadHandler(fhconfig);
+
+  initModules(clusterWorker, getMbaasMiddlewareConfig(), startApp);
+}
+
+function getMbaasMiddlewareConfig() {
   var conf = fhconfig.getConfig();
-  logger = getFhConfigLogger(fhconfig);
   var jsonConfig = {
     mongoUrl: fhconfig.mongoConnectionString(),
     mongo : {
@@ -100,20 +133,12 @@ function refreshJsonConfig(fhconfig, cb) {
   };
   logger.debug('JSON Config ', jsonConfig);
 
-  return cb(jsonConfig);
-}
-
-function initializeScheduler(clusterWorker){
-  var conf = fhconfig.getConfig();
-  logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
-  scheduler = formsUpdater.scheduler(logger, conf.rawConfig, fhconfig.mongoConnectionString());
-  logger.info("Initialised scheduler", scheduler);
+  return jsonConfig;
 }
 
 
-function initializeMiddlewareModule(clusterWorker, jsonConfig) {
+function initModules(clusterWorker, jsonConfig, cb) {
   // models are also initialised in this call
-
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
       jsonConfig.logger.error(err);
@@ -121,7 +146,7 @@ function initializeMiddlewareModule(clusterWorker, jsonConfig) {
     } else {
       fhServiceAuth.init({
         logger: logger
-      }, startApp);
+      }, cb);
     }
   });
 }

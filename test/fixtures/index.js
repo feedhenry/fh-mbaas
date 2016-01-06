@@ -1,9 +1,9 @@
-
+var mockMongoUrl = "mongodb://someuser:somepassword@some.mongo.host:27017/mockdomain_mockenv";
 
 module.exports = {
   forms: require('./forms'),
   services: require('./services'),
-  mockMongoUrl: "mongodb://some.mongo.url/somedatabase",
+  mockMongoUrl: mockMongoUrl,
   mockEnv: "mockenv",
   mockDomain: "mockdomain",
   config: require('./config'),
@@ -17,7 +17,7 @@ module.exports = {
         host: "some.mongo.host",
         port: 27017,
         name: this.mockDomain + "_" + this.mockEnv,
-        expectedMongoUrl: "mongodb://someuser:somepassword@some.mongo.host:27017/mockdomain_mockenv"
+        expectedMongoUrl: mockMongoUrl
       }
     }
   }
