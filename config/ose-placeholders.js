@@ -1,4 +1,5 @@
 var placeholders = {
+  "openshift3": true,
   "crash_monitor.enabled": false,
   "fhamqp.enabled": false,
   "fhmbaas.port": 8080,
