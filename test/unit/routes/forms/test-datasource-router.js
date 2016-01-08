@@ -369,5 +369,78 @@ module.exports = {
 
         done();
       });
+  },
+  "It Should Validate A Single Data Source No Deployed Service": function (done) {
+
+    var mockDs = fixtures.forms.dataSources.get();
+    var mockServiceDetails = fixtures.services.get();
+    var mockDSValidate = stubs.forms.core.dataSources.validate();
+    var mockGetDeployedService = stubs.services.appmbaas.getDeployedService(true);
+    mockGetDeployedService['@global'] = true;
+    var mockRequestEndpointData = stubs.dataSourceUpdater.handlers.requestEndpointData();
+
+    var dataSourceUpdaterModule = function () {
+      return {
+        handlers: {
+          requestEndpointData: mockRequestEndpointData
+        }
+      };
+    };
+    dataSourceUpdaterModule['@global'] = true;
+
+    var mocks = {
+      'fh-forms': {
+        '@global': true,
+        core: {
+          dataSources: {
+            validate: mockDSValidate
+          }
+        }
+      },
+      '../../../services/appmbaas/getDeployedService': mockGetDeployedService,
+      'fh-config': {
+        '@global': true,
+        getLogger: sinon.stub().returns(logger)
+      },
+      '../../../dataSourceUpdater': dataSourceUpdaterModule
+    };
+
+    var dsRouter = proxyquire('../../../../lib/routes/forms/dataSources/router.js', mocks);
+
+    var app = express();
+
+    app.use(bodyParser.json());
+
+    app.use(function (req, res, next) {
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    });
+
+    app.use(baseRoutePath, dsRouter);
+
+    supertest(app)
+      .post(baseUrl + "/validate")
+      .send(mockDs)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function (res) {
+        assert.equal(res.body._id, mockDs._id);
+        assert.equal(res.body.serviceGuid, mockServiceDetails.guid);
+        assert.equal(res.body.validationResult.valid, false);
+        assert.ok(res.body.validationResult.message.indexOf("Deployed") > -1);
+        assert.ok(!res.body.data, "Expected NO Data Set");
+      })
+      .end(function (err) {
+        if (err) {
+          logger.error(err);
+        }
+        assert.ok(!err, "Expected No Error " + err);
+
+        sinon.assert.notCalled(mockDSValidate);
+        sinon.assert.notCalled(mockRequestEndpointData);
+        sinon.assert.calledOnce(mockGetDeployedService);
+
+        done();
+      });
   }
 };
