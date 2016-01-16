@@ -5,7 +5,8 @@ var dynofarmPort = 19002;
 var config ={
   fhmbaas:{
     key:'testkey',
-    protocol: "https"
+    protocol: "https",
+    "mbaasid":"development"
   },
   mongo:{
     enabled: true,
