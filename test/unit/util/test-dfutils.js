@@ -22,6 +22,13 @@ var mockdfc = function(){
       assert.equal(args[0], DOMAIN, 'domain does not match');
       assert.equal(args[1], APPNAME, 'appname does not match');
       return cb();
+    },
+
+    'appmigrate': function(args, cb){
+      assert.ok(args[0] === 'start' || args[0] === 'stop');
+      assert.equal(args[1], DOMAIN, 'domain does not match');
+      assert.equal(args[2], APPNAME, 'appname does not match');
+      return cb();
     }
   }
 };
@@ -35,3 +42,11 @@ exports.it_should_stop_app = function(finish){
     finish();
   });
 };
+
+exports.it_should_migrate_app = function(finish){
+  dfutils.migrateAppDb('start', DOMAIN, ENVIRONMENT, APPNAME, function(err){
+    assert.ok(!err, 'failed to start app migration');
+    dfutils.clearInterval(); //need to call this otherwise the test runner will not finish
+    finish();
+  });
+}
