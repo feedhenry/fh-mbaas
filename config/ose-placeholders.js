@@ -18,7 +18,7 @@ var placeholders = {
   "fhmessaging.port":"$(FH_MESSAGING_SERVICE_SERVICE_PORT)",
   "fhmessaging.apikey":"$(FH_MESSAGING_API_KEY)",
   "fhmessaging.realtime":true,
-  "fhmessaging.cluster":"${FH_CLUSTER}"
+  "fhmessaging.cluster":"$(FH_CLUSTER)"
 };
 
 module.exports = placeholders;
