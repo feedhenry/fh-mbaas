@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     optional: ['mocha -A -u exports --recursive -t 10000 test/accept/test-backoff.js'],
     
     accept: [
-      'turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js'
+      'turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js test/accept/test_api_app.js'
     ],
 
     unit_cover: ['istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- --setUp=test/setup.js test/unit/**/*.js'],

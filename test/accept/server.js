@@ -35,6 +35,20 @@ var cfg = {
       pass: 'admin'
     }
   },
+  "fhmessaging":{
+    "enabled": true,
+    "host":"localhost",
+    "protocol":"http",
+    "port":8803,
+    "path":"msg/TOPIC",
+    "cluster":"development",
+    "realtime": false,
+    "apikey":"secretkey",
+    "files":{
+      "recovery_file":"../messages/recovery.log",
+      "backup_file":"../messages/backup.log"
+    }
+  },
   logger: log
 };
 
@@ -253,3 +267,5 @@ exports.tearDown = function(finish) {
     });
   });
 };
+
+exports.connectDb = connectDb;
