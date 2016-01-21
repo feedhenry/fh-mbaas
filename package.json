@@ -26,15 +26,10 @@
     "fh-config": "0.1.2",
     "fh-forms": "1.2.1",
     "fh-health": "0.0.6",
-<<<<<<< HEAD
-    "fh-mbaas-middleware": "^1.1.3",
-    "mongodb": "^1.4.18",
-=======
-    "fh-mbaas-middleware": "^1.1.7",
+    "fh-mbaas-middleware": "1.1.7",
     "fh-messaging-client": "1.0.3",
     "fh-metrics-client": "1.0.2",
     "mongodb": "1.4.39",
->>>>>>> d7f426dca13a9350a6331f53e9b1f0d67c42b969
     "mongoose": "3.8.16",
     "mongoose-filter-denormalize": "0.2.1",
     "mongoose-timestamp": "0.3.0",
