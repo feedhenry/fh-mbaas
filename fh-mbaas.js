@@ -104,16 +104,19 @@ function initializeMiddlewareModule(clusterWorker, jsonConfig) {
       jsonConfig.logger.error(err);
       clusterWorker.kill();
     } else {
-      startApp();
+      startApp(jsonConfig.logger);
     }
   });
 }
 
-function startApp() {
+function startApp( logger ) {
   var app = express();
 
   // Enable CORS for all requests
   app.use(cors());
+
+  // Request logging
+  app.use(require('express-bunyan-logger')({ logger: logger, parseUA: false }));
 
   // Parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({
