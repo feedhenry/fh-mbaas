@@ -70,6 +70,12 @@
       }
     }
   },
+  "fhmetrics" :{
+    "host":"127.0.0.1",
+    "port":"8813",
+    "protocol":"http",
+    "apikey":"somekey"
+  },
   "fhmessaging":{
     "enabled": true,
     "host":"localhost",
@@ -78,6 +84,7 @@
     "path":"msg/TOPIC",
     "cluster":"development",
     "realtime": false,
+    "apikey":"secretkey",
     "files":{
       "recovery_file":"../messages/recovery.log",
       "backup_file":"../messages/backup.log"

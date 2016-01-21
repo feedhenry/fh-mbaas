@@ -1,0 +1,85 @@
+# sys endpoint routes
+swagger: '2.0'
+info:
+  title: Metrics Api
+  description: Endpoints For Retrieving Metrics from an mbaas
+  version: "1.0.0"
+
+schemes:
+  - http
+
+basePath: /api/metrics
+
+produces:
+  - application/json
+  
+
+paths:
+  /:
+    get:
+      summary: Get Rolled up metrics from an mbaas
+      description: Returns the rolled up metrics from fh-metrics in the mbaas
+      tags:
+        - Metrics
+      responses:
+        200:
+          description: 
+          schema:
+            type: Metrics
+        500:
+          description: Error Getting Metrics
+          schema:
+            type: object
+        400:
+          description: Bad request Getting Metrics
+          schema:
+          type: object
+
+#TODO, Full FH-Supercore Config
+definitions:
+  Metrics:
+    properties:
+      domainrequestsgeo:
+        type: array        
+      domainstartupsdest:
+        type: array
+      domaininstallsgeo:
+        type: array
+      domainrequestsdest:
+        type: array
+      domainstartupsgeo:
+        type: array
+      domaintransactionsdest:
+        type: array
+      domaintransactionsgeo:
+        type: array
+      domaininstallsdest:
+        type: array
+      appinstallsdest:
+        type: array
+      apprequestsdest:
+        type: array
+      apprequestsgeo:
+        type: array
+      appstartupsdest:
+        type: array
+      apptransactionsgeo:
+        type: array
+      appstartupsgeo:
+        type: array
+      apptransactionsdest:
+        type: array
+      appinstallsgeo
+        type: array        
+
+
+
+
+
+
+
+
+
+
+
+

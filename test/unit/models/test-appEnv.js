@@ -38,7 +38,7 @@ exports.test_app_envs = function(finish){
 
   assert.equal(envs.FH_MESSAGING_BACKUP_FILE, '../messages/backup.log');
   assert.equal(envs.FH_MESSAGING_CLUSTER, 'development');
-  assert.equal(envs.FH_MESSAGING_ENABLED, false);
+  assert.equal(envs.FH_MESSAGING_ENABLED, true);
   assert.equal(envs.FH_MESSAGING_HOST, 'localhost');
   assert.equal(envs.FH_MESSAGING_PROTOCOL, 'http');
   assert.equal(envs.FH_MESSAGING_REALTIME_ENABLED, false);
