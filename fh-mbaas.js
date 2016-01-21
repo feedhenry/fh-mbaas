@@ -166,7 +166,7 @@ function setupUncaughtExceptionHandler(logger) {
     if (err !== undefined && err.stack !== undefined) {
       logger.error(util.inspect(err.stack));
     }
-    console.trace();
+    console.trace(err.stack);
     process.exit(1);
   });
 }

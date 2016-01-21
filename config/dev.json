@@ -116,5 +116,6 @@
     "auth_pass": "SENDGRID_PASSWORD",
     "alert_email_from": "no-reply@feedhenry.com",
     "alert_email_bcc": ""
-  }
+  },
+  "openshift3": false
 }
