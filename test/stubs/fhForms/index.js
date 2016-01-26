@@ -9,9 +9,21 @@ module.exports = {
     dataSources: {
       get: function () {
         var mockDataSource = fixtures.forms.dataSources.withData();
+        var mockDataSourceWithAuditLogs = fixtures.forms.dataSources.withAuditLogs();
         var stub = sinon.stub();
 
-        stub.withArgs(sinon.match.has('uri', mockMongoUrl), sinon.match.has("_id", mockDataSource._id), sinon.match.func).callsArgWith(2, undefined, mockDataSource);
+        stub.withArgs(sinon.match.has('uri', mockMongoUrl), sinon.match({
+          _id: mockDataSource._id,
+          includeAuditLog: sinon.match.falsy
+        }), sinon.match.func).callsArgWith(2, undefined, mockDataSource);
+
+        //Looking for audit logs
+        stub.withArgs(sinon.match({
+          uri: mockMongoUrl
+        }), sinon.match({
+          _id: mockDataSource._id,
+          includeAuditLog: true
+        }), sinon.match.func).callsArgWith(2, undefined, mockDataSourceWithAuditLogs);
 
         stub.throws("Invalid Arguments");
 

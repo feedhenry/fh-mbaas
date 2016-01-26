@@ -10,6 +10,7 @@ fhConfig.setRawConfig(fixtures.config);
 var logger = fhConfig.getLogger();
 var sinon = require('sinon');
 var bodyParser = require('body-parser');
+var _ = require('underscore');
 
 var baseRoutePath = '/:domain/:environment/appforms/data_sources';
 var baseUrl = '/' + fixtures.mockDomain + '/' + fixtures.mockEnv + '/appforms/data_sources';
@@ -112,11 +113,73 @@ module.exports = {
         done();
       });
   },
+  "It Should Get A Single Data Source With Audit Logs": function (done) {
+    var mockDSWithAuditLogs = fixtures.forms.dataSources.withAuditLogs();
+    var mockServiceDetails = fixtures.services.get();
+    var dsGetStub = stubs.forms.core.dataSources.get();
+
+    var mocks = {
+      'fh-forms': {
+        '@global': true,
+        core: {
+          dataSources: {
+            get: dsGetStub
+          }
+        }
+      },
+      'fh-config': {
+        '@global': true,
+        getLogger: sinon.stub().returns(logger)
+      }
+    };
+
+    var dsRouter = proxyquire('../../../../lib/routes/forms/dataSources/router.js', mocks);
+
+    var app = express();
+
+    app.use(function (req, res, next) {
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    });
+
+    app.use(baseRoutePath, dsRouter);
+
+    supertest(app)
+      .get(baseUrl + '/' + mockDSWithAuditLogs._id + "/audit_logs")
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function (res) {
+        assert.equal(res.body._id, mockDSWithAuditLogs._id);
+        assert.equal(res.body.serviceGuid, mockServiceDetails.guid);
+        assert.ok(res.body.auditLogs, "Expected Audit Logs");
+      })
+      .end(function (err) {
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        sinon.assert.calledOnce(dsGetStub);
+
+        done();
+      });
+  },
   "It Should Deploy A Single Data Source": function (done) {
     var mockDs = fixtures.forms.dataSources.get();
     var mockServiceDetails = fixtures.services.get();
     var deploy = stubs.forms.core.dataSources.deploy();
     var mockUpdateDataSources = stubs.fhServiceAuth.model.updateDataSources();
+
+    var mockGetDeployedService = stubs.services.appmbaas.getDeployedService();
+    mockGetDeployedService['@global'] = true;
+    var mockUpdateSingleDataSource = stubs.dataSourceUpdater.handlers.updateSingleDataSource();
+
+    var dataSourceUpdaterModule = function () {
+      return {
+        handlers: {
+          updateSingleDataSource: mockUpdateSingleDataSource
+        }
+      };
+    };
+    dataSourceUpdaterModule['@global'] = true;
+
     var mockServiceModel = stubs.fhServiceAuth.model.get({
       updateDataSources: mockUpdateDataSources
     });
@@ -130,6 +193,7 @@ module.exports = {
           }
         }
       },
+      '../../../services/appmbaas/getDeployedService': mockGetDeployedService,
       'fh-service-auth': {
         '@global': true,
         model: {
@@ -139,7 +203,8 @@ module.exports = {
       'fh-config': {
         '@global': true,
         getLogger: sinon.stub().returns(logger)
-      }
+      },
+      '../../../dataSourceUpdater': dataSourceUpdaterModule
     };
 
     var dsRouter = proxyquire('../../../../lib/routes/forms/dataSources/router.js', mocks);
@@ -167,11 +232,16 @@ module.exports = {
       .end(function (err) {
         assert.ok(!err, "Expected No Error " + err);
 
-        assert.equal(1, deploy.callCount);
-        assert.equal(1, mockUpdateDataSources.callCount);
-        assert.equal(1, mockServiceModel.callCount);
+        sinon.assert.calledOnce(deploy);
+        sinon.assert.calledOnce(mockUpdateDataSources);
+        sinon.assert.calledOnce(mockServiceModel);
 
-        done();
+        //These functions should be called after the deploy has responded.
+        setTimeout(function(){
+          sinon.assert.calledOnce(mockUpdateSingleDataSource);
+          sinon.assert.calledOnce(mockGetDeployedService);
+          done();
+        }, 100);
       });
   },
   "It Should Remove A Single Data Source": function (done) {
