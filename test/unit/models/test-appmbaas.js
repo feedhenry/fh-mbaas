@@ -195,48 +195,6 @@ exports.test_migrate_db = function(finish){
   finish();
 };
 
-exports.test_complete_migrate_db = function(finish){
-  var next = sinon.spy();
-  var migrateComplete = sinon.stub();
-  var mockSave = sinon.stub();
-  var createDb = sinon.stub();
-
-  var migrateCompleteDb = proxyquire('../../../lib/middleware/mbaasApp.js', { '../util/mongo.js' : {createDb: createDb} , '../util/ditchhelper.js': {migrateComplete: migrateComplete} } ).completeMigrateDbMiddleware;
-
-  var req = {
-      params: {
-        appid: "someappguid",
-        id: "somethemeid"
-      },
-      appMbaasModel: { 
-        name: "unit-testing",
-        domain: "somedomain",
-        environment: "someenvironment",
-        guid:"4562651426",
-        save : mockSave
-      }
-  };
-  
-  migrateComplete.callsArg(5);
-  // first save with error
-  mockSave.callsArgWith(0, new Error('mock error'));
-  migrateCompleteDb(req, {}, next);
-  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
-  assert.equal(next.args[0][0],'Error: No cacheKey found for app unit-testing');
-
-  req.body = {'cacheKey':'2321312321' };
-  next.reset();
-  migrateComplete.reset();
-  mockSave.reset();
-  migrateComplete.callsArg(5);
-  mockSave.callsArg(0);
-  migrateCompleteDb(req, {}, next);
-  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
-  assert.ok(migrateComplete.calledBefore(next));
-  assert.equal(true,mockSave.thisValues[0].migrated);
-  finish();
-};
-
 exports.test_drop_db = function(finish){
   var next = sinon.spy();
   var mockRemove = sinon.stub();
