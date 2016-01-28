@@ -20,6 +20,24 @@ module.exports = {
 
     return ds;
   },
+  withAuditLogs: function(){
+    var ds = this.withData();
+    var self = this;
+
+    ds.auditLogs = [{
+      updateTimestamp: new Date(),
+      serviceGuid: services.get().guid,
+      endpoint: ds.endpoint,
+      lastRefreshed: new Date(),
+      data: self.dsDataSet(),
+      dataHash: "123456",
+      currentStatus: {
+        status: "ok"
+      }
+    }];
+
+    return ds;
+  },
   dsDataSet: function(){
     return [{
       key: "dskey1",

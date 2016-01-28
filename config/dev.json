@@ -115,7 +115,7 @@
     "preferredWorkerId": 1,
     "jobs": {
       "data_source_update": {
-        "schedule": "5 seconds"
+        "schedule": "60 seconds"
       }
     }
   }
