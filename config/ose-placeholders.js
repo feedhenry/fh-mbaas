@@ -22,7 +22,8 @@ var placeholders = {
   "fhmessaging.realtime": true,
   "fhmessaging.cluster":"$(FH_CLUSTER)",
   "fhstats.host": "$(FH_STATSD_SERVICE_SERVICE_HOST)",
-  "fhstats.port": "$(FH_STATSD_SERVICE_SERVICE_PORT)"
+  "fhstats.port": "$(FH_STATSD_SERVICE_SERVICE_PORT)",
+  "fhmbaas.mbaasid":"$(FH_MBAASID)"
 };
 
 module.exports = placeholders;
