@@ -25,7 +25,7 @@
     "fh-amqp-js": "0.5.0",
     "fh-cluster": "0.1.0",
     "fh-config": "0.1.3",
-    "fh-forms": "1.2.4-198",
+    "fh-forms": "1.2.4",
     "fh-health": "0.1.0",
     "fh-mbaas-middleware": "1.1.7",
     "fh-messaging-client": "1.0.3",
