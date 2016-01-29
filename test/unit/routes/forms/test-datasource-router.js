@@ -244,6 +244,90 @@ module.exports = {
         }, 100);
       });
   },
+  "It Should Deploy A Single Data Source No Service Deployed": function (done) {
+    var mockDs = fixtures.forms.dataSources.get();
+    var mockServiceDetails = fixtures.services.get();
+    var deploy = stubs.forms.core.dataSources.deploy();
+    var mockUpdateDataSources = stubs.fhServiceAuth.model.updateDataSources();
+
+    var mockGetDeployedService = stubs.services.appmbaas.getDeployedService(true);
+    mockGetDeployedService['@global'] = true;
+    //Expecting an error update to the data source update function
+    var mockUpdateSingleDataSource = stubs.dataSourceUpdater.handlers.updateSingleDataSource(true);
+
+    var dataSourceUpdaterModule = function () {
+      return {
+        handlers: {
+          updateSingleDataSource: mockUpdateSingleDataSource
+        }
+      };
+    };
+    dataSourceUpdaterModule['@global'] = true;
+
+    var mockServiceModel = stubs.fhServiceAuth.model.get({
+      updateDataSources: mockUpdateDataSources
+    });
+
+    var mocks = {
+      'fh-forms': {
+        '@global': true,
+        core: {
+          dataSources: {
+            deploy: deploy
+          }
+        }
+      },
+      '../../../services/appmbaas/getDeployedService': mockGetDeployedService,
+      'fh-service-auth': {
+        '@global': true,
+        model: {
+          get: mockServiceModel
+        }
+      },
+      'fh-config': {
+        '@global': true,
+        getLogger: sinon.stub().returns(logger)
+      },
+      '../../../dataSourceUpdater': dataSourceUpdaterModule
+    };
+
+    var dsRouter = proxyquire('../../../../lib/routes/forms/dataSources/router.js', mocks);
+
+    var app = express();
+
+    app.use(bodyParser.json());
+
+    app.use(function (req, res, next) {
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    });
+
+    app.use(baseRoutePath, dsRouter);
+
+    supertest(app)
+      .post(baseUrl + '/' + mockDs._id + "/deploy")
+      .send(mockDs)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function (res) {
+        assert.equal(res.body._id, mockDs._id);
+        assert.equal(res.body.serviceGuid, mockServiceDetails.guid);
+      })
+      .end(function (err) {
+        assert.ok(!err, "Expected No Error " + err);
+
+        sinon.assert.calledOnce(deploy);
+        sinon.assert.calledOnce(mockUpdateDataSources);
+        sinon.assert.calledOnce(mockServiceModel);
+
+        //These functions should be called after the deploy has responded.
+        setTimeout(function(){
+          sinon.assert.calledOnce(mockUpdateSingleDataSource);
+          sinon.assert.calledOnce(mockGetDeployedService);
+          done();
+        }, 100);
+      });
+  },
   "It Should Remove A Single Data Source": function (done) {
     var mockDs = fixtures.forms.dataSources.get();
     var dsRemoveStub = stubs.forms.core.dataSources.remove();
