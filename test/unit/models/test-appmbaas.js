@@ -62,18 +62,20 @@ exports.test_create_db = function(finish){
       domain: "somedomain",
       environment: "someenvironment",
       id: "somethemeid",
+      type:"feedhenry"
     },
     cacheKey: "2321312321",
     body: {'cacheKey':'2321312321'},
     appMbaasModel: {
-      save: mockSave, 
-      markModified: mockMod, 
-      name: "unit-testing", 
-      migrated: 'true'
+      save: mockSave,
+      markModified: mockMod,
+      name: "unit-testing",
+      migrated: 'true',
+      type:"feedhenry"
     }
   };
 
-  mockSave.callsArg(0); 
+  mockSave.callsArg(0);
   createDb.callsArg(4);
   createDatabase(req, req, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
@@ -101,10 +103,10 @@ exports.test_create_db_error = function(finish){
         cacheKey: "2321312321"
       },
       body: {'cacheKey':'2321312321'},
-      appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing"}
+      appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing","type":"feedhenry"}
   };
 
-  mockSave.callsArgWith(0,new Error('mock error')); 
+  mockSave.callsArgWith(0,new Error('mock error'));
   createDb.callsArg(4);
   createDatabase(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
@@ -131,8 +133,8 @@ exports.test_stop_app = function(finish){
       },
       appMbaasModel: { name: "unit-testing"}
   };
-  
-  stopApp.callsArg(3); 
+
+  stopApp.callsArg(3);
   stopAppMiddle(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
   assert.ok(stopApp.calledBefore(next));
@@ -150,15 +152,15 @@ exports.test_stop_app_error = function(finish){
       params: {
         id: "somethemeid"
       },
-      appMbaasModel: { 
+      appMbaasModel: {
         name: "unit-testing",
         appid: "someappguid",
         domain: "somedomain",
         environment: "someenvironment",
       }
   };
-  
-  stopApp.callsArgWith(3, new Error('mock error')); 
+
+  stopApp.callsArgWith(3, new Error('mock error'));
   stopAppMiddle(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
   assert.ok(stopApp.calledBefore(next));
@@ -179,7 +181,7 @@ exports.test_migrate_db = function(finish){
         cacheKey: "cahckey456",
         id: "somethemeid"
       },
-      appMbaasModel: { 
+      appMbaasModel: {
         name: "unit-testing",
         domain: "somedomain",
         environment: "someenvironment",
@@ -187,8 +189,8 @@ exports.test_migrate_db = function(finish){
       },
       body: {'cacheKey':'2321312321'},
   };
-  
-  doMigrate.callsArg(5); 
+
+  doMigrate.callsArg(5);
   migrateDbMiddle(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
   assert.ok(doMigrate.calledBefore(next));
@@ -209,8 +211,8 @@ exports.test_drop_db = function(finish){
         environment: "someenvironment",
         id: "somethemeid"
       },
-      appMbaasModel: { 
-        name: "unit-testing", 
+      appMbaasModel: {
+        name: "unit-testing",
         migrated: true,
         dbConf: {
           user: 'user',
@@ -245,8 +247,8 @@ exports.test_drop_db_error = function(finish){
         environment: "someenvironment",
         id: "somethemeid"
       },
-      appMbaasModel: { 
-        name: "unit-testing", 
+      appMbaasModel: {
+        name: "unit-testing",
         migrated: true,
         dbConf: {
           user: 'user',
@@ -271,8 +273,8 @@ exports.test_get_models_info = function(finish){
   var createDb = sinon.stub();
   var mockMbaas = sinon.stub();
   var mockEnv = sinon.stub();
-  
-  var mockFind = function() { 
+
+  var mockFind = function() {
     return {
       findOne : function(args, cb) {
         return cb();
@@ -289,8 +291,8 @@ exports.test_get_models_info = function(finish){
         environment: "someenvironment",
         id: "somethemeid"
       },
-      appMbaasModel: { 
-        name: "unit-testing", 
+      appMbaasModel: {
+        name: "unit-testing",
         migrated: true,
         dbConf: {
           user: 'user',
@@ -331,8 +333,8 @@ exports.test_get_models_info_error = function(finish){
         environment: "someenvironment",
         id: "somethemeid"
       },
-      appMbaasModel: { 
-        name: "unit-testing", 
+      appMbaasModel: {
+        name: "unit-testing",
         migrated: true,
         dbConf: {
           user: 'user',
