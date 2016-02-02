@@ -73,40 +73,42 @@ module.exports = {
 
     return stub;
   },
-  updateSingleDataSource: function () {
+  updateSingleDataSource: function (expectError) {
     var stub = sinon.stub();
     var dsWithData = fixtures.forms.dataSources.withData();
     var dsWithError = fixtures.forms.dataSources.withError();
     var deployedService = fixtures.services.deployedService();
 
-    stub.withArgs(
-      sinon.match(
-        {
-          accessKey: deployedService.serviceAccessKey,
-          fullUrl: sinon.match.string,
-          dataSourceId: dsWithData._id,
-          mongoUrl: sinon.match.string
-        }
-      ),
-      sinon.match.func
-    ).callsArgWith(1, undefined);
-
-    stub.withArgs(
-      sinon.match(
-        {
-          accessKey: sinon.match.falsy,
-          fullUrl: sinon.match.falsy,
-          dataSourceId: dsWithError._id,
-          mongoUrl: sinon.match.string,
-          error: sinon.match({
-            code: sinon.match.string,
-            userDetail: sinon.match.string,
-            systemDetail: sinon.match.string
-          })
-        }
-      ),
-      sinon.match.func
-    ).callsArgWith(1, undefined);
+    if(!expectError){
+      stub.withArgs(
+        sinon.match(
+          {
+            accessKey: deployedService.serviceAccessKey,
+            fullUrl: sinon.match.string,
+            dataSourceId: dsWithData._id,
+            mongoUrl: sinon.match.string
+          }
+        ),
+        sinon.match.func
+      ).callsArgWith(1, undefined);
+    } else {
+      stub.withArgs(
+        sinon.match(
+          {
+            accessKey: sinon.match.falsy,
+            fullUrl: sinon.match.falsy,
+            dataSourceId: dsWithError._id,
+            mongoUrl: sinon.match.string,
+            error: sinon.match({
+              code: sinon.match.string,
+              userDetail: sinon.match.string,
+              systemDetail: sinon.match.string
+            })
+          }
+        ),
+        sinon.match.func
+      ).callsArgWith(1, undefined);
+    }
 
     stub.throws(new Error("Invalid Arguments"));
 
