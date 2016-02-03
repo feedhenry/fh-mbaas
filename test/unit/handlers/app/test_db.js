@@ -37,9 +37,9 @@ module.exports.test_get_connection_string_ok = function (finish){
 
   db.getConnectionString(req,res,next);
   assert(next.calledOnce,"expected next to be called once");
-  assert(res.resultData, "expected result data");
-  assert.ok(res.resultData.url,"expected a url value");
-  assert.ok(res.resultData.url.indexOf("mongodb") === 0,"expected a mongodb connection string");
+  assert(req.resultData, "expected result data");
+  assert.ok(req.resultData.url,"expected a url value");
+  assert.ok(req.resultData.url.indexOf("mongodb") === 0,"expected a mongodb connection string");
   finish();
 
 };
