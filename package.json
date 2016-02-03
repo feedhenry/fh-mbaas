@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "3.0.2-BUILD-NUMBER",
+  "version": "3.0.3-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -8,7 +8,7 @@
   "scripts": {
     "install": "scripts/install.sh",
     "postinstall": "scripts/postinstall.sh",
-    "start": "node fh-mbaas.js config/conf.json"
+    "start": "node fh-mbaas.js config/conf.json --master-only"
   },
   "bin": {
     "fh-mbaas": "./fh-mbaas.js"
