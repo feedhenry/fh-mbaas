@@ -74,6 +74,7 @@ function startWorker(clusterWorker) {
   });
 }
 
+
 function refreshJsonConfig(fhconfig, cb) {
   var conf = fhconfig.getConfig();
   var logger = getFhConfigLogger(fhconfig);
@@ -100,6 +101,7 @@ function refreshJsonConfig(fhconfig, cb) {
 
 
 function initializeMiddlewareModule(clusterWorker, jsonConfig) {
+  var migrationStatusHandler = require('./lib/util/migrationStatusHandler.js');
   // models are also initialised in this call
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
@@ -107,6 +109,7 @@ function initializeMiddlewareModule(clusterWorker, jsonConfig) {
       clusterWorker.kill();
     } else {
       startApp(jsonConfig.logger);
+      migrationStatusHandler.listenToMigrationStatus(jsonConfig);
     }
   });
 }
