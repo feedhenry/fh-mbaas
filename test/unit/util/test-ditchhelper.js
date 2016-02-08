@@ -18,7 +18,7 @@ exports.it_should_call_fh_ditch = function(finish){
   var cb2 = sinon.spy();
 
   post.callsArg(1);
-  ditchhelper.doMigrate(DOMAIN, ENVIRONMENT, APPNAME, 'testcachekey', 'testappguid', cb1);
+  ditchhelper.doMigrate(DOMAIN, ENVIRONMENT, APPNAME, 'testcachekey', 'testappguid',"http:/test.feedhenry.com", cb1);
   post.once();
   post.calledWith({url: 'http://localhost:9999/sys/admin/migratedb', json:{
     cacheKey: 'testcachekey',

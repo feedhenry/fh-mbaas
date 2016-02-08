@@ -3,9 +3,9 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     unit: ['turbo --setUp=test/setup.js test/unit/**/*.js'],
-    
+    unit_single: ['turbo --setUp=test/setup.js test/unit/**/<%= unit_test_filename %>'],
     optional: ['mocha -A -u exports --recursive -t 10000 test/accept/test-backoff.js'],
-    
+
     accept: [
       'turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js test/accept/test_api_app.js'
     ],
