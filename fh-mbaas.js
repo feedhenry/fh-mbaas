@@ -31,7 +31,7 @@ var START_AGENDA = "startAgenda";
 
 // args and usage
 function usage() {
-  console.log("Usage: " + args.$0 + " <config file> [-d] (debug)");
+  console.log("Usage: " + args.$0 + " <config file> [-d] (debug) --master-only --workers=[int] \n --master-only will override  --workers so should not be used together");
   process.exit(0);
 }
 
@@ -45,14 +45,16 @@ if (args._.length < 1) {
 
 //Loading The Config First
 loadConfig(function(){
-  if (args.d === true) {
-    console.log("STARTING ONE WORKER FOR DEBUG PURPOSES");
+  if (args.d === true || args["master-only"] === true) {
+
+    console.log("starting single master process");
     startWorker();
   } else {
     var preferredWorkerId = fhconfig.value('agenda.preferredWorkerId');
     // Note: if required as a module, its up to the user to call start();
     if (require.main === module) {
-      fhcluster(startWorker, undefined, undefined, [
+      var numWorkers = args["workers"];
+      fhcluster(startWorker, numWorkers, undefined, [
         {
           workerFunction: initializeScheduler,
           startEventId: START_AGENDA,
@@ -110,7 +112,7 @@ function startWorker(clusterWorker) {
   setupUncaughtExceptionHandler(logger);
   setupFhconfigReloadHandler(fhconfig);
 
-  initModules(clusterWorker, getMbaasMiddlewareConfig(), startApp);
+  initModules(clusterWorker, getMbaasMiddlewareConfig(), startApp());
 }
 
 function getMbaasMiddlewareConfig() {
@@ -138,12 +140,18 @@ function getMbaasMiddlewareConfig() {
 
 
 function initModules(clusterWorker, jsonConfig, cb) {
+  var migrationStatusHandler = require('./lib/util/migrationStatusHandler.js');
   // models are also initialised in this call
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
-      jsonConfig.logger.error(err);
-      clusterWorker.kill();
+      logger.error(err);
+      if(clusterWorker){
+        clusterWorker.kill();
+      } else {
+        process.exit(1);
+      }
     } else {
+      migrationStatusHandler.listenToMigrationStatus(jsonConfig);
       fhServiceAuth.init({
         logger: logger
       }, cb);
@@ -151,11 +159,14 @@ function initModules(clusterWorker, jsonConfig, cb) {
   });
 }
 
-function startApp() {
+function startApp( ) {
   var app = express();
 
   // Enable CORS for all requests
   app.use(cors());
+
+  // Request logging
+  app.use(require('express-bunyan-logger')({ logger: logger, parseUA: false }));
 
   // Parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({
@@ -208,7 +219,7 @@ function setupUncaughtExceptionHandler(logger) {
     if (err !== undefined && err.stack !== undefined) {
       logger.error(util.inspect(err.stack));
     }
-    console.trace();
+    console.trace(err.stack);
     process.exit(1);
   });
 }

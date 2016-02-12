@@ -5,7 +5,8 @@ var dynofarmPort = 19002;
 var config ={
   fhmbaas:{
     key:'testkey',
-    protocol: "https"
+    protocol: "https",
+    "mbaasid":"development"
   },
   mongo:{
     enabled: true,
@@ -48,18 +49,25 @@ var config ={
       "enabled": false
     }
   },
-  fhmessaging:{
-    "enabled": false,
+  "fhmessaging":{
+    "enabled": true,
     "host":"localhost",
     "protocol":"http",
     "port":8803,
     "path":"msg/TOPIC",
     "cluster":"development",
     "realtime": false,
+    "apikey":"secretkey",
     "files":{
       "recovery_file":"../messages/recovery.log",
       "backup_file":"../messages/backup.log"
     }
+  },
+  "fhmetrics" :{
+    "host":"127.0.0.1",
+    "port":"8813",
+    "protocol":"http",
+    "apikey":"somekey"
   },
   fhstats:{
     "enabled": false,

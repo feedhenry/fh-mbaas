@@ -18,7 +18,7 @@ exports.it_should_call_fh_ditch = function(finish){
   var cb2 = sinon.spy();
 
   post.callsArg(1);
-  ditchhelper.doMigrate(DOMAIN, ENVIRONMENT, APPNAME, 'testcachekey', 'testappguid', cb1);
+  ditchhelper.doMigrate(DOMAIN, ENVIRONMENT, APPNAME, 'testcachekey', 'testappguid',"http:/test.feedhenry.com", cb1);
   post.once();
   post.calledWith({url: 'http://localhost:9999/sys/admin/migratedb', json:{
     cacheKey: 'testcachekey',
@@ -29,22 +29,6 @@ exports.it_should_call_fh_ditch = function(finish){
   }}, cb1);
   post.verify();
   assert.ok(cb1.calledOnce);
-
-  post.reset();
-
-  post.callsArg(1);
-  ditchhelper.migrateComplete(DOMAIN, ENVIRONMENT, APPNAME, 'testcachekey', 'testappguid', cb2);
-  post.once();
-  post.calledWith({url: 'http://localhost:9999/sys/admin/completeMigration', json:{
-    domain: DOMAIN,
-    env: ENVIRONMENT,
-    appName: APPNAME,
-    cacheKey: 'testcachekey',
-    appGuid: 'testappguid'
-  }}, cb2);
-  post.verify();  
-  assert.ok(cb2.calledOnce);
-
   finish();
 };
 

@@ -10,7 +10,7 @@ var TEST_DOMAIN = 'fhmbaas-accept-test-domain';
 var TEST_ENV = 'test';
 
 var mockRequestData = {
-  cacheKey: 'testcachekey',
+  securityToken: 'securityToken',
   appGuid: 'testappguid',
   coreHost: 'some.core.host.com',
   apiKey: "someappapikey",
@@ -79,7 +79,7 @@ exports.it_should_return_db_url = function(finish){
   });
 };
 
-var TEST_APP_NAME = 'fhmbaas-accept-test-appname';
+var TEST_APP_NAME = 'fhmbaas-accept-test-appnames'+new Date().getTime();
 exports.it_should_migrate_db = function(finish){
   var url = util.format('%s%s/%s/%s/%s/migratedb', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
   var params = {
@@ -92,29 +92,18 @@ exports.it_should_migrate_db = function(finish){
   };
   request.post(params, function(err, response){
     assert.equal(response.statusCode, 400);
-
     _.extend(params.json, mockRequestData);
-    
-    request.post(params, function(err, response, body){
+    request.post(params, function(err, response){
+      console.log("RESPONSE" + JSON.stringify(response));
       assert.equal(response.statusCode, 200);
 
       //request the same url again, we should get 423
-      request.post(params, function(err, response, body){
+      request.post(params, function(err, response){
         assert.equal(response.statusCode, 423);
-        
-        params.url = util.format('%s%s/%s/%s/%s/migrateComplete', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
-        request.post(params, function(err, response){
-          assert.equal(response.statusCode, 200);
-          
-          params.url = util.format('%s%s/%s/%s/%s', common.baseUrl, 'api/mbaas/apps', TEST_DOMAIN, TEST_ENV, TEST_APP_NAME);
-          request.del(params, function(err, response){
-            assert.equal(response.statusCode, 200);
-            finish();
-          });
+          finish();
         });
       });
     });
-  });
 };
 
 exports.it_should_return_app_envs = function(finish){

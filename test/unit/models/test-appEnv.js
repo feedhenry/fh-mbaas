@@ -45,7 +45,7 @@ exports.test_app_envs = function(finish){
 
   assert.equal(envs.FH_MESSAGING_BACKUP_FILE, '../messages/backup.log');
   assert.equal(envs.FH_MESSAGING_CLUSTER, 'development');
-  assert.equal(envs.FH_MESSAGING_ENABLED, false);
+  assert.equal(envs.FH_MESSAGING_ENABLED, true);
   assert.equal(envs.FH_MESSAGING_HOST, 'localhost');
   assert.equal(envs.FH_MESSAGING_PROTOCOL, 'http');
   assert.equal(envs.FH_MESSAGING_REALTIME_ENABLED, false);
@@ -64,8 +64,36 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_MBAAS_HOST, "mbaas.somembaas.com");
   assert.equal(envs.FH_MBAAS_PROTOCOL, "https");
   assert.equal(envs.FH_MBAAS_ENV_ACCESS_KEY, "somembaasaccesskey");
+  assert.equal(envs.FH_MBAAS_ID, "development");
 
   assert.equal(params.appMbaas.serviceAccessKey, envs.FH_SERVICE_ACCESS_KEY);
 
+  finish();
+};
+
+
+exports.test_app_env_os3 = function(finish){
+  var params = {
+    mbaas: {dbConf: dbConf},
+    appMbaas: {
+      dbConf: dbConf,
+      migrated: true,
+      accessKey: "somembaasaccesskey",
+      type: 'openshift3',
+      mbaasUrl: "https://mbaas.somembaas.com"
+    },
+    fhconfig: fhconfig
+  };
+
+  var envs = appEnv[params.appMbaas.type](params);
+  assert.equal(envs.FH_MESSAGING_CLUSTER, 'development');
+  assert.equal(envs.FH_MESSAGING_ENABLED, true);
+  assert.equal(envs.FH_MESSAGING_HOST, 'localhost');
+  assert.ok(envs.hasOwnProperty("FH_MESSAGING_REALTIME_ENABLED"));
+  //Checking mbaas data checked
+  assert.equal(envs.FH_MBAAS_HOST, "mbaas.somembaas.com");
+  assert.equal(envs.FH_MBAAS_PROTOCOL, "https");
+  assert.equal(envs.FH_MBAAS_ENV_ACCESS_KEY, "somembaasaccesskey");
+  assert.equal(envs.FH_MBAAS_ID, "development");
   finish();
 };

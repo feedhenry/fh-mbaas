@@ -44,8 +44,11 @@ module.exports = {
       "enabled": false
     }
   },
+  "fhmbaas": {
+    "mbaasid":"development"
+  },
   "fhmessaging":{
-    "enabled": false,
+    "enabled": true,
     "host":"localhost",
     "protocol":"http",
     "port":8803,

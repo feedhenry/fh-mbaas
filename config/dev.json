@@ -1,26 +1,26 @@
 {
-  "logger": {
-    "name": "mbaas",
-    "type": "bunyan",
-    "streams": [{
-      "type": "stream",
-      "src": true,
-      "level": "trace",
-      "stream": "process.stdout"
-    }, {
-      "type": "raw",
-      "src": true,
-      "level": "trace",
-      "stream": "ringBuffer"
-    }]
-  },
   "fhmbaas": {
     "port": 8819,
     "key": "mBqxpulwlj3Rw7EsHZq0YEQyrArq2tlIRCQ0pCmr5DRPPDZMAP4ZNb7U0E6bPSb3",
     "maxpayloadsize": "100mb",
     "temp_forms_files_dest" : "/tmp/fh-mbaas",
     "pdfExportDir": "/tmp/fh-mbaas",
-    "code_coverage_enabled": false
+    "code_coverage_enabled": false,
+    "mbaasid":"development",
+    "logger": {
+      "name": "mbaas",
+      "streams": [{
+        "type": "stream",
+        "src": true,
+        "level": "trace",
+        "stream": "process.stdout"
+      }, {
+        "type": "raw",
+        "src": true,
+        "level": "trace",
+        "stream": "ringBuffer"
+      }]
+    }
   },
   "mongo": {
     "enabled": true,
@@ -41,7 +41,8 @@
   "fhditch": {
     "host": "localhost",
     "port": 8802,
-    "protocol": "http"
+    "protocol": "http",
+    "service_key": "test"
   },
   "fhdfc": {
     "dynofarm": "http://localhost:9000",
@@ -71,6 +72,12 @@
       }
     }
   },
+  "fhmetrics" :{
+    "host":"127.0.0.1",
+    "port":"8813",
+    "protocol":"http",
+    "apikey":"somekey"
+  },
   "fhmessaging":{
     "enabled": true,
     "host":"localhost",
@@ -79,6 +86,7 @@
     "path":"msg/TOPIC",
     "cluster":"development",
     "realtime": false,
+    "apikey":"secretkey",
     "files":{
       "recovery_file":"../messages/recovery.log",
       "backup_file":"../messages/backup.log"
@@ -110,6 +118,7 @@
     "alert_email_from": "no-reply@feedhenry.com",
     "alert_email_bcc": ""
   },
+  "openshift3": false,
   "agenda": {
     "enabled": true,
     "preferredWorkerId": 1,
