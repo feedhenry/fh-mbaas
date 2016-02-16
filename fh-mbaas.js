@@ -101,7 +101,8 @@ function refreshJsonConfig(fhconfig, cb) {
 
 
 function initializeMiddlewareModule(clusterWorker, jsonConfig) {
-  var migrationStatusHandler = require('./lib/util/migrationStatusHandler.js');
+  var migrationStatusHandler = require('./lib/messageHandlers/migrationStatusHandler.js');
+  var deployStatusHandler = require('./lib/messageHandlers/deployStatusHandler.js');
   // models are also initialised in this call
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
@@ -109,7 +110,9 @@ function initializeMiddlewareModule(clusterWorker, jsonConfig) {
       clusterWorker.kill();
     } else {
       startApp(jsonConfig.logger);
+      // TODO use one listener with different filters.
       migrationStatusHandler.listenToMigrationStatus(jsonConfig);
+      deployStatusHandler.listenToDeployStatus(jsonConfig);
     }
   });
 }

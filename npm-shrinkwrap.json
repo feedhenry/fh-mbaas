@@ -2382,9 +2382,9 @@
       }
     },
     "fh-mbaas-middleware": {
-      "version": "1.1.7",
-      "from": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.1.7.tgz",
-      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.1.7.tgz",
+      "version": "1.1.9",
+      "from": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.1.9.tgz",
+      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-1.1.9.tgz",
       "dependencies": {
         "bunyan": {
           "version": "1.4.0",
