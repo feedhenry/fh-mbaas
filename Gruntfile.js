@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 
     _test_runner: '_mocha',
 
-    _unit_args: '-A -u exports --recursive -t 10000 ./test/unit',
+    _unit_args: '-b -A -u exports --recursive -t 10000 ./test/unit',
     optional: ['mocha -A -u exports --recursive -t 10000 test/accept/test-backoff.js'],
 
     unit: ['echo $NODE_PATH', '<%= _test_runner %> <%= _unit_args %>'],
