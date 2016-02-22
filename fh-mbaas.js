@@ -112,7 +112,7 @@ function startWorker(clusterWorker) {
   setupUncaughtExceptionHandler(logger);
   setupFhconfigReloadHandler(fhconfig);
 
-  initModules(clusterWorker, getMbaasMiddlewareConfig(), startApp());
+  initModules(clusterWorker, getMbaasMiddlewareConfig(), startApp);
 }
 
 function getMbaasMiddlewareConfig() {
@@ -138,9 +138,9 @@ function getMbaasMiddlewareConfig() {
   return jsonConfig;
 }
 
-
 function initModules(clusterWorker, jsonConfig, cb) {
-  var migrationStatusHandler = require('./lib/util/migrationStatusHandler.js');
+  var migrationStatusHandler = require('./lib/messageHandlers/migrationStatusHandler.js');
+  var deployStatusHandler = require('./lib/messageHandlers/deployStatusHandler.js');
   // models are also initialised in this call
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
@@ -151,7 +151,9 @@ function initModules(clusterWorker, jsonConfig, cb) {
         process.exit(1);
       }
     } else {
+      // TODO use one listener with different filters.
       migrationStatusHandler.listenToMigrationStatus(jsonConfig);
+      deployStatusHandler.listenToDeployStatus(jsonConfig);
       fhServiceAuth.init({
         logger: logger
       }, cb);

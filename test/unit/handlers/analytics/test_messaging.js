@@ -10,13 +10,15 @@ var mockMessageClient = {
     assert.ok(Array.isArray(messages));
     var lastId;
     messages.forEach(function (m){
-      if(lastId) assert.ok(m.guid === lastId,"expected all id to be the same")
+      if(lastId) {
+        assert.ok(m.guid === lastId,"expected all id to be the same");
+      }
       else{
         lastId = m.guid;
       }
     });
     
-    return cb()
+    return cb();
   }
 };
 
