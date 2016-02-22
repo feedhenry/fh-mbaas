@@ -578,7 +578,6 @@ module.exports = {
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(function (res) {
-        logger.debug("**RES BODY ", res.body);
         assert.equal(res.body._id, mockDs._id);
         assert.equal(res.body.serviceGuid, mockServiceDetails.guid);
         assert.equal(res.body.validationResult.valid, false);
