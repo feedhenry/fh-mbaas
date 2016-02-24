@@ -29,6 +29,21 @@ module.exports = {
 
         return stub;
       },
+      getAuditLogEntry: function(){
+        var mockAuditLog = fixtures.forms.dataSources.auditLog();
+
+        var stub = sinon.stub();
+
+        stub.withArgs(sinon.match({
+          uri: mockMongoUrl
+        }), sinon.match({
+          _id: mockAuditLog._id
+        }), sinon.match.func).callsArgWith(2, undefined, mockAuditLog);
+
+        stub.throws("Invalid Arguments");
+
+        return stub;
+      },
       list: function () {
 
         var mockDataSource = fixtures.forms.dataSources.get();

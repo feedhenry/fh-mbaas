@@ -161,6 +161,52 @@ module.exports = {
         done();
       });
   },
+  "It Should Get A Single Audit Log Entry": function (done) {
+    var mockAuditLog = fixtures.forms.dataSources.auditLog();
+    var dsGetAuditLogEntryStub = stubs.forms.core.dataSources.getAuditLogEntry();
+
+    var mocks = {
+      'fh-forms': {
+        '@global': true,
+        core: {
+          dataSources: {
+            getAuditLogEntry: dsGetAuditLogEntryStub
+          }
+        }
+      },
+      'fh-config': {
+        '@global': true,
+        getLogger: sinon.stub().returns(logger)
+      }
+    };
+
+    var dsRouter = proxyquire('../../../../lib/routes/forms/dataSources/router.js', mocks);
+
+    var app = express();
+
+    app.use(function (req, res, next) {
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    });
+
+    app.use(baseRoutePath, dsRouter);
+
+    supertest(app)
+      .get(baseUrl + '/audit_logs/' + mockAuditLog._id)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect(function (res) {
+        assert.equal(res.body._id, mockAuditLog._id);
+        assert.ok(res.body.data, "Expected a Data Response");
+      })
+      .end(function (err) {
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        sinon.assert.calledOnce(dsGetAuditLogEntryStub);
+
+        done();
+      });
+  },
   "It Should Deploy A Single Data Source": function (done) {
     var mockDs = fixtures.forms.dataSources.get();
     var mockServiceDetails = fixtures.services.get();
