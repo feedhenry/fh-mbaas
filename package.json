@@ -43,7 +43,7 @@
     "rc": "0.4.0",
     "request": "2.67.0",
     "underscore": "1.8.3",
-    "fh-service-auth": "0.1.0-1"
+    "fh-service-auth": "0.1.1"
   },
   "devDependencies": {
     "grunt-fh-build": "0.4.0",
