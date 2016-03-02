@@ -123,5 +123,14 @@
     "alert_email_from": "no-reply@feedhenry.com",
     "alert_email_bcc": ""
   },
-  "openshift3": false
+  "openshift3": false,
+  "agenda": {
+    "enabled": true,
+    "preferredWorkerId": 1,
+    "jobs": {
+      "data_source_update": {
+        "schedule": "60 seconds"
+      }
+    }
+  }
 }
