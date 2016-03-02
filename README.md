@@ -20,3 +20,20 @@ The basic strategy how to develop and debug fh-mbaas component is as follows:
 * Unit test have been moved to the fh-mbaas-middleware module
 * If you want to be able to debug running `fh-mbaas` service, you have to start it by triggering debug task in Grunt. You do it by `grunt debug`. Be sure the port `8080` in Vagrant machine is not occupied by other service. It is possible that `grunt debug` fails to start because of it. You find out the PID of the process which already listens to this port by executing `netstat -tupln  | grep 8080` as a root user. You basically have to stop Tomcat server by `/etc/init.d/tomcat6 stop`. Once this is done, you have to open node's debug console at address `http://127.0.0.1:8080/debug?port=5858`. The `127.0.0.1` is little bit misleading. You have to open this address from your host's browser but it does not see any console running on host's `127.0.0.1`. You have to replace this address by the address which Vagrant machine uses internally, e.g '192.168.33.10'. This address is visible from your host computer and since it represents IP of the Vagrant machine, you get that debugger started.
 * Plato statistics are generated via `grunt analysis`. Note that in order to see generated analysis by your web browser, you have to open statistics in `plato/index.html`. You can run `grunt analysis` either at your host or at your Vargant machine since the sources are the same. You just have to view it at your host because there is not apparently any web browser in Vagrant machine itself.
+
+
+### Email Configuration
+
+To configure email sending from `fh-mbaas`, the `email.transport` configuration property must be set to:
+
+* `""` to use the default transport (sendmail)
+* `"sendgrid"` - to use sendgrid. The following config must also be set on the `email.sendgrid` object:
+	  "auth": {
+	    "api_user": "SENDGRID_USER",
+	    "api_key": "SENDGRID_PASSWORD"
+	  }
+* `"smtp"` - to use SMTP. An SMTP connection URL must also be set on the `email.smtp` string:
+		"smtps://user:password@smtp.example.com"
+
+#### OSE3
+For OSE3 images, fh-mbaas will use `smtp` as a transport by default. An administrator must add an Environment variable to configure `fh-mbaas` to use a local SMTP relay/server - the name of this environment variable is `FH_EMAIL_SMTP` and it should be set to an SMTP URL e.g. `smtps://user:password@smtp.example.com`

@@ -97,13 +97,9 @@ exports.it_should_migrate_db = function(finish){
       console.log("RESPONSE" + JSON.stringify(response));
       assert.equal(response.statusCode, 200);
 
-      //request the same url again, we should get 423
-      request.post(params, function(err, response){
-        assert.equal(response.statusCode, 423);
-          finish();
-        });
-      });
+      finish();
     });
+  });
 };
 
 exports.it_should_return_app_envs = function(finish){
