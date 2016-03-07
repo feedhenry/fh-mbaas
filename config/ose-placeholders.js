@@ -23,7 +23,6 @@ var placeholders = {
   "fhmessaging.cluster":"$(FH_CLUSTER)",
   "fhstats.host": "$(FH_STATSD_SERVICE_SERVICE_HOST)",
   "fhstats.port": "$(FH_STATSD_SERVICE_SERVICE_PORT)",
-  "auto_create_app_dbs":["openshift3"],
   "fhstats.udp.port": "$(FH_STATSD_SERVICE_PORT_8081_UDP_PORT)",
   "fhstats.udp.protocol": "$(FH_STATSD_SERVICE_PORT_8081_UDP_PROTO)",
   "fhmbaas.mbaasid":"$(FH_MBAASID)",
