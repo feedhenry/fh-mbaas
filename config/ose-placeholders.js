@@ -23,17 +23,13 @@ var placeholders = {
   "fhmessaging.cluster":"$(FH_CLUSTER)",
   "fhstats.host": "$(FH_STATSD_SERVICE_SERVICE_HOST)",
   "fhstats.port": "$(FH_STATSD_SERVICE_SERVICE_PORT)",
-<<<<<<< HEAD
-  "fhmbaas.mbaasid":"$(FH_MBAASID)",
-  "auto_create_app_dbs":["openshift3"]
-=======
+  "auto_create_app_dbs":["openshift3"],
   "fhstats.udp.port": "$(FH_STATSD_SERVICE_PORT_8081_UDP_PORT)",
   "fhstats.udp.protocol": "$(FH_STATSD_SERVICE_PORT_8081_UDP_PROTO)",
   "fhmbaas.mbaasid":"$(FH_MBAASID)",
   "email.smtp": "$(FH_EMAIL_SMTP)",
   "email.alert_email_from": "$(FH_EMAIL_ALERT_FROM)",
   "email.transport": "smtp"
->>>>>>> upstream/master
 };
 
 module.exports = placeholders;
