@@ -2,13 +2,15 @@ module.exports = function(grunt) {
   'use strict';
 
   grunt.initConfig({
-    unit: ['turbo --setUp=test/setup.js test/unit/**/*.js'],
-    unit_single: ['turbo --setUp=test/setup.js test/unit/**/<%= unit_test_filename %>'],
+
+    _test_runner: '_mocha',
+
+    _unit_args: '-b -A -u exports --recursive -t 10000 ./test/unit',
     optional: ['mocha -A -u exports --recursive -t 10000 test/accept/test-backoff.js'],
 
-    accept: [
-      'turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js test/accept/test_api_app.js'
-    ],
+    unit: ['echo $NODE_PATH', '<%= _test_runner %> <%= _unit_args %>'],
+
+    accept: ['turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js test/accept/test-dataSourceUpdater.js'],
 
     unit_cover: ['istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- --setUp=test/setup.js test/unit/**/*.js'],
 

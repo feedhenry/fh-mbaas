@@ -111,13 +111,27 @@
     "base_time_seconds":60,
     "sample_time_hrs":1
   },
-  "email":{
-    "service": "SendGrid",
-    "auth_user": "SENDGRID_USER",
-    "auth_pass": "SENDGRID_PASSWORD",
+  "email": {
+    "transport": "",
+    "sendgrid": {
+      "auth": {
+        "api_user": "SENDGRID_USER",
+        "api_key": "SENDGRID_PASSWORD"
+      }
+    },
+    "smtp": "smtps://user:password@smtp.example.com",
     "alert_email_from": "no-reply@feedhenry.com",
     "alert_email_bcc": ""
   },
   "auto_create_app_dbs":[],
-  "openshift3": false
+  "openshift3": false,
+  "agenda": {
+    "enabled": true,
+    "preferredWorkerId": 1,
+    "jobs": {
+      "data_source_update": {
+        "schedule": "60 seconds"
+      }
+    }
+  }
 }

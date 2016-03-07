@@ -9,7 +9,6 @@ var util = require('util');
 var args = require('optimist').argv;
 var fs = require('fs');
 var path = require('path');
-var cluster = require('cluster');
 var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
@@ -17,8 +16,18 @@ var fhconfig = require('fh-config');
 var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
+var fhServiceAuth = require('fh-service-auth');
 var requiredvalidation = require('./lib/util/requiredvalidation.js');
+var logger;
+var scheduler;
+var _ = require('underscore');
+var async = require('async');
+
 var fhcluster = require('fh-cluster');
+var cluster = require('cluster');
+var formsUpdater = require('./lib/formsUpdater');
+
+var START_AGENDA = "startAgenda";
 
 // args and usage
 function usage() {
@@ -34,50 +43,80 @@ if (args._.length < 1) {
   usage();
 }
 
-if (args.d === true || args["master-only"] === true) {
+//Loading The Config First
+loadConfig(function(){
+  if (args.d === true || args["master-only"] === true) {
 
-  console.log("starting single master process");
-  startWorker();
-} else {
-  // Note: if required as a module, its up to the user to call start();
-  if (require.main === module) {
-    var numWorkers = args["workers"];
-    fhcluster(startWorker,numWorkers);
+    console.log("starting single master process");
+    startWorker();
+  } else {
+    var preferredWorkerId = fhconfig.value('agenda.preferredWorkerId');
+    // Note: if required as a module, its up to the user to call start();
+    if (require.main === module) {
+      var numWorkers = args["workers"];
+      fhcluster(startWorker, numWorkers, undefined, [
+        {
+          workerFunction: initializeScheduler,
+          startEventId: START_AGENDA,
+          preferredWorkerId: preferredWorkerId
+        }
+      ]);
+    }
   }
-}
+});
 
-function startWorker(clusterWorker) {
-
+/**
+ * Loading Mondule Config From File System
+ * @param cb
+ */
+function loadConfig(cb){
   // read our config file
   var configFile = process.env.conf_file || args._[0];
 
-  fhconfig.init(configFile, requiredvalidation, function(err) {
-    if (err) {
+  fhconfig.init(configFile, requiredvalidation, function(err){
+    if(err){
       console.error("Problems reading config file: " + configFile);
       console.error(err);
       process.exit(-1);
     }
 
-    // Note: location/order of these requires for istanbul code coverage is important.
-    if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
-      var coverage = require('istanbul-middleware');
-      coverage.hookLoader(__dirname);
+    if(!logger){
+      logger = getFhConfigLogger(fhconfig);
     }
 
-    var logger = getFhConfigLogger(fhconfig);
-    setupUncaughtExceptionHandler(logger);
-    setupFhconfigReloadHandler(fhconfig);
-
-    refreshJsonConfig(fhconfig, function(jsonConfig) {
-      initializeMiddlewareModule(clusterWorker, jsonConfig);
-    });
+    cb();
   });
 }
 
+/**
+ * Initialising The Scheduler. This is bound to a single worker using fh-cluster.
+ * @param clusterWorker
+ */
+function initializeScheduler(clusterWorker){
+  //Ensuring that the config is loaded.
+  initModules(clusterWorker, getMbaasMiddlewareConfig(), function(){
+    logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
+    scheduler = formsUpdater.scheduler(logger, fhconfig.getConfig().rawConfig, fhconfig.mongoConnectionString());
+    logger.info("Initialised scheduler", scheduler);
+  });
+}
 
-function refreshJsonConfig(fhconfig, cb) {
+function startWorker(clusterWorker) {
+
+  // Note: location/order of these requires for istanbul code coverage is important.
+  if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
+    var coverage = require('istanbul-middleware');
+    coverage.hookLoader(__dirname);
+  }
+
+  setupUncaughtExceptionHandler(logger);
+  setupFhconfigReloadHandler(fhconfig);
+
+  initModules(clusterWorker, getMbaasMiddlewareConfig(), startApp);
+}
+
+function getMbaasMiddlewareConfig() {
   var conf = fhconfig.getConfig();
-  var logger = getFhConfigLogger(fhconfig);
   var jsonConfig = {
     mongoUrl: fhconfig.mongoConnectionString(),
     mongo : {
@@ -96,25 +135,33 @@ function refreshJsonConfig(fhconfig, cb) {
   };
   logger.debug('JSON Config ', jsonConfig);
 
-  return cb(jsonConfig);
+  return jsonConfig;
 }
 
-
-function initializeMiddlewareModule(clusterWorker, jsonConfig) {
-  var migrationStatusHandler = require('./lib/util/migrationStatusHandler.js');
+function initModules(clusterWorker, jsonConfig, cb) {
+  var migrationStatusHandler = require('./lib/messageHandlers/migrationStatusHandler.js');
+  var deployStatusHandler = require('./lib/messageHandlers/deployStatusHandler.js');
   // models are also initialised in this call
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
-      jsonConfig.logger.error(err);
-      clusterWorker.kill();
+      logger.error(err);
+      if(clusterWorker){
+        clusterWorker.kill();
+      } else {
+        process.exit(1);
+      }
     } else {
-      startApp(jsonConfig.logger);
+      // TODO use one listener with different filters.
       migrationStatusHandler.listenToMigrationStatus(jsonConfig);
+      deployStatusHandler.listenToDeployStatus(jsonConfig);
+      fhServiceAuth.init({
+        logger: logger
+      }, cb);
     }
   });
 }
 
-function startApp( logger ) {
+function startApp( ) {
   var app = express();
 
   // Enable CORS for all requests

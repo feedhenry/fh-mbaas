@@ -15,7 +15,8 @@ var mockRequestData = {
   coreHost: 'some.core.host.com',
   apiKey: "someappapikey",
   type: "feedhenry",
-  mbaasUrl: "https://mbaas.somembaas.com"
+  mbaasUrl: "https://mbaas.somembaas.com",
+  url: "https://some.cloud.app.url"
 };
 
 
@@ -68,11 +69,11 @@ exports.it_should_return_db_url = function(finish){
     //call it again and should get the same reponse
     request.post(params, function(err, response, body){
       assert.ok(!err, 'db create request should success');
-      assert.equal(response.statusCode, 200); 
+      assert.equal(response.statusCode, 200);
       var another_url = body.uri;
       assert.equal(new_db_url, another_url, 'db url does not match');
       verifyDb(new_db_url, function(){
-        finish();  
+        finish();
       });
     });
   });
@@ -96,13 +97,9 @@ exports.it_should_migrate_db = function(finish){
       console.log("RESPONSE" + JSON.stringify(response));
       assert.equal(response.statusCode, 200);
 
-      //request the same url again, we should get 423
-      request.post(params, function(err, response){
-        assert.equal(response.statusCode, 423);
-          finish();
-        });
-      });
+      finish();
     });
+  });
 };
 
 exports.it_should_return_app_envs = function(finish){
