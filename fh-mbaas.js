@@ -22,7 +22,7 @@ var fhcluster = require('fh-cluster');
 
 // args and usage
 function usage() {
-  console.log("Usage: " + args.$0 + " <config file> [-d] (debug)");
+  console.log("Usage: " + args.$0 + " <config file> [-d] (debug) --master-only --workers=[int] \n --master-only will override  --workers so should not be used together");
   process.exit(0);
 }
 
@@ -34,13 +34,15 @@ if (args._.length < 1) {
   usage();
 }
 
-if (args.d === true) {
-  console.log("STARTING ONE WORKER FOR DEBUG PURPOSES");
+if (args.d === true || args["master-only"] === true) {
+
+  console.log("starting single master process");
   startWorker();
 } else {
   // Note: if required as a module, its up to the user to call start();
   if (require.main === module) {
-    fhcluster(startWorker);
+    var numWorkers = args["workers"];
+    fhcluster(startWorker,numWorkers);
   }
 }
 
@@ -72,6 +74,7 @@ function startWorker(clusterWorker) {
   });
 }
 
+
 function refreshJsonConfig(fhconfig, cb) {
   var conf = fhconfig.getConfig();
   var logger = getFhConfigLogger(fhconfig);
@@ -98,6 +101,7 @@ function refreshJsonConfig(fhconfig, cb) {
 
 
 function initializeMiddlewareModule(clusterWorker, jsonConfig) {
+  var migrationStatusHandler = require('./lib/util/migrationStatusHandler.js');
   // models are also initialised in this call
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
@@ -105,6 +109,7 @@ function initializeMiddlewareModule(clusterWorker, jsonConfig) {
       clusterWorker.kill();
     } else {
       startApp(jsonConfig.logger);
+      migrationStatusHandler.listenToMigrationStatus(jsonConfig);
     }
   });
 }
