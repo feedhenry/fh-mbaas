@@ -62,7 +62,8 @@ exports.test_create_db = function(finish){
       appid: "someappguid",
       domain: "somedomain",
       environment: "someenvironment",
-      id: "somethemeid"
+      id: "somethemeid",
+      type:"feedhenry"
     },
     cacheKey: "2321312321",
     body: {'cacheKey': '2321312321', securityToken: 'testToken'},
@@ -70,7 +71,8 @@ exports.test_create_db = function(finish){
       save: mockSave,
       markModified: mockMod,
       name: "unit-testing",
-      migrated: 'true'
+      migrated: 'true',
+      type:"feedhenry"
     }
   };
 
@@ -101,8 +103,8 @@ exports.test_create_db_error = function(finish){
       id: "somethemeid",
       cacheKey: "2321312321"
     },
-    body: {'cacheKey': '2321312321', securityToken: 'testToken'},
-    appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing"}
+    body: {'cacheKey':'2321312321', securityToken: 'testToken'},
+    appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing","type":"feedhenry"}
   };
 
   mockSave.callsArgWith(0, new Error('mock error'));
@@ -135,7 +137,7 @@ exports.test_stop_app = function(finish){
     },
     appMbaasModel: {name: "unit-testing"}
   };
-  
+
   stopApp.callsArg(3);
   stopAppMiddle(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
@@ -164,7 +166,7 @@ exports.test_stop_app_error = function(finish){
       environment: "someenvironment",
     }
   };
-  
+
   stopApp.callsArgWith(3, new Error('mock error'));
   stopAppMiddle(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
@@ -200,7 +202,7 @@ exports.test_migrate_db = function(finish){
       coreHost: "http://corehost.feedhenry.com"
     },
   };
-  
+
   doMigrate.callsArg(6);
   migrateDbMiddle(req, {}, next);
   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
@@ -229,7 +231,16 @@ exports.test_drop_db = function(finish){
         user: 'user',
         name: 'name'
       },
-      remove: mockRemove
+      remove: mockRemove,
+      appMbaasModel: {
+        name: "unit-testing",
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        remove: mockRemove
+      }
     }
   };
 
@@ -265,7 +276,16 @@ exports.test_drop_db_error = function(finish){
         user: 'user',
         name: 'name'
       },
-      remove: mockRemove
+      remove: mockRemove,
+      appMbaasModel: {
+        name: "unit-testing",
+        migrated: true,
+        dbConf: {
+          user: 'user',
+          name: 'name'
+        },
+        remove: mockRemove
+      }
     }
   };
 
@@ -284,7 +304,7 @@ exports.test_get_models_info = function(finish){
   var createDb = sinon.stub();
   var mockMbaas = sinon.stub();
   var mockEnv = sinon.stub();
-  
+
   var mockFind = function(){
     return {
       findOne: function(args, cb){

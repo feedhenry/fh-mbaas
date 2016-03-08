@@ -123,6 +123,7 @@
     "alert_email_from": "no-reply@feedhenry.com",
     "alert_email_bcc": ""
   },
+  "auto_create_app_dbs":["openshift3"],
   "openshift3": false,
   "agenda": {
     "enabled": true,
