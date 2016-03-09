@@ -729,7 +729,7 @@
     },
     "fh-component-metrics": {
       "version": "2.0.0",
-      "from": "fh-component-metrics@2.0.0",
+      "from": "https://registry.npmjs.org/fh-component-metrics/-/fh-component-metrics-2.0.0.tgz",
       "resolved": "https://registry.npmjs.org/fh-component-metrics/-/fh-component-metrics-2.0.0.tgz",
       "dependencies": {
         "lodash": {
@@ -2563,6 +2563,11 @@
             }
           }
         },
+        "redis": {
+          "version": "0.8.2",
+          "from": "redis@0.8.2",
+          "resolved": "https://registry.npmjs.org/redis/-/redis-0.8.2.tgz"
+        },
         "request": {
           "version": "2.69.0",
           "from": "https://registry.npmjs.org/request/-/request-2.69.0.tgz",
@@ -4030,11 +4035,6 @@
           "resolved": "https://registry.npmjs.org/ini/-/ini-1.1.0.tgz"
         }
       }
-    },
-    "redis": {
-      "version": "0.8.2",
-      "from": "https://registry.npmjs.org/redis/-/redis-0.8.2.tgz",
-      "resolved": "https://registry.npmjs.org/redis/-/redis-0.8.2.tgz"
     },
     "request": {
       "version": "2.67.0",
