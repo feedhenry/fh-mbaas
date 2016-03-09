@@ -22,7 +22,7 @@ var logger;
 var scheduler;
 var _ = require('underscore');
 var async = require('async');
-
+var fhComponentMetrics = require('fh-component-metrics');
 var fhcluster = require('fh-cluster');
 var cluster = require('cluster');
 var formsUpdater = require('./lib/formsUpdater');
@@ -44,7 +44,7 @@ if (args._.length < 1) {
 }
 
 //Loading The Config First
-loadConfig(function(){
+loadConfig(function() {
   if (args.d === true || args["master-only"] === true) {
 
     console.log("starting single master process");
@@ -112,9 +112,28 @@ function startWorker(clusterWorker) {
   setupUncaughtExceptionHandler(logger);
   setupFhconfigReloadHandler(fhconfig);
 
+  if (fhconfig.bool('component_metrics.enabled')) {
+    initComponentMetrics(fhconfig.value('component_metrics'));
+  }
+
   initModules(clusterWorker, getMbaasMiddlewareConfig(), startApp);
 }
 
+function initComponentMetrics(metricsConf) {
+  var metrics = fhComponentMetrics(metricsConf);
+
+  metrics.memory(TITLE, { interval: 2000 }, function(err) {
+    if (err) {
+      logger.warn(err);
+    }
+  });
+
+  metrics.cpu(TITLE, { interval: 1000 }, function(err) {
+    if (err) {
+      logger.warn(err);
+    }
+  });
+}
 function getMbaasMiddlewareConfig() {
   var conf = fhconfig.getConfig();
   var jsonConfig = {
@@ -164,6 +183,9 @@ function initModules(clusterWorker, jsonConfig, cb) {
 function startApp( ) {
   var app = express();
 
+  if (fhconfig.bool('component_metrics.enabled')) {
+    app.use(fhComponentMetrics.timingMiddleware(TITLE, fhconfig.value('component_metrics')));
+  }
   // Enable CORS for all requests
   app.use(cors());
 
