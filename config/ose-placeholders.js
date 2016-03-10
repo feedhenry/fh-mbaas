@@ -28,7 +28,10 @@ var placeholders = {
   "fhmbaas.mbaasid":"$(FH_MBAASID)",
   "email.smtp": "$(FH_EMAIL_SMTP)",
   "email.alert_email_from": "$(FH_EMAIL_ALERT_FROM)",
-  "email.transport": "smtp"
+  "email.transport": "smtp",
+  "component_metrics.host":"$(FH_COMPONENT_METRICS_HOST)",
+  "component_metrics.enabled":"$(FH_COMPONENT_METRICS_ENABLED)",
+  "component_metrics.port":"$(FH_COMPONENT_METRICS_PORT)"
 };
 
 module.exports = placeholders;
