@@ -1,4 +1,4 @@
-var mockMongoUrl = "mongodb://someuser:somepassword@some.mongo.host:27017/mockdomain_mockenv";
+var mockMongoUrl = "mongodb://someuser:somepassword@some.mongo.host:27017,some.mongo.host2:27017/mockdomain_mockenv?replicaSet=somereplset";
 
 module.exports = {
   forms: require('./forms'),
@@ -14,7 +14,8 @@ module.exports = {
       dbConf: {
         user: "someuser",
         pass: "somepassword",
-        host: "some.mongo.host",
+        host: "some.mongo.host,some.mongo.host2",
+        replicaset_name: "somereplset",
         port: 27017,
         name: this.mockDomain + "_" + this.mockEnv,
         expectedMongoUrl: mockMongoUrl
