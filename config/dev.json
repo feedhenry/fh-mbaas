@@ -138,5 +138,6 @@
     "enabled": false,
     "host": "192.168.33.1",
     "port": 4444
-  }
+  },
+  "ops_env_file": "/etc/feedhenry/openv.json"
 }

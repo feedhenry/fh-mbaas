@@ -9,6 +9,8 @@ mbaas.domain="";
 mbaas.environment="";
 mbaas.coreHost="";
 
+var prefix = "deployTest";
+
 var middlewareMocks = {
   models: {
     getModels: function(){
@@ -25,7 +27,10 @@ var middlewareMocks = {
 
 var amqpStub = {
   connect:sinon.stub(),
-  getVhostConnection:sinon.stub()
+  getVhostConnection:sinon.stub(),
+  getExchangePrefix: function(){
+    return prefix;
+  }
 };
 amqpStub.getVhostConnection.returns({subscribeToTopic:sinon.stub()});
 
