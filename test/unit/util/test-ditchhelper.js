@@ -46,3 +46,18 @@ exports.it_should_check_status = function(finish){
   finish();
 };
 
+
+exports.it_should_removeAppCollection = function(finish){
+  var mock = sinon.mock(request);
+  var del = mock.expects('del');
+  var ditchhelper = proxyquire('../../../lib/util/ditchhelper', {request: mock});
+
+  var cb = sinon.spy();
+  del.callsArgWith(1, null, {}, {});
+  ditchhelper.removeAppCollection("test-app-dev", cb);
+  del.calledWith({url: 'http://localhost:9999/admin/dropCollection', json: true}, cb);
+  del.verify();
+  assert.ok(del.calledOnce);
+  finish();
+};
+
