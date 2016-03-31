@@ -64,7 +64,8 @@ module.exports = {
     "enabled": false,
     "host":"localhost",
     "port": 8804,
-    "protocol": "http"
+    "protocol": "http",
+    "apikey": "12345"
   },
   "fhredis":{
     "host": "127.0.0.1",
