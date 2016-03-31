@@ -118,3 +118,65 @@ module.exports.test_create_does_not_create_when_dbConf_present = function (done)
     done();
   });
 };
+
+module.exports.test_removeDbMiddlewareForMigrated = function(done){
+  var mocks = {
+    '../util/mongo.js': {
+      'dropDb': function(config, user, name, callback){
+        callback();
+      }
+    }
+  };
+  var mbaasApp = proxyquire(undertest, mocks);
+  var req = {
+    appMbaasModel: {
+      migrated: true,
+      "type": "nonfeedhenry",
+      domain: "test",
+      dbConf: {user: "test", name: "testdb"},
+      environment: "dev",
+      name: "test-fsdfsdgdsfgdsf-dev",
+      remove: function(cb){
+        return cb(null, req.appMbaasModel);
+      }
+    }
+  };
+  var res = {};
+  mbaasApp.removeDbMiddleware(req, res, function next(err, ok){
+    assert.ok(!err, "did not expect an error to be returned");
+    assert.ok(req.resultData);
+    done();
+  });
+};
+
+
+module.exports.test_removeDbMiddlewareForDitch = function(done){
+  var mocks = {
+    "../util/ditchhelper.js": {
+      removeAppCollection: function(name, callback){
+        callback(null, {collections: ["test", "test2"]});
+      }
+    }
+  };
+  var mbaasApp = proxyquire(undertest, mocks);
+  var req = {
+    appMbaasModel: {
+      migrated: false,
+      "type": "nonfeedhenry",
+      domain: "test",
+      dbConf: {user: "test", name: "testdb"},
+      environment: "dev",
+      name: "test-fsdfsdgdsfgdsf-dev",
+      remove: function(cb){
+        return cb(null, req.appMbaasModel);
+      }
+    }
+  };
+  var res = {};
+  mbaasApp.removeDbMiddleware(req, res, function next(err, ok){
+    assert.ok(!err, "did not expect an error to be returned");
+    assert.ok(req.resultData);
+    done();
+  });
+};
+
