@@ -5,7 +5,6 @@ var sinon = require('sinon');
 
 var fixtures = require('../../../fixtures');
 var fhConfig = require('fh-config');
-fhConfig.setRawConfig(fixtures.config);
 var logger = fhConfig.getLogger();
 
 var mockLogger = function() {
@@ -31,6 +30,11 @@ var mockRes = {
     "gauges": []
   }]
 };
+
+exports.setUp = function(finish) {
+  fhConfig.setRawConfig(fixtures.config);
+  finish();
+}
 
 exports.test_call_stats = function(finish) {
   var statsClient = proxyquire('../../../../lib/handlers/stats/stats_client', {
