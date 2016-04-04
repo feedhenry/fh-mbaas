@@ -96,7 +96,8 @@
     "enabled": true,
     "host":"localhost",
     "port": 8804,
-    "protocol": "http"
+    "protocol": "http",
+    "apikey": "4972afa9489b7dfbbaa6dbce4e3a305fef3a802e1831dfe5e590965e1fee0f43"
   },
   "fhredis":{
     "host": "127.0.0.1",
