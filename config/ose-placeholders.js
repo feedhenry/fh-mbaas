@@ -32,7 +32,9 @@ var placeholders = {
   "email.transport": "smtp",
   "component_metrics.host":"$(FH_COMPONENT_METRICS_HOST)",
   "component_metrics.enabled":"$(FH_COMPONENT_METRICS_ENABLED)",
-  "component_metrics.port":"$(FH_COMPONENT_METRICS_PORT)"
+  "component_metrics.port":"$(FH_COMPONENT_METRICS_PORT)",
+  "logger.streams[0].level": "$(FH_LOG_LEVEL)",
+  "logger.streams[1].level": "$(FH_LOG_LEVEL)"
 };
 
 module.exports = placeholders;
