@@ -120,11 +120,10 @@ module.exports.test_create_does_not_create_when_dbConf_present = function (done)
 };
 
 module.exports.test_removeDbMiddlewareForMigrated = function(done){
+  var dropDbStub = sinon.stub().callsArg(3);
   var mocks = {
     '../util/mongo.js': {
-      'dropDb': function(config, user, name, callback){
-        callback();
-      }
+      'dropDb': dropDbStub
     }
   };
   var mbaasApp = proxyquire(undertest, mocks);
@@ -133,7 +132,7 @@ module.exports.test_removeDbMiddlewareForMigrated = function(done){
       migrated: true,
       "type": "nonfeedhenry",
       domain: "test",
-      dbConf: {user: "test", name: "testdb"},
+      dbConf: {user: "test1", name: "testdb1"},
       environment: "dev",
       name: "test-fsdfsdgdsfgdsf-dev",
       remove: function(cb){
@@ -145,13 +144,48 @@ module.exports.test_removeDbMiddlewareForMigrated = function(done){
   mbaasApp.removeDbMiddleware(req, res, function next(err, ok){
     assert.ok(!err, "did not expect an error to be returned");
     assert.ok(req.resultData);
+    sinon.assert.calledWith(dropDbStub, sinon.match.any, 'test1', 'testdb1', sinon.match.func);
+    done();
+  });
+};
+
+module.exports.test_removeDbMiddlewareForOpenShift3 = function(done){
+  var dropDbStub = sinon.stub().callsArg(3);
+  var mocks = {
+    '../util/mongo.js': {
+      'dropDb': dropDbStub
+    }
+  };
+  var mbaasApp = proxyquire(undertest, mocks);
+  var req = {
+    appMbaasModel: {
+      migrated: false,
+      "type": "openshift3",
+      domain: "test",
+      dbConf: {user: "test2", name: "testdb2"},
+      environment: "dev",
+      name: "test-fsdfsdgdsfgdsf-dev",
+      remove: function(cb){
+        return cb(null, req.appMbaasModel);
+      }
+    }
+  };
+  var res = {};
+  mbaasApp.removeDbMiddleware(req, res, function next(err, ok){
+    assert.ok(!err, "did not expect an error to be returned");
+    assert.ok(req.resultData);
+    sinon.assert.calledWith(dropDbStub, sinon.match.any, 'test2', 'testdb2', sinon.match.func);
     done();
   });
 };
 
 
 module.exports.test_removeDbMiddlewareForDitch = function(done){
+  var dropDbStub = sinon.stub().callsArg(3);
   var mocks = {
+    '../util/mongo.js': {
+      'dropDb': dropDbStub
+    },
     "../util/ditchhelper.js": {
       removeAppCollection: function(name, callback){
         callback(null, {collections: ["test", "test2"]});
@@ -176,6 +210,7 @@ module.exports.test_removeDbMiddlewareForDitch = function(done){
   mbaasApp.removeDbMiddleware(req, res, function next(err, ok){
     assert.ok(!err, "did not expect an error to be returned");
     assert.ok(req.resultData);
+    sinon.assert.notCalled(dropDbStub);
     done();
   });
 };
