@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "3.4.2-BUILD-NUMBER",
+  "version": "3.5.0-BUILD-NUMBER",
   "dependencies": {
     "async": {
       "version": "0.9.2",
@@ -1093,7 +1093,7 @@
     },
     "fh-forms": {
       "version": "1.4.2",
-      "from": "fh-forms@1.4.2",
+      "from": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.4.2.tgz",
       "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.4.2.tgz",
       "dependencies": {
         "archiver": {
@@ -1420,23 +1420,6 @@
               "version": "1.5.2",
               "from": "https://registry.npmjs.org/async/-/async-1.5.2.tgz",
               "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
-            },
-            "optimist": {
-              "version": "0.6.1",
-              "from": "https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz",
-              "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz",
-              "dependencies": {
-                "wordwrap": {
-                  "version": "0.0.3",
-                  "from": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.3.tgz",
-                  "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.3.tgz"
-                },
-                "minimist": {
-                  "version": "0.0.10",
-                  "from": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz",
-                  "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
-                }
-              }
             },
             "source-map": {
               "version": "0.4.4",
@@ -2441,6 +2424,11 @@
           }
         }
       }
+    },
+    "fh-logger": {
+      "version": "0.4.0",
+      "from": "fh-logger@*",
+      "resolved": "https://registry.npmjs.org/fh-logger/-/fh-logger-0.4.0.tgz"
     },
     "fh-mbaas-middleware": {
       "version": "1.2.0",
