@@ -26,6 +26,7 @@ var fhComponentMetrics = require('fh-component-metrics');
 var fhcluster = require('fh-cluster');
 var cluster = require('cluster');
 var formsUpdater = require('./lib/formsUpdater');
+var fhlogger = require('fh-logger');
 
 var START_AGENDA = "startAgenda";
 
@@ -79,13 +80,18 @@ function loadConfig(cb){
       console.error(err);
       process.exit(-1);
     }
-
-    if(!logger){
-      logger = getFhConfigLogger(fhconfig);
-    }
-
+    createAndSetLogger();
     cb();
   });
+}
+
+function createAndSetLogger() {
+    // We are overwriting any logger created in fhconfig.init and replacing
+    // it with an fh-logger instance to allow the underlying logger to be
+    // controlled (setting log levels for example)
+    logger = fhlogger.createLogger(fhconfig.getConfig().rawConfig.logger);
+    fhconfig.setLogger(logger);
+    forms.core.setLogger(logger);
 }
 
 /**
@@ -217,12 +223,6 @@ function startApp( ) {
   });
 }
 
-function getFhConfigLogger(fhconfig) {
-  var logger = fhconfig.getLogger();
-  forms.core.setLogger(logger);
-  return logger;
-}
-
 function setupFhconfigReloadHandler(fhconfig) {
   process.on(fhconfig.RELOAD_CONFIG_SIGNAL, function() {
     fhconfig.reload(cluster.workers, function(err) {
@@ -231,6 +231,7 @@ function setupFhconfigReloadHandler(fhconfig) {
         console.error(err);
         console.error("Please fix and try again!!");
       }
+      createAndSetLogger();
     });
   });
 }
