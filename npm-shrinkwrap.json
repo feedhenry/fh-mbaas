@@ -1092,9 +1092,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.4.3",
-      "from": "fh-forms@1.4.3",
-      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.4.3.tgz",
+      "version": "1.4.4",
+      "from": "fh-forms@1.4.4",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.4.4.tgz",
       "dependencies": {
         "archiver": {
           "version": "0.14.3",
