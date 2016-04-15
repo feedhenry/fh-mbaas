@@ -6,7 +6,8 @@
     "temp_forms_files_dest" : "/tmp/fh-mbaas",
     "pdfExportDir": "/tmp/fh-mbaas",
     "code_coverage_enabled": false,
-    "mbaasid":"development"
+    "mbaasid":"development",
+    "dsMinsPerBackOffIndex": 1
   },
   "logger": {
     "name": "mbaas",

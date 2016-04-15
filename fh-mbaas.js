@@ -20,8 +20,6 @@ var fhServiceAuth = require('fh-service-auth');
 var requiredvalidation = require('./lib/util/requiredvalidation.js');
 var logger;
 var scheduler;
-var _ = require('underscore');
-var async = require('async');
 var fhComponentMetrics = require('fh-component-metrics');
 var fhcluster = require('fh-cluster');
 var cluster = require('cluster');
@@ -92,6 +90,12 @@ function createAndSetLogger() {
     logger = fhlogger.createLogger(fhconfig.getConfig().rawConfig.logger);
     fhconfig.setLogger(logger);
     forms.core.setLogger(logger);
+
+    //Setting global forms config
+    logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
+    forms.core.setConfig({
+      minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
+    });
 }
 
 /**
