@@ -6,6 +6,60 @@ var mockMongoUrl = fixtures.mockMongoUrl;
 
 module.exports = {
   core: {
+    getSubmissions: function(params){
+      params = params || {};
+      var stub = sinon.stub();
+
+      var expectedParams = {
+        paginate: sinon.match({
+          page: params.expectedPage ? params.expectedPage : sinon.match.number,
+          limit: params.expectedLimit ? params.expectedLimit : sinon.match.number
+        })
+      };
+
+      if(params.expectedFormId){
+        expectedParams.formId = sinon.match(params.expectedFormId);
+      }
+
+      if(params.expectedProjectId){
+        expectedParams.appId = sinon.match(params.expectedProjectId);
+      }
+
+      stub.withArgs(sinon.match({
+        uri: sinon.match.string
+      }), sinon.match(expectedParams), sinon.match.func).callsArgWith(2, undefined, {
+        submissions: [fixtures.forms.submissions.get(), fixtures.forms.submissions.get()],
+        total: 2,
+        pages: 1
+      });
+
+      stub.throws("Invalid Arguments");
+
+      return stub;
+    },
+    submissionSearch: function(params){
+      params = params || {};
+      var stub = sinon.stub();
+
+      stub.withArgs(sinon.match({
+        uri: sinon.match.string
+      }), sinon.match({
+        clauseOperator: sinon.match.string,
+        queryFields: sinon.match.object,
+        paginate: sinon.match({
+          page: params.expectedPage ? params.expectedPage : sinon.match.number,
+          limit: params.expectedLimit ? params.expectedLimit : sinon.match.number
+        })
+      }), sinon.match.func).callsArgWith(2, undefined, {
+        submissions: [fixtures.forms.submissions.get(), fixtures.forms.submissions.get()],
+        total: 2,
+        pages: 1
+      });
+
+      stub.throws("Invalid Arguments");
+
+      return stub;
+    },
     dataSources: {
       get: function () {
         var mockDataSource = fixtures.forms.dataSources.withData();

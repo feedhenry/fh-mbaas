@@ -1,4 +1,5 @@
 
 module.exports = {
-  dataSources: require('./dataSources')
+  dataSources: require('./dataSources'),
+  submissions: require('./submissions')
 };
