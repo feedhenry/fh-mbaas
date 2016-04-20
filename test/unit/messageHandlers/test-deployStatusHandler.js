@@ -26,13 +26,10 @@ var middlewareMocks = {
 };
 
 var amqpStub = {
-  connect:sinon.stub(),
-  getVhostConnection:sinon.stub(),
   getExchangePrefix: function(){
     return prefix;
   }
 };
-amqpStub.getVhostConnection.returns({subscribeToTopic:sinon.stub()});
 
 var supercoreApiClientMock = {};
 var amqMock = sinon.mock();
@@ -55,6 +52,7 @@ exports.it_should_send_message_to_supercore = function(finish){
     finish();
   };
   var conf = {fhamqp: {}};
-  deployStatusHandler.listenToDeployStatus(conf);
+  var connectionStub = {subscribeToTopic: sinon.stub()};
+  deployStatusHandler.listenToDeployStatus(connectionStub,conf);
   deployStatusHandler.deployStatusUpdate(json);
 };
