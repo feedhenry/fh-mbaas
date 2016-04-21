@@ -11,17 +11,15 @@ var logger = fhConfig.getLogger();
 var sinon = require('sinon');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
-
-var PAGINATION_MAX_LIMIT_KEY = "fhmbaas.pagination.maxLimit";
-var PAGINATION_DEFAULT_LIMIT_KEY = "fhmbaas.pagination.defaultLimit";
+var CONSTANTS = require('../../../../lib/constants');
 
 describe("Admin Submissions Router", function(){
   var baseRoutePath = '/:domain/:environment/appforms/submissions';
   var baseUrl = '/' + fixtures.mockDomain + '/' + fixtures.mockEnv + '/appforms/submissions';
 
   var getMaxLimitValueStub = sinon.stub();
-  getMaxLimitValueStub.withArgs(PAGINATION_MAX_LIMIT_KEY).returns(fixtures.config.fhmbaas.pagination.maxLimit);
-  getMaxLimitValueStub.withArgs(PAGINATION_DEFAULT_LIMIT_KEY).returns(fixtures.config.fhmbaas.pagination.defaultLimit);
+  getMaxLimitValueStub.withArgs(CONSTANTS.CONFIG_PROPERTIES.PAGINATION_MAX_LIMIT_KEY).returns(fixtures.config.fhmbaas.pagination.maxLimit);
+  getMaxLimitValueStub.withArgs(CONSTANTS.CONFIG_PROPERTIES.PAGINATION_DEFAULT_LIMIT_KEY).returns(fixtures.config.fhmbaas.pagination.defaultLimit);
   getMaxLimitValueStub.throws("Invalid Arguments");
 
   beforeEach(function(done){
@@ -80,8 +78,8 @@ describe("Admin Submissions Router", function(){
         assert.ok(!err, "Expected No Error " + util.inspect(err));
 
         sinon.assert.calledOnce(getSubmissionsStub);
-        sinon.assert.calledWith(getMaxLimitValueStub, PAGINATION_MAX_LIMIT_KEY);
-        sinon.assert.calledWith(getMaxLimitValueStub, PAGINATION_DEFAULT_LIMIT_KEY);
+        sinon.assert.calledWith(getMaxLimitValueStub, CONSTANTS.CONFIG_PROPERTIES.PAGINATION_MAX_LIMIT_KEY);
+        sinon.assert.calledWith(getMaxLimitValueStub, CONSTANTS.CONFIG_PROPERTIES.PAGINATION_DEFAULT_LIMIT_KEY);
 
         done();
       });
@@ -146,8 +144,8 @@ describe("Admin Submissions Router", function(){
         assert.ok(!err, "Expected No Error " + util.inspect(err));
 
         sinon.assert.calledOnce(searchSubmissionsStub);
-        sinon.assert.calledWith(getMaxLimitValueStub, PAGINATION_MAX_LIMIT_KEY);
-        sinon.assert.calledWith(getMaxLimitValueStub, PAGINATION_DEFAULT_LIMIT_KEY);
+        sinon.assert.calledWith(getMaxLimitValueStub, CONSTANTS.CONFIG_PROPERTIES.PAGINATION_MAX_LIMIT_KEY);
+        sinon.assert.calledWith(getMaxLimitValueStub, CONSTANTS.CONFIG_PROPERTIES.PAGINATION_DEFAULT_LIMIT_KEY);
 
         done();
       });
@@ -214,8 +212,8 @@ describe("Admin Submissions Router", function(){
         assert.ok(!err, "Expected No Error " + util.inspect(err));
 
         sinon.assert.calledOnce(getSubmissionsStub);
-        sinon.assert.calledWith(getMaxLimitValueStub, PAGINATION_MAX_LIMIT_KEY);
-        sinon.assert.calledWith(getMaxLimitValueStub, PAGINATION_DEFAULT_LIMIT_KEY);
+        sinon.assert.calledWith(getMaxLimitValueStub, CONSTANTS.CONFIG_PROPERTIES.PAGINATION_MAX_LIMIT_KEY);
+        sinon.assert.calledWith(getMaxLimitValueStub, CONSTANTS.CONFIG_PROPERTIES.PAGINATION_DEFAULT_LIMIT_KEY);
 
         done();
       });
