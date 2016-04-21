@@ -25,6 +25,7 @@ var fhcluster = require('fh-cluster');
 var cluster = require('cluster');
 var formsUpdater = require('./lib/formsUpdater');
 var fhlogger = require('fh-logger');
+var amqp = require('./lib/util/amqp.js');
 
 var START_AGENDA = "startAgenda";
 
@@ -180,9 +181,10 @@ function initModules(clusterWorker, jsonConfig, cb) {
         process.exit(1);
       }
     } else {
-      // TODO use one listener with different filters.
-      migrationStatusHandler.listenToMigrationStatus(jsonConfig);
-      deployStatusHandler.listenToDeployStatus(jsonConfig);
+      var amqpConnection = amqp.connect(jsonConfig);
+      deployStatusHandler.listenToDeployStatus(amqpConnection, jsonConfig,function(){
+        migrationStatusHandler.listenToMigrationStatus(amqpConnection, jsonConfig);
+      });
       fhServiceAuth.init({
         logger: logger
       }, cb);
