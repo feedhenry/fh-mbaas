@@ -42,6 +42,11 @@ paths:
           description: Number of submissions per page
           type: string
           required: true
+        - in: query
+          name: filter
+          description: Optional filter for submission metadata.
+          type: string
+          required: false
       responses:
         200:
           description: List Of Submissions
@@ -79,16 +84,21 @@ paths:
           description: Domain
           type: string
           required: true
-        - in: body
+        - in: query
           name: page
           description: Page Number
           type: string
           required: true
-        - in: body
+        - in: query
           name: limit
           description: Number of submissions per page
           type: string
           required: true
+        - in: query
+          name: filter
+          description: Optional filter for submission metadata.
+          type: string
+          required: false
       responses:
         200:
           description: List Of Submissions

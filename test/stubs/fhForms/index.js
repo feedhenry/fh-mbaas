@@ -10,11 +10,18 @@ module.exports = {
       params = params || {};
       var stub = sinon.stub();
 
+      var expectedPaginationParams = {
+        page: params.expectedPage ? params.expectedPage : sinon.match.number,
+        limit: params.expectedLimit ? params.expectedLimit : sinon.match.number
+      };
+
+      //Checking for a filter param if required.
+      if(params.expectedFilter){
+        expectedPaginationParams.filter = sinon.match(params.expectedFilter);
+      }
+
       var expectedParams = {
-        paginate: sinon.match({
-          page: params.expectedPage ? params.expectedPage : sinon.match.number,
-          limit: params.expectedLimit ? params.expectedLimit : sinon.match.number
-        })
+        paginate: sinon.match(expectedPaginationParams)
       };
 
       if(params.expectedFormId){

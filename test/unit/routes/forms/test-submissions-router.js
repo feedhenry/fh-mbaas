@@ -16,6 +16,7 @@ var CONSTANTS = require('../../../../lib/constants');
 describe("Admin Submissions Router", function(){
   var baseRoutePath = '/:domain/:environment/appforms/submissions';
   var baseUrl = '/' + fixtures.mockDomain + '/' + fixtures.mockEnv + '/appforms/submissions';
+  var expectedFilter = 'testfiltervalue';
 
   var getMaxLimitValueStub = sinon.stub();
   getMaxLimitValueStub.withArgs(CONSTANTS.CONFIG_PROPERTIES.PAGINATION_MAX_LIMIT_KEY).returns(fixtures.config.fhmbaas.pagination.maxLimit);
@@ -32,7 +33,8 @@ describe("Admin Submissions Router", function(){
     var expectedLimit = 20;
     var getSubmissionsStub = stubs.forms.core.getSubmissions({
       expectedPage: expectedPage,
-      expectedLimit: expectedLimit
+      expectedLimit: expectedLimit,
+      expectedFilter: expectedFilter
     });
 
     var mocks = {
@@ -63,7 +65,7 @@ describe("Admin Submissions Router", function(){
     app.use(baseRoutePath, submissionsRouter());
 
     supertest(app)
-      .get(baseUrl + '/?page='+expectedPage + '&limit=' + expectedLimit)
+      .get(baseUrl + '/?page='+expectedPage + '&limit=' + expectedLimit + "&filter=" + expectedFilter)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect(function (response) {
@@ -90,7 +92,7 @@ describe("Admin Submissions Router", function(){
     var expectedLimit = 20;
     var searchSubmissionsStub = stubs.forms.core.submissionSearch({
       expectedPage: expectedPage,
-      expectedLimit: expectedLimit,
+      expectedLimit: expectedLimit
     });
 
     var mocks = {
@@ -160,7 +162,8 @@ describe("Admin Submissions Router", function(){
       expectedPage: expectedPage,
       expectedLimit: expectedLimit,
       expectedFormId: expectedFormId,
-      expectedProjectId: expectedProjectId
+      expectedProjectId: expectedProjectId,
+      expectedFilter: expectedFilter
     });
 
     var mocks = {
@@ -193,7 +196,7 @@ describe("Admin Submissions Router", function(){
     app.use(baseRoutePath, submissionsRouter());
 
     supertest(app)
-      .post(baseUrl + '/filter?page='+expectedPage + '&limit=' + expectedLimit)
+      .post(baseUrl + '/filter?page='+expectedPage + '&limit=' + expectedLimit + "&filter=" + expectedFilter)
       .send({
         formId: expectedFormId,
         appId: expectedProjectId
