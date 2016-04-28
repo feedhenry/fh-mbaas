@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var ObjectId = require('mongoose').Types.ObjectId;
 var exportJobs = {
   1: {
     '_id': 1,
@@ -18,7 +19,7 @@ var exportJobs = {
 };
 
 function createExportJob(params) {
-  var id = Math.floor(Math.random() * 1001);
+  var id = new ObjectId();
   var newJob = _.clone(exportJobs['1']);
   newJob._id = id;
   newJob.appid = params.appid;
