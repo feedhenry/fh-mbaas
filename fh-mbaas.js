@@ -171,6 +171,12 @@ function getMbaasMiddlewareConfig() {
 function initModules(clusterWorker, jsonConfig, cb) {
   var migrationStatusHandler = require('./lib/messageHandlers/migrationStatusHandler.js');
   var deployStatusHandler = require('./lib/messageHandlers/deployStatusHandler.js');
+
+  var amqpConnection = amqp.connect(jsonConfig);
+  deployStatusHandler.listenToDeployStatus(amqpConnection, jsonConfig,function(){
+    migrationStatusHandler.listenToMigrationStatus(amqpConnection, jsonConfig);
+  });
+
   // models are also initialised in this call
   fhmbaasMiddleware.init(jsonConfig, function(err) {
     if (err) {
@@ -181,10 +187,6 @@ function initModules(clusterWorker, jsonConfig, cb) {
         process.exit(1);
       }
     } else {
-      var amqpConnection = amqp.connect(jsonConfig);
-      deployStatusHandler.listenToDeployStatus(amqpConnection, jsonConfig,function(){
-        migrationStatusHandler.listenToMigrationStatus(amqpConnection, jsonConfig);
-      });
       fhServiceAuth.init({
         logger: logger
       }, cb);
