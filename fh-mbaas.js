@@ -220,6 +220,7 @@ function startApp( ) {
   app.use('/sys', require('./lib/handlers/sys.js')());
   app.use('/api/mbaas', require('./lib/handlers/api.js'));
   app.use('/api/app', require('./lib/handlers/app.js'));
+  app.use('/api/storage', require('./lib/storage/impl/handlers'));
 
   var port = fhconfig.int('fhmbaas.port');
   app.listen(port, function () {
