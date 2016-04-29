@@ -1245,9 +1245,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.5.0-327",
-      "from": "fh-forms@1.5.0-327",
-      "resolved": "http://npm.skunkhenry.com/fh-forms/-/fh-forms-1.5.0-327.tgz",
+      "version": "1.5.0",
+      "from": "fh-forms@1.5.0",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.5.0.tgz",
       "dependencies": {
         "archiver": {
           "version": "0.14.3",
