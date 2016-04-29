@@ -45,7 +45,10 @@ module.exports = {
     }
   },
   "fhmbaas": {
-    "mbaasid":"development"
+    "mbaasid":"development",
+    "pagination": {
+      "maxLimit": 20
+    }
   },
   "fhmessaging":{
     "enabled": true,

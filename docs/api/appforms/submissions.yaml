@@ -1,0 +1,396 @@
+# sys endpoint routes
+swagger: '2.0'
+info:
+  title: Appforms Submissions Admin API
+  description: Endpoints For Retrieving Metrics from an mbaas
+  version: "1.0.0"
+
+schemes:
+  - http
+
+basePath: /api
+
+produces:
+  - application/json
+
+paths:
+  /{domain}/{environment}/appforms/submissions:
+    get:
+      tags:
+        - MbaaS
+        - Appforms
+        - Submissions
+      summary: List All Submissions For An Environment
+      parameters:
+        - in: path
+          name: environment
+          description: Environment
+          type: string
+          required: true
+        - in: path
+          name: domain
+          description: Domain
+          type: string
+          required: true
+        - in: query
+          name: page
+          description: Page Number
+          type: string
+          required: true
+        - in: query
+          name: limit
+          description: Number of submissions per page
+          type: string
+          required: true
+        - in: query
+          name: filter
+          description: Optional filter for submission metadata.
+          type: string
+          required: false
+      responses:
+        200:
+          description: List Of Submissions
+          schema:
+            properties:
+              pages:
+                type: number
+                description: Total pages that match the filter
+              total:
+                type: number
+                description: Total number of submissions that match the filter
+              submissions:
+                type: array
+                items:
+                  $ref: '#/definitions/Submission'
+        500:
+          description: Error getting Submissions
+          schema:
+            $ref: '#/definitions/Error'
+  /{domain}/{environment}/appforms/filter:
+    post:
+      tags:
+        - MbaaS
+        - Appforms
+        - Submissions
+      summary: List All Submissions For An Environment
+      parameters:
+        - in: path
+          name: environment
+          description: Environment
+          type: string
+          required: true
+        - in: path
+          name: domain
+          description: Domain
+          type: string
+          required: true
+        - in: query
+          name: page
+          description: Page Number
+          type: string
+          required: true
+        - in: query
+          name: limit
+          description: Number of submissions per page
+          type: string
+          required: true
+        - in: query
+          name: filter
+          description: Optional filter for submission metadata.
+          type: string
+          required: false
+      responses:
+        200:
+          description: List Of Submissions
+          schema:
+            properties:
+              pages:
+                type: number
+                description: Total pages that match the filter
+              total:
+                type: number
+                description: Total number of submissions that match the filter
+              submissions:
+                type: array
+                items:
+                  $ref: '#/definitions/Submission'
+        500:
+          description: Error getting Submissions
+          schema:
+            $ref: '#/definitions/Error'
+  /{domain}/{environment}/appforms/search:
+    post:
+      tags:
+        - MbaaS
+        - Appforms
+        - Submissions
+      summary: List All Submissions For An Environment
+      parameters:
+        - in: path
+          name: environment
+          description: Environment
+          type: string
+          required: true
+        - in: path
+          name: domain
+          description: Domain
+          type: string
+          required: true
+        - in: body
+          schema:
+            type: string
+          name: formId
+          description: ID Of A Form To Filter Submissions By
+          required: true
+        - in: body
+          schema:
+            type: string
+            enum:
+              - "and"
+              - "or"
+          name: clauseOperator
+          description: Operator To Combine Search Clauses
+          required: true
+        - in: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionQueryFields'
+          name: queryFields
+        - in: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubmissionQueryMeta'
+          name: queryMeta
+        - in: body
+          name: page
+          description: Page Number
+          type: string
+          required: true
+        - in: body
+          name: limit
+          description: Number of submissions per page
+          type: string
+          required: true
+      responses:
+        200:
+          description: List Of Submissions
+          schema:
+            properties:
+              pages:
+                type: number
+                description: Total pages that match the filter
+              total:
+                type: number
+                description: Total number of submissions that match the filter
+              submissions:
+                type: array
+                items:
+                  $ref: '#/definitions/Submission'
+        500:
+          description: Error getting Submissions
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  Submission:
+    properties:
+      _id:
+        type: string
+        description: Submission ID
+      appClientId:
+        type: string
+        description: ID Of The Client App That Performed The Submission
+      appCloudName:
+        type: string
+        description: Full Name Of The Cloud App That Received The Submission
+      appEnvironment:
+        type: string
+        description: Environment Of The Cloud That Received The Submission
+      appId:
+        type: string
+        description: The GUID Of The Project The Submission Was Submitted Against
+      comments:
+        type: array
+        items:
+          type: object
+          properties:
+            madeBy:
+              type: string
+            madeOn:
+              type: string
+              format: dateTime
+            value:
+              type: string
+              description: Comment Made By User
+      deviceFormTimestamp:
+        type: string
+        format: dateTime
+        description: Timestamp Of The Form The Submission Was Made Against
+      deviceIPAddress:
+        type: string
+        description: Comma-Separated List Of IP Addressses The Submission Was Made Against
+        example: "10.0.2.2,127.0.0.1"
+      deviceId:
+        type: string
+        description: The ID Of The Device That Made The Submission
+      formId:
+        type: string
+        description: The ID Of The Form The Submission Was Made Against
+      masterFormTimestamp:
+        type: string
+        format: dateTime
+        description: The Last Updated Timestamp Of The Form Stored On The Cloud When The Submission Was Made
+      status:
+        type: string
+        description: Current Status Of The Submission
+        enum:
+          - complete
+          - pending
+          - error
+      submissionCompletedTimestamp:
+        type: string
+        format: dateTime
+        description: The Date & Time The Submission JSON & Files Were Validated And Completed
+      submissionStartedTimestamp:
+        type: string
+        format: dateTime
+        description: The Date & Time The Submission JSON Was Validated
+      timezoneOffset:
+        type: integer
+        description: The Offset, In Minutes, From UTC Of The Device That Performed The Submission
+      updatedTimestamp:
+        type: string
+        format: dateTime
+        description: The Last Time The Submission Was Updated From Studio
+      userId:
+        type: string
+        description: The ID Of The User That Performed The Submission (Not Used)
+      formName:
+        type: string
+        description: The name of the form that the submission was made against
+      formFields:
+        description: Field Values Made Against The Submission
+        type: array
+        items:
+          type: object
+          properties:
+            fieldId:
+              description: Full Field Definition Of The Field The Values Were Made Against
+              type: object
+              properties:
+                _id:
+                  type: string
+                  description: Field ID
+                type:
+                  type: string
+                  description: Field type
+            fieldValues:
+              description: Array Of Field Values Made Against This Field. Field Value Format Depends On The Type Of Field Submitted.
+              type: array
+              items:
+                $ref: '#/definitions/FieldValueObject'
+  FieldValueObject:
+    properties:
+      text:
+        type: string
+      textarea:
+        type: string
+      url:
+        type: string
+      emailAddress:
+        type: string
+      dropdown:
+        type: string
+      radio:
+        type: string
+      locationMap:
+        type: object
+        properties:
+          lat:
+            type: number
+          long:
+            type: number
+      location:
+        type: object
+        properties:
+          lat:
+            type: number
+          long:
+            type: number
+      checkboxes:
+        type: array
+        items:
+          type: string
+      photo:
+        $ref: '#/definitions/FileFieldObject'
+      file:
+        $ref: '#/definitions/FileFieldObject'
+      signature:
+        $ref: '#/definitions/FileFieldObject'
+      barcode:
+        type: object
+        properties:
+          text:
+            type: string
+          format:
+            type: string
+      number:
+        type: number
+      sliderNumber:
+        type: number
+      dateTime:
+        type: string
+        format: dateTime
+  FileFieldObject:
+    properties:
+      fileName:
+        type: string
+      fileType:
+        type: string
+      fileSize:
+        type: integer
+      groupId:
+        type: string
+      hashName:
+        type: string
+      url:
+        type: string
+  Error:
+    properties:
+      code:
+        type: integer
+        description: Error Code (Feedhenry)
+      userDetail:
+        type: string
+        description: Error Message To Present To The User
+      systemDetail:
+        type: string
+        description: More Detailed Message For Debugging (e.g. Stack Trace)
+  SubmissionQueryFields:
+    properties:
+      clauses:
+        type: array
+        items:
+          $ref: '#/definitions/SubmissionQueryFieldsClause'
+  SubmissionQueryMeta:
+    properties:
+      clauses:
+        type: array
+        items:
+          $ref: '#/definitions/SubmissionQueryMetaClause'
+  SubmissionQueryMetaClause:
+    properties:
+      fieldId:
+        type: string
+        description: ID Of The Field To Search
+      metaName:
+        type: string
+        description: ID of Meta Field To Search By
+      restriction:
+        type: string
+        description: Type Of Comparison. Depends On Field Type.
+      value:
+        type: string
+        description: Value To Compare To
