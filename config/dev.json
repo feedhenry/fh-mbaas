@@ -147,7 +147,7 @@
     "port": 4444
   },
   "storage": {
-    "token_exp_time" : 60,
+    "token_exp_time" : 600,
     "base_url": "https://files.feedhenry.me"
   },
   "ops_env_file": "/etc/feedhenry/openv.json"
