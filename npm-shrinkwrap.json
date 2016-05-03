@@ -5153,6 +5153,11 @@
       "version": "1.8.3",
       "from": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz",
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz"
+    },
+    "diskspace": {
+      "version": "1.0.2",
+      "from": "https://registry.npmjs.org/diskspace/-/diskspace-1.0.2.tgz",
+      "resolved": "https://registry.npmjs.org/diskspace/-/diskspace-1.0.2.tgz"
     }
   }
 }
