@@ -29,15 +29,7 @@ function createExportJob(params) {
   return newJob;
 }
 
-function buildDownloadTarget(job) {
-  return {
-    url: 'files.eng1.skunkhenry.com/api/storage/' + job._id + '.tar.gz'
-  };
-}
-
-
 module.exports = {
   exportJobs: exportJobs,
-  createExportJob: createExportJob,
-  buildDownloadTarget: buildDownloadTarget
+  createExportJob: createExportJob
 };

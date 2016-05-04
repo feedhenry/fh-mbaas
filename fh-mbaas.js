@@ -220,9 +220,10 @@ function startApp( ) {
   app.use('/sys', require('./lib/handlers/sys.js')());
   app.use('/api/mbaas', require('./lib/handlers/api.js'));
   app.use('/api/app', require('./lib/handlers/app.js'));
+  app.use('/api/storage', require('./lib/storage').router);
 
   var port = fhconfig.int('fhmbaas.port');
-  app.listen(port, function () {
+  app.listen(port, function() {
     // Get our version number from package.json
     var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
     console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);
