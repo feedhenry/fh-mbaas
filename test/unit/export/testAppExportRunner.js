@@ -36,15 +36,21 @@ var ditchHelperStub = {
 }
 
 ////////////// FS MOCK
-var fsMock = {
-  mkdir: function(path, cb) {
-    cb();
+var mkdirp = function(path, cb) {
+  cb(null);
+};
+
+var modelsMock = {
+  ExportJob: {
+    aggregate: function(params, cb) {
+      cb(null, []);
+    }
   }
-}
+};
 
 
-var AppExportRunner = proxyquire('lib/export/AppExportRunner',
-  { 'mongodb': mongo, '../util/ditchhelper': ditchHelperStub , 'fs': fsMock}).AppExportRunner;
+var AppExportRunner = proxyquire('lib/export/AppDataExportRunner',
+  { 'mongodb': mongo, '../util/ditchhelper': ditchHelperStub , 'mkdirp': mkdirp, '../models': modelsMock}).AppExportRunner;
 
 module.exports.test_persisting = function(done) {
 
@@ -64,10 +70,12 @@ module.exports.test_persisting = function(done) {
     },
     status: null,
     progress: null,
-    appName: 'testApp',
-    appEnv: 'testAppEnv',
-    appGuid: '01234567890'
+    name: 'testApp',
+    environment: 'testAppEnv',
+    guid: '01234567890'
   };
+
+  //parent, appInfo.guid, appInfo.environment, context.jobID
 
   var exportJobMock = {
     fileSize: null,
@@ -78,7 +86,6 @@ module.exports.test_persisting = function(done) {
 
   sinon.stub(mongo.MongoClient, 'connect', mongo.MongoClient.connect);
   sinon.stub(ditchHelperStub, 'getAppInfo', ditchHelperStub.getAppInfo);
-  sinon.stub(fsMock, 'mkdir', fsMock.mkdir);
 
   var appExportRunner = new AppExportRunner('JOBID', mockAppInfo, exportJobMock, '/tmp');
 
@@ -88,13 +95,9 @@ module.exports.test_persisting = function(done) {
     assert.equal(mongo.MongoClient.connect.args[0][0], MOCK_DB_URL);
     assert.ok(ditchHelperStub.getAppInfo.called);
     assert.ok(ditchHelperStub.getAppInfo.calledOnce);
-    assert.equal(ditchHelperStub.getAppInfo.args[0][0], mockAppInfo.appName);
+    assert.equal(ditchHelperStub.getAppInfo.args[0][0], mockAppInfo.name);
 
     assert.equal(exportJobMock.fileSize, 3072);
-
-    assert.ok(fsMock.mkdir.called);
-    assert.ok(fsMock.mkdir.calledOnce);
-    assert.equal(fsMock.mkdir.args[0][0], '/tmp/01234567890/testAppEnv/JOBID');
 
     done();
   }).on(FAIL_EVENT, function(errorMessage) {
@@ -102,4 +105,5 @@ module.exports.test_persisting = function(done) {
   });
 
   appExportRunner.run();
-}
+};
+

@@ -47,7 +47,8 @@
     "rc": "0.4.0",
     "request": "2.67.0",
     "underscore": "1.8.3",
-    "diskspace": "1.0.2"
+    "diskspace": "1.0.2",
+    "mkdirp": "0.5.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

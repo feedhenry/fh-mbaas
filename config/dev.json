@@ -11,6 +11,11 @@
     "pagination": {
       "maxLimit": 1000,
       "defaultLimit": 10
+    },
+    "appexport" : {
+      "output_dir" : "/var/feedhenry/data",
+      "schedule_time": 180000,
+      "default_lock_lifetime":120000
     }
   },
   "logger": {
