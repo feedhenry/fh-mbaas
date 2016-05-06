@@ -7,7 +7,12 @@
     "pdfExportDir": "/tmp/fh-mbaas",
     "code_coverage_enabled": false,
     "mbaasid":"development",
-    "dsMinsPerBackOffIndex": 1
+    "dsMinsPerBackOffIndex": 1,
+    "appexport" : {
+      "output_dir" : "/var/feedhenry/data",
+      "schedule_time": 180000,
+      "default_lock_lifetime":120000
+    }
   },
   "logger": {
     "name": "mbaas",
