@@ -15,7 +15,7 @@
   },
   "preferGlobal": true,
   "dependencies": {
-    "async": "0.9.2",
+    "async": "1.5.2",
     "body-parser": "1.14.1",
     "bunyan": "1.5.1",
     "cors": "2.7.1",
