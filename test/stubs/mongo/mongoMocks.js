@@ -7,10 +7,10 @@ function createMongoMocks(collectionObjects) {
   // Creating collections
   _.each(collectionObjects, function(collectionObject, index, context) {
       collections[collectionObject.name] = {
-        stats: function() {
-          return {
+        stats: function(cb) {
+          return cb(null, {
             size: collectionObject.size
-          }
+          });
         }
       };
   });

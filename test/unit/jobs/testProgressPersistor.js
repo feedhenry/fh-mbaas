@@ -38,7 +38,7 @@ module.exports.test_persisting = function(done) {
 
   sinon.stub(mockTask, 'save', mockTask.save);
 
-  var progressPersistor = new ProgressPersistor(emitter, mockTask, function(err) {
+  var progressPersistor = new ProgressPersistor().listen(emitter, mockTask, function(err) {
     assert.ok(false, 'An error has occurred: ' + err);
   });
 
