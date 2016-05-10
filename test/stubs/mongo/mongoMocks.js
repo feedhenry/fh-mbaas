@@ -1,44 +1,33 @@
 var _ = require('underscore');
 
-function createMongoMocks(collectionObjects) {
 
-  var collections = {};
+var mongoMock = {
+  createMockedDbConnection: function(uri) {
 
-  // Creating collections
-  _.each(collectionObjects, function(collectionObject, index, context) {
-      collections[collectionObject.name] = {
-        stats: function(cb) {
-          return cb(null, {
-            size: collectionObject.size
-          });
-        }
-      };
-  });
-
-  var mongoClientMock = {
-    dbMock: {
-      mockedCollections: collections,
+    // Mocked DB Object
+    return {
+      mockedDb: require('../../fixtures/appdata/export/app1db.json'),
       collection: function(name) {
-        return this.mockedCollections[name];
+        return {
+          mockedCollection: this.mockedDb.collections[name],
+          stats: function(cb) {
+            cb(null, {
+              size: this.mockedCollection.size
+            });
+          }
+        }
       },
       collectionNames: function(cb) {
-        var keys = Object.keys(this.mockedCollections);
-        cb(null, keys);
+        cb(null, Object.keys(this.mockedDb.collections));
       },
       close: function(cb) {
         cb();
       }
-    },
-    connect: function(mongoUrl, cb) {
-      cb(null, this.dbMock);
-    }
-  };
-
-  var mongoMock = {
-    MongoClient: mongoClientMock
-  };
-
-  return mongoMock;
+    };
+  },
+  connect: function(uri, cb) {
+    cb(null, this.createMockedDbConnection(uri));
+  }
 }
 
-module.exports=createMongoMocks;
+module.exports.MongoClient=mongoMock;
