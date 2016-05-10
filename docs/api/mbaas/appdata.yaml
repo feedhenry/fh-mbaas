@@ -36,38 +36,6 @@ parameters:
     type: string
     required: true
 paths:
-  "/{domain}/{environment}/{appid}/data/import":
-    get:
-      description: List import operations
-      parameters:
-        - $ref: "#/parameters/domain"
-        - $ref: "#/parameters/environment"
-        - $ref: "#/parameters/appid"
-      responses:
-        200:
-          description: data import operations list, includes both current and historical data
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/ImportJob'
-        401:
-          description: Authentication Invalid
-      tags:
-        - import
-    post:
-      description: Create a new data import operation
-      parameters:
-        - $ref: "#/parameters/domain"
-        - $ref: "#/parameters/environment"
-        - $ref: "#/parameters/appid"
-      responses:
-        200:
-          description: Creation successful
-          schema:
-            $ref: '#/definitions/ImportJob'
-      tags:
-        - import
-
   "/{domain}/{environment}/{appid}/data/export":
     get:
       description: List export operations
@@ -144,19 +112,6 @@ paths:
       tags:
         - export
 definitions:
-  ImportJob:
-    properties:
-      "_id":
-        type: string
-      appid:
-        type: string
-      environment:
-        type: string
-      domain:
-        type: string
-      timestamp:
-        type: string
-        format: date
   ExportJob:
     properties:
       "_id":
@@ -167,6 +122,23 @@ definitions:
         type: string
       domain:
         type: string
-      timestamp:
+      status:
         type: string
-        format: date
+      step:
+        type: number
+      totalSteps:
+        type: number
+      fileSize:
+        type: number
+      fileDeleted:
+        type: string
+      filePath:
+        type: string
+      fileId:
+        type: string
+      progress:
+        type: object
+      created:
+        type: date
+      modified:
+        type: date
