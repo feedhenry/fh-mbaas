@@ -7,6 +7,7 @@ module.exports = {
   mockEnv: "mockenv",
   mockDomain: "mockdomain",
   config: require('./config'),
+  appdata: require('./appdata'),
   envConfig: function(){
     return {
       domain: this.mockDomain,

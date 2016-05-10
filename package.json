@@ -52,14 +52,14 @@
   },
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-fh-build": "^0.5.0",
+    "grunt-fh-build": "^1.0",
     "istanbul": "0.2.16",
     "mocha": "^2.3.3",
-    "mockgoose": "^1.10.7",
+    "mockgoose": "^2.0",
     "proxyquire": "^1.4.0",
     "should": "2.1.1",
     "sinon": "1.17.0",
     "supertest": "1.1.0",
-    "turbo-test-runner": "0.3.3"
+    "turbo-test-runner": "^0.5.0"
   }
 }
