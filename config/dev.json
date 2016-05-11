@@ -148,7 +148,8 @@
   },
   "storage": {
     "token_exp_time" : 600,
-    "base_url": "https://files.feedhenry.me"
+    "base_url_protocol": "https",
+    "base_url_host":"files.feedhenry.me"
   },
   "ops_env_file": "/etc/feedhenry/openv.json"
 }
