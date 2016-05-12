@@ -14,10 +14,11 @@ var models;
 
 exports['middleware/appdata'] = {
   before: function(done) {
-    mockgoose(mongoose);
-    mongoose.connect('test', function() {
-      models = require('../../../lib/models');
-      models.init(mongoose.connection, done);
+    mockgoose(mongoose).then(function() {
+      mongoose.connect('test', function() {
+        models = require('../../../lib/models');
+        models.init(mongoose.connection, done);
+      });
     });
   },
   beforeEach: function(done) {

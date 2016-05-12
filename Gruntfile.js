@@ -9,6 +9,8 @@ module.exports = function(grunt) {
     optional: ['mocha -A -u exports --recursive -t 10000 test/accept/test-backoff.js'],
 
     unit: ['echo $NODE_PATH', '<%= _test_runner %> <%= _unit_args %> --recursive ./test/unit'],
+
+    // use `grunt fh:testfile:{{unit_test_filename}}` to run a single test file
     unit_single: ['<%= _test_runner %> <%= _unit_args %> <%= unit_test_filename %>'],
 
     accept: ['turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js test/accept/test-dataSourceUpdater.js'],
