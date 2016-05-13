@@ -5,12 +5,26 @@ var fhConfig = require('fh-config');
 var mockgoose = require('mockgoose');
 var mongoose = require('mongoose');
 var sinon = require('sinon');
+var _ = require('underscore');
+var ExportJobSchema = require('../../../lib/models/ExportJobSchema');
 fhConfig.setRawConfig(fixtures.config);
 
 var modulePath = '../../../lib/middleware/appdata';
 var middleware;
 var jobFixture;
 var models;
+
+var appExportControllerMock = {
+  startExport: sinon.stub()
+    .callsArgWith(1, null, jobFixture)
+};
+
+var fakeUrl = { url: 'http://files.skunkhenry.com/storage/some-file.gz' };
+var storageMock = {
+  generateURL: sinon.stub()
+    .callsArgWith(2, null, fakeUrl)
+};
+
 
 exports['middleware/appdata'] = {
   before: function(done) {
@@ -24,7 +38,9 @@ exports['middleware/appdata'] = {
   beforeEach: function(done) {
     // reset mocks
     middleware = proxyquire(modulePath, {
-      '../models': models
+      '../models': models,
+      '../export/appExportController': appExportControllerMock,
+      '../../lib/storage': storageMock
     });
     mockgoose.reset();
 
@@ -92,47 +108,79 @@ exports['middleware/appdata'] = {
       };
       done();
     },
-    'should populate req.job with new job with [domain, environment, appid]': function(done) {
+    'should delegate to appExportController': function(done) {
       var self = this;
       var next = function(err) {
         assert.ok(!err);
-        assert.equal('domain', self.req.job.domain);
-        assert.equal('environment', self.req.job.environment);
-        assert.equal('appid', self.req.job.appid);
+        assert.ok(appExportControllerMock.startExport.calledOnce);
+        assert.deepEqual(self.req.job, jobFixture);
         done();
       };
       middleware.createJob(this.req, undefined, next);
-    },
-    'should return 400 on a ValidationError': function(done) {
-      delete this.req.appid;
-      var next = function(err) {
-        assert.equal(err.code, 400);
-      };
-      middleware.createJob(this.req, undefined, next);
-      done();
     }
   },
-  '#registerFile': {
+  '#ensureJobFinishedAndRegistered': {
     beforeEach: function(done) {
-      this.req = { job: jobFixture };
+      this.job = _.clone(jobFixture);
+      this.job.status = ExportJobSchema.statuses.FINISHED;
+      this.job.fileId = 'some-id';
+      this.req = { job: this.job };
       done();
     },
-    'should populate fileId': function(done) {
+    'should error on incorrect status': function(done) {
+      this.job.status = ExportJobSchema.statuses.FAILED;
+      var next = function(err) {
+        assert.ok(err);
+        assert.ok(/not finished/.test(err.message));
+        done();
+      };
+      middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
+    },
+    'should error on fileId missing': function(done) {
+      delete this.job.fileId;
+      var next = function(err) {
+        assert.ok(err);
+        assert.ok(/no registered file/.test(err.message), err.message);
+        done();
+      };
+      middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
+    },
+    'should error on file deleted': function(done) {
+      this.job.fileDeleted = true;
+      var next = function(err) {
+        assert.ok(err);
+        assert.ok(/deleted/.test(err.message), err.message);
+        done();
+      };
+      middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
+    }
+  },
+  '#generateURL': {
+    before: function(done) {
+      this.req = {
+        fileId: 'some-id'
+      };
+      done();
+    },
+    'should delegate to storage': function(done) {
       var self = this;
       var next = function(err) {
         assert.ok(!err);
-        assert.ok(self.req.fileId);
+        assert.ok(storageMock.generateURL.calledOnce);
+        assert.equal(self.req.fileUrl.url, fakeUrl.url);
         done();
       };
-      middleware.registerFile(this.req, undefined, next);
+      middleware.generateURL(this.req, undefined, next);
     },
-    'should return 404 on a deleted file': function(done) {
-      this.req.job.fileDeleted = true;
+    'should 500 on error': function(done) {
+      storageMock.generateURL = sinon.stub()
+        .callsArgWith(2, new Error('test error'));
       var next = function(err) {
-        assert.equal(err.code, 404);
+        assert.ok(err);
+        assert.equal(err.code, 500);
         done();
       };
-      middleware.registerFile(this.req, undefined, next);
+      middleware.generateURL(this.req, undefined, next);
     }
   }
 };
