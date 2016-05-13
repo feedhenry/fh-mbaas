@@ -54,7 +54,7 @@
     "grunt-fh-build": "^1.0",
     "istanbul": "0.2.16",
     "mocha": "^2.3.3",
-    "mockgoose": "^2.0",
+    "mockgoose": "^6.0",
     "proxyquire": "^1.4.0",
     "should": "2.1.1",
     "sinon": "1.17.0",
