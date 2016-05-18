@@ -30,6 +30,8 @@ var amqp = require('./lib/util/amqp.js');
 var async = require('async');
 var models = require('./lib/models');
 
+
+
 var START_AGENDA = "startAgenda";
 
 // args and usage
@@ -112,6 +114,8 @@ function initializeScheduler(clusterWorker) {
     logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
     scheduler = formsUpdater.scheduler(logger, fhconfig.getConfig().rawConfig, fhconfig.mongoConnectionString());
     logger.info("Initialised scheduler", scheduler);
+    var appDataExportAgenda = require('./lib/export');
+    appDataExportAgenda.scheduler().start();
   });
 }
 
