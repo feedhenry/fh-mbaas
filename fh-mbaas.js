@@ -172,9 +172,11 @@ function initModules(clusterWorker, jsonConfig, cb) {
   var migrationStatusHandler = require('./lib/messageHandlers/migrationStatusHandler.js');
   var deployStatusHandler = require('./lib/messageHandlers/deployStatusHandler.js');
 
-  var amqpConnection = amqp.connect(jsonConfig);
-  deployStatusHandler.listenToDeployStatus(amqpConnection, jsonConfig,function(){
-    migrationStatusHandler.listenToMigrationStatus(amqpConnection, jsonConfig);
+  var amqpConnection = amqp.connect(jsonConfig, function(){
+    logger.warn("AMQP is ready. Setup subscribers");
+    deployStatusHandler.listenToDeployStatus(amqpConnection, jsonConfig, function(){
+      migrationStatusHandler.listenToMigrationStatus(amqpConnection, jsonConfig);
+    });
   });
 
   // models are also initialised in this call
