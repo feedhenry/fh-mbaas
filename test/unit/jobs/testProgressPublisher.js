@@ -23,7 +23,8 @@ module.exports.test_publishing_batching = function(done) {
   var emitter = new EventEmitter();
 
   // Lets create a publisher with a batch size of '3'
-  var progressPublisher = new ProgressPublisher(emitter, publishSpy, 3);
+  var progressPublisher = new ProgressPublisher(3, publishSpy);
+  progressPublisher.listen(emitter);
 
   emitter.emit(STATUS_EVENT, 'started');
   assert.ok(!publishSpy.called, 'Publisher called with non full basket');
@@ -53,7 +54,8 @@ module.exports.test_publishing = function(done) {
   var ProgressPublisher = require('lib/jobs/progressPublisher').ProgressPublisher;
 
   // Lets create a publisher with a batch size of '3'
-  var progressPublisher = new ProgressPublisher(emitter, publishSpy, 3);
+  var progressPublisher = new ProgressPublisher(3, publishSpy);
+  progressPublisher.listen(emitter);
 
   emitter.emit(STATUS_EVENT, 'started');
   assert.ok(!publishSpy.called, 'Publisher called with non full basket');
@@ -85,7 +87,8 @@ module.exports.test_publishing_fail = function(done) {
   var emitter = new EventEmitter();
 
   // Lets create a publisher with a batch size of '10'
-  var progressPublisher = new ProgressPublisher(emitter, publishSpy, 10);
+  var progressPublisher = new ProgressPublisher(10, publishSpy);
+  progressPublisher.listen(emitter);
 
   emitter.emit(STATUS_EVENT, 'started');
   assert.ok(!publishSpy.called, 'Publisher called with non full basket');
@@ -113,7 +116,8 @@ module.exports.test_publishing_finish = function(done) {
   var emitter = new EventEmitter();
 
   // Lets create a publisher with a batch size of '10'
-  var progressPublisher = new ProgressPublisher(emitter, publishSpy, 10);
+  var progressPublisher = new ProgressPublisher(10, publishSpy);
+  progressPublisher.listen(emitter);
 
   emitter.emit(STATUS_EVENT, 'started');
   assert.ok(!publishSpy.called, 'Publisher called with non full basket');

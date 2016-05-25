@@ -1,0 +1,64 @@
+[ {
+    "__v" : 0,
+    "_id" : "5745c8de2aaf5fd27e88c026",
+    "appid" : "imtdbqsqteab2dccybb3tzil",
+    "created" : "2016-05-02T15:46:38.633Z",
+    "domain" : "testing",
+    "environment" : "dev",
+    "jobType" : "export",
+    "logs" : [],
+    "metadata" : {
+      "fileSize" : 10240,
+      "fileDeleted" : true,
+      "filePath" : "/var/feedhenry/data/imtdbqsqteab2dccybb3tzil/dev/5745c8de2aaf5fd27e88c026/export.tar",
+      "fileId" : "5745c8e06c95e6d07ee62f86"
+    },
+    "modified" : "2016-05-25T15:46:40.579Z",
+    "progress" : "complete",
+    "status" : "complete",
+    "step" : 1,
+    "totalSteps" : 1
+  },
+  {
+    "__v" : 0,
+    "_id" : "5745c9e42aaf5fd27e88c027",
+    "appid" : "imtdbqsqteab2dccybb3tzil",
+    "created" : "2015-05-25T15:51:00.885Z",
+    "domain" : "testing",
+    "environment" : "dev",
+    "jobType" : "export",
+    "logs" : [],
+    "metadata" : {
+      "fileId" : "5745c9e96c95e6d07ee62f87",
+      "filePath" : "/var/feedhenry/data/imtdbqsqteab2dccybb3tzil/dev/5745c9e42aaf5fd27e88c027/export.tar",
+      "fileDeleted" : true,
+      "fileSize" : 10240
+    },
+    "modified" : "2016-05-25T15:54:00.436Z",
+    "progress" : "complete",
+    "status" : "complete",
+    "step" : 1,
+    "totalSteps" : 1
+  },
+  {
+    "__v" : 0,
+    "_id" : "5745cc49ad46f14930349a36",
+    "appid" : "imtdbqsqteab2dccybb3tzil",
+    "created" : "2012-05-25T16:01:13.367Z",
+    "domain" : "testing",
+    "environment" : "dev",
+    "jobType" : "export",
+    "logs" : [],
+    "metadata" : {
+      "fileId" : "5745cc4ecfd2b6473046f1a1",
+      "filePath" : "/var/feedhenry/data/imtdbqsqteab2dccybb3tzil/dev/5745cc49ad46f14930349a36/export.tar",
+      "fileDeleted" : true,
+      "fileSize" : 10240
+    },
+    "modified" : "2016-05-25T16:02:00.412Z",
+    "progress" : "complete",
+    "status" : "complete",
+    "step" : 1,
+    "totalSteps" : 1
+  }
+]
