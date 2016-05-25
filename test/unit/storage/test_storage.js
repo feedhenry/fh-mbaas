@@ -4,6 +4,7 @@ const proxyquire = require('proxyquire');
 const fhConfig = require('fh-config');
 const mockgoose = require('mockgoose');
 const mongoose = require('mongoose');
+mockgoose(mongoose);
 const fixtures = require('../../fixtures');
 fhConfig.setRawConfig(fixtures.config);
 
@@ -23,15 +24,13 @@ function createModel(done) {
 
 exports['storage'] = {
   before: function(done) {
-    mockgoose(mongoose).then(function() {
-      mongoose.connect('test', function() {
-        models = require('../../../lib/storage/models/FileSchema');
-        models.createModel(mongoose.connection);
-        storage = proxyquire('../../../lib/storage', {
-          './models/FileSchema': models
-        });
-        done();
+    mongoose.connect('test', function() {
+      models = require('../../../lib/storage/models/FileSchema');
+      models.createModel(mongoose.connection);
+      storage = proxyquire('../../../lib/storage', {
+        './models/FileSchema': models
       });
+      done();
     });
   },
   '#registerFile': {

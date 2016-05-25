@@ -110,12 +110,14 @@ var exportJob = modelsMock.AppdataJob;
 
 module.exports.test_prepare_export = function(done) {
 
+  var TaggedLogger = require('lib/jobs/taggedLogger').TaggedLogger;
+
   var context = {
     appInfo : mockAppInfo,
     exportJob : exportJob,
     outputDir : '/tmp',
     jobID: 'JOBID',
-    logger: logger
+    logger: new TaggedLogger(logger, '[APPDATAEXPORT]')
   };
 
   preparationSteps.prepare(context, function(err, ctx) {
