@@ -8,6 +8,28 @@ var noop = sinon.stub.yields();
 
 module.exports = {
   core: {
+    exportSubmissions: function(expectedFileUrl){
+      var stub = sinon.stub();
+
+      //The CSV Response is always "date-formId-formName : 'full CSV Export For The Form'"
+      var mockCSVResponse = {
+        "2016-05-25-01-49-someformid-someformname": 'formName,formId,_id,submissionCompletedTimestamp,appCloudName,deviceId,deviceIPAddress,updatedTimestamp,NON ADMIN,ADMIN\ntestadmind,573c4c28c080559575da5bba,573c4c7d6be54d82766374a3,Wed May 18 2016 11:05:34 GMT+0000 (UTC),testing-cdwmcf6dpi6txzock2exkxgi-dev,B64F9A23336B4CADBE55A26B39ABBBB8,"83.147.149.210,172.18.156.30",Wed May 18 2016 11:05:43 GMT+0000 (UTC),asfasf,gsdf'
+      };
+
+      stub.withArgs(
+        sinon.match({
+          uri: sinon.match(fixtures.mockMongoUrl)
+        }),
+        sinon.match({
+          downloadUrl: sinon.match(expectedFileUrl)
+        }),
+        sinon.match.func
+      )
+        .callsArgWith(1, undefined, mockCSVResponse);
+
+      stub.throws("Invalid Arguments");
+      return stub;
+    },
     getSubmissions: function(params){
       params = params || {};
       var stub = sinon.stub();
