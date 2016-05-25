@@ -6,7 +6,7 @@ var mockgoose = require('mockgoose');
 var mongoose = require('mongoose');
 var sinon = require('sinon');
 var _ = require('underscore');
-var ExportJobSchema = require('../../../lib/models/ExportJobSchema');
+var AppdataJobSchema = require('../../../lib/models/AppdataJobSchema');
 fhConfig.setRawConfig(fixtures.config);
 
 var modulePath = '../../../lib/middleware/appdata';
@@ -45,7 +45,7 @@ exports['middleware/appdata'] = {
     mockgoose.reset();
 
     // repopulate fixtures
-    new models.ExportJob(fixtures.appdata.createJob(1))
+    new models.AppdataJob(fixtures.appdata.createJob(1))
       .save(function(err, job) {
         jobFixture = job;
         done(err);
@@ -85,7 +85,7 @@ exports['middleware/appdata'] = {
       var req = {};
       middleware = proxyquire(modulePath, {
         '../models': {
-          ExportJob: {
+          AppdataJob: {
             find: sinon.stub().yields(new Error())
           }
         }
@@ -122,13 +122,13 @@ exports['middleware/appdata'] = {
   '#ensureJobFinishedAndRegistered': {
     beforeEach: function(done) {
       this.job = _.clone(jobFixture);
-      this.job.status = ExportJobSchema.statuses.FINISHED;
-      this.job.fileId = 'some-id';
+      this.job.status = AppdataJobSchema.statuses.FINISHED;
+      this.job.metadata.fileId = 'some-id';
       this.req = { job: this.job };
       done();
     },
     'should error on incorrect status': function(done) {
-      this.job.status = ExportJobSchema.statuses.FAILED;
+      this.job.status = AppdataJobSchema.statuses.FAILED;
       var next = function(err) {
         assert.ok(err);
         assert.ok(/not finished/.test(err.message));
@@ -137,7 +137,7 @@ exports['middleware/appdata'] = {
       middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
     },
     'should error on fileId missing': function(done) {
-      delete this.job.fileId;
+      delete this.job.metadata.fileId;
       var next = function(err) {
         assert.ok(err);
         assert.ok(/no registered file/.test(err.message), err.message);
@@ -146,7 +146,7 @@ exports['middleware/appdata'] = {
       middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
     },
     'should error on file deleted': function(done) {
-      this.job.fileDeleted = true;
+      this.job.metadata.fileDeleted = true;
       var next = function(err) {
         assert.ok(err);
         assert.ok(/deleted/.test(err.message), err.message);
