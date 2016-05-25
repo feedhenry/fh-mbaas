@@ -48,7 +48,8 @@ module.exports = {
     "mbaasid":"development",
     "pagination": {
       "maxLimit": 20
-    }
+    },
+    'pdfExportDir': '/some/path'
   },
   "fhmessaging":{
     "enabled": true,

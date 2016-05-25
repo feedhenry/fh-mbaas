@@ -4,6 +4,9 @@ var _ = require('underscore');
 
 var mockMongoUrl = fixtures.mockMongoUrl;
 
+var passThrough = sinon.stub().callsArg(2);
+var noop = sinon.stub.yields();
+
 module.exports = {
   core: {
     getSubmissions: function(params){
@@ -65,6 +68,20 @@ module.exports = {
 
       stub.throws("Invalid Arguments");
 
+      return stub;
+    },
+    generateSubmissionPdf: function() {
+      var downloadFile = fixtures.forms.submissions.get().downloadFile;
+      var stub = sinon.stub();
+      stub.withArgs(
+        sinon.match({
+          _id: sinon.match.string,
+          pdfExportDir: sinon.match.string,
+          filesAreRemote: false,
+          fileUriPath: sinon.match.string,
+          location: sinon.match.string
+        }), sinon.match.func).callsArgWith(1, undefined, downloadFile);
+      stub.yields("Invalid Arguments");
       return stub;
     },
     dataSources: {
@@ -221,5 +238,31 @@ module.exports = {
         return updateCacheStub;
       }
     }
+  },
+  'middleware': {
+    'submissions': {
+      'generatePDF': noop,
+      'getRequestFileParameters': noop,
+      'submitFormFileBase64': noop,
+      'submitFormFile': noop,
+      'completeSubmission': noop,
+      'getSubmissionFile': noop,
+      'processFileResponse': noop,
+      'status': noop,
+      'listProjectSubmissions': noop,
+      'get': noop,
+    },
+    'formProjects': {
+      'getFormIds': noop,
+      'getFullTheme': noop,
+      'getConfig': noop
+    },
+    'forms': {
+      'listDeployedForms': noop,
+      'get': noop,
+      'search': noop,
+      'submitFormData':noop
+    },
+    'parseMongoConnectionOptions': passThrough
   }
 };
