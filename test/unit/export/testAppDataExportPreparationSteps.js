@@ -35,17 +35,26 @@ var ditchHelperStub = {
 
 var modelsMock = {
   exportJobs:{},
-  ExportJob: {
+  AppdataJob: {
     id: 1234,
     progress: undefined,
     status: 'created',
+    metadata: {
+      fileSize: 0,
+      fileDeleted: null,
+      filePath: null,
+      fileId: null
+    },
+    updateMetadata: function (field, value) {
+      this.metadata[field] = value;
+    },
     aggregate: function(params, cb) {
       var total = 0;
 
       for (var i in this.exportJobs) {
         var job = this.exportJobs[i];
         if (job.status === 'created' || jobs.status === 'progress') {
-          total += job.fileSize;
+          total += job.metadata.fileSize;
         }
       }
 
@@ -97,7 +106,7 @@ var mockAppInfo = {
   environment: 'dev'
 };
 
-var exportJob = modelsMock.ExportJob;
+var exportJob = modelsMock.AppdataJob;
 
 module.exports.test_prepare_export = function(done) {
 
