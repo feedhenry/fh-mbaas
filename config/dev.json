@@ -11,7 +11,11 @@
     "appdataexport" : {
       "output_dir" : "/var/feedhenry/data",
       "schedule_time": 180000,
-      "default_lock_lifetime":120000
+      "default_lock_lifetime":120000,
+      "cleaner": {
+        "frequency": "*/30 * * * *",
+        "grace_time": 10
+      }
     }
   },
   "logger": {

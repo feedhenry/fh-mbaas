@@ -1,5 +1,6 @@
 const mockgoose = require('mockgoose');
 const mongoose = require('mongoose');
+mockgoose(mongoose);
 const proxyquire = require('proxyquire');
 const express = require('express');
 const fhConfig = require('fh-config');
@@ -18,20 +19,18 @@ var testPath = path.resolve(__dirname, '../../../README.md');
 
 exports['storage#router'] = {
   before: function(done) {
-    mockgoose(mongoose).then(function() {
-      mongoose.connect('test', function() {
-        models = require('../../../lib/storage/models/FileSchema');
-        models.createModel(mongoose.connection);
-        storage = proxyquire('../../../lib/storage', {
-          './models/FileSchema': models
-        });
-
-        router = storage.router;
-        app = express();
-        app.use('/api/storage/', router);
-
-        done();
+    mongoose.connect('test', function() {
+      models = require('../../../lib/storage/models/FileSchema');
+      models.createModel(mongoose.connection);
+      storage = proxyquire('../../../lib/storage', {
+        './models/FileSchema': models
       });
+
+      router = storage.router;
+      app = express();
+      app.use('/api/storage/', router);
+
+      done();
     });
   },
   'GET /api/storage/:resourceId': {

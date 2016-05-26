@@ -4,7 +4,7 @@ var baseJob = {
   appid: 'appid',
   environment: 'env',
   domain: 'domain',
-  status: 'exporting',
+  status: 'running',
   step: 1,
   totalSteps: 100,
   metadata: {

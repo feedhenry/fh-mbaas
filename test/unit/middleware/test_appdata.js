@@ -1,9 +1,11 @@
 var assert = require('assert');
+var deepequal=require('deep-equal');
 var proxyquire = require('proxyquire');
 var fixtures = require('../../fixtures');
 var fhConfig = require('fh-config');
 var mockgoose = require('mockgoose');
 var mongoose = require('mongoose');
+mockgoose(mongoose);
 var sinon = require('sinon');
 var _ = require('underscore');
 var AppdataJobSchema = require('../../../lib/models/AppdataJobSchema');
@@ -28,18 +30,16 @@ var storageMock = {
 
 exports['middleware/appdata'] = {
   before: function(done) {
-    mockgoose(mongoose).then(function() {
-      mongoose.connect('test', function() {
-        models = require('../../../lib/models');
-        models.init(mongoose.connection, done);
+    mongoose.connect('test', function() {
+      models = require('../../../lib/models');
+      models.init(mongoose.connection, done);
       });
-    });
   },
   beforeEach: function(done) {
     // reset mocks
     middleware = proxyquire(modulePath, {
       '../models': models,
-      '../export/appExportController': appExportControllerMock,
+      '../export/appDataExportController': appExportControllerMock,
       '../../lib/storage': storageMock
     });
     mockgoose.reset();
@@ -112,8 +112,9 @@ exports['middleware/appdata'] = {
       var self = this;
       var next = function(err) {
         assert.ok(!err);
+        assert.ok(appExportControllerMock.startExport.called, 'Export controller not invoked');
         assert.ok(appExportControllerMock.startExport.calledOnce);
-        assert.deepEqual(self.req.job, jobFixture);
+        deepequal(self.req.job, jobFixture);
         done();
       };
       middleware.createJob(this.req, undefined, next);
@@ -158,7 +159,11 @@ exports['middleware/appdata'] = {
   '#generateURL': {
     before: function(done) {
       this.req = {
-        fileId: 'some-id'
+        job: {
+          metadata: {
+            fileId: 'some-id'
+          }
+        }
       };
       done();
     },
