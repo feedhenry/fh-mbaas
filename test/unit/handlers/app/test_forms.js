@@ -17,11 +17,12 @@ var baseUrl = '/mockdomain/mockenv/mockproject/mockapp/appforms';
 describe("Forms App Submissions Router", function() {
 
   describe("submissions/:id/exportpdf tests", function(done) {
-    var exportpdfUrl = baseUrl + '/submissions/123/exportpdf'
+    var mockSubmission = fixtures.forms.submissions.get();
+    var exportpdfUrl = baseUrl + '/submissions/' + mockSubmission._id + '/exportpdf'
     var formsRouter;
 
     beforeEach(function createDownloadFile() {
-      fs.closeSync(fs.openSync(fixtures.forms.submissions.get().downloadFile, 'w'));
+      fs.closeSync(fs.openSync(mockSubmission.downloadFile, 'w'));
     });
 
     before(function createRouter() {
@@ -45,7 +46,7 @@ describe("Forms App Submissions Router", function() {
 
     it("should export submission when all parameters are provided", function(done) {
       var app = express();
-      app.use(setRequestParams('example.com.org', 'somepath'));
+      app.use(setRequestParams(mockSubmission.location, mockSubmission.fileUrlPath));
       app.use(baseRoutePath, formsRouter);
 
       supertest(app)
@@ -63,7 +64,7 @@ describe("Forms App Submissions Router", function() {
 
     it("should return 500 if coreHost is missing", function(done) {
       var app = express();
-      app.use(setRequestParams(undefined, 'somepath'));
+      app.use(setRequestParams(undefined, mockSubmission.fileUrlPath));
       app.use(baseRoutePath, formsRouter);
 
       assertInternalServerError(app, exportpdfUrl, done);
@@ -71,7 +72,7 @@ describe("Forms App Submissions Router", function() {
 
     it("should return 500 if fileUriPath is missing", function(done) {
       var app = express();
-      app.use(setRequestParams('example.com.org', undefined));
+      app.use(setRequestParams(mockSubmission.location, undefined));
       app.use(baseRoutePath, formsRouter);
 
       assertInternalServerError(app, exportpdfUrl, done);

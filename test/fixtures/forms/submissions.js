@@ -89,7 +89,10 @@ var submission = {
   "submissionStartedTimestamp": "2014-06-26T19:14:16.144Z",
   "updatedTimestamp": "2014-06-26T19:14:29.415Z",
   "submissionCompletedTimestamp": "2014-06-26T19:14:29.409Z",
-  "downloadFile": os.tmpdir() + '/download.pdf'
+  "downloadFile": os.tmpdir() + '/download.pdf',
+  "pdfExportDir": '/tmp/',
+  "fileUrlPath": '/some/path',
+  "location": 'example.com.org'
 };
 
 

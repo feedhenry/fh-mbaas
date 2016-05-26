@@ -70,16 +70,16 @@ module.exports = {
       return stub;
     },
     generateSubmissionPdf: function() {
-      var downloadFile = fixtures.forms.submissions.get().downloadFile;
+      var mockSubmission = fixtures.forms.submissions.get();
       var stub = sinon.stub();
       stub.withArgs(
         sinon.match({
-          _id: sinon.match.string,
-          pdfExportDir: sinon.match.string,
+          _id: sinon.match(mockSubmission._id),
+          pdfExportDir: sinon.match(fixtures.config.fhmbaas.pdfExportDir),
           filesAreRemote: false,
-          fileUriPath: sinon.match.string,
-          location: sinon.match.string
-        }), sinon.match.func).callsArgWith(1, undefined, downloadFile);
+          fileUriPath: sinon.match(mockSubmission.fileUrlPath),
+          location: sinon.match(mockSubmission.location)
+        }), sinon.match.func).callsArgWith(1, undefined, mockSubmission.downloadFile);
       stub.yields("Invalid Arguments");
       return stub;
     },
