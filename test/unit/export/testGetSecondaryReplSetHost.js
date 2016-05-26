@@ -103,12 +103,33 @@ module.exports.test_get_host_happy = function (done) {
     }
   };
 
-  getHost(function (err, host) {
+  getHost(function (err, result) {
     assert.equal(err, null);
-    assert.equal(host, "eng1-mbaas1-ship1:27017");
+    assert.equal(result.host, "eng1-mbaas1-ship1");
+    assert.equal(result.port, "27017");
     done();
   });
 };
+
+// Make sure that it can also deal with non existing ports
+module.exports.test_get_host_no_port = function (done) {
+  mockReplicaSet.members[1].name = "eng1-mbaas1-ship1";
+  mockMongo = {
+    rs: {
+      status: function () {
+        return mockReplicaSet;
+      }
+    }
+  };
+
+  getHost(function (err, result) {
+    assert.equal(err, null);
+    assert.equal(result.host, "eng1-mbaas1-ship1");
+    assert.equal(result.port, "27017");
+    done();
+  });
+};
+
 
 // Make sure that it returns null in a setup that does not have
 // replica sets
@@ -121,9 +142,9 @@ module.exports.test_get_host_no_repl_set = function (done) {
     }
   };
 
-  getHost(function (err, host) {
+  getHost(function (err, result) {
     assert.equal(err, null);
-    assert.equal(host, null);
+    assert.equal(result, null);
     done();
   });
 };
