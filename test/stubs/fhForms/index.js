@@ -4,7 +4,6 @@ var _ = require('underscore');
 
 var mockMongoUrl = fixtures.mockMongoUrl;
 
-var passThrough = sinon.stub().callsArg(2);
 var noop = sinon.stub.yields();
 
 module.exports = {
@@ -263,6 +262,6 @@ module.exports = {
       'search': noop,
       'submitFormData':noop
     },
-    'parseMongoConnectionOptions': passThrough
+    'parseMongoConnectionOptions': noop
   }
 };
