@@ -99,7 +99,8 @@ module.exports = {
           _id: sinon.match(mockSubmission._id),
           pdfExportDir: sinon.match(fixtures.config.fhmbaas.pdfExportDir),
           filesAreRemote: false,
-          fileUriPath: sinon.match(mockSubmission.fileUrlPath),
+          fileUriPath: sinon.match.string,
+          downloadUrl: sinon.match.string,
           location: sinon.match(mockSubmission.location),
           uri: sinon.match(fixtures.mockMongoUrl)
         }), sinon.match.func).callsArgWith(1, undefined, mockSubmission.downloadFile);

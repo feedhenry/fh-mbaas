@@ -72,7 +72,8 @@ describe("Forms App Submissions Router", function() {
 
     it("should export submission when all parameters are provided", function(done) {
       var app = express();
-      app.use(setRequestParams(mockSubmission.location, mockSubmission.fileUrlPath));
+      var expectedUrl = "https://some.path.to.cloud.app/mbaas/forms/somecloudappguid/submission/:id/file/:fileId";
+      app.use(setRequestParams(mockSubmission.location, mockSubmission.fileUrlPath, expectedUrl));
       app.use(baseRoutePath, formsRouter);
 
       supertest(app)
