@@ -11,14 +11,40 @@ fhConfig.setRawConfig(fixtures.config);
 var logger = fhConfig.getLogger();
 var fs = require('fs');
 var _ = require('underscore');
+var bodyParser = require('body-parser');
 var baseRoutePath = '/:domain/:environment/:projectid/:appid/appforms';
 var baseUrl = '/mockdomain/mockenv/mockproject/mockapp/appforms';
+var archiver = require('archiver');
 
 describe("Forms App Submissions Router", function() {
 
-  describe("submissions/:id/exportpdf tests", function(done) {
+  function setRequestParams(coreHost, fileUriPath, cloudAppUrl, cloudAppGuid) {
+    return function setRequestParameters(req, res, next) {
+      req.appMbaasModel = {
+        'coreHost': coreHost,
+        'url': cloudAppUrl,
+        'guid': cloudAppGuid
+      };
+      req.fileUriPath = fileUriPath;
+
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    };
+  }
+
+  function assertInternalServerError(app, url, done) {
+    supertest(app)
+      .get(url)
+      .expect(500)
+      .end(function (err) {
+        assert.ok(!err, "Expected Invalid Arguments" + util.inspect(err));
+        done();
+      });
+  }
+
+  describe("submissions/:id/exportpdf tests", function() {
     var mockSubmission = fixtures.forms.submissions.get();
-    var exportpdfUrl = baseUrl + '/submissions/' + mockSubmission._id + '/exportpdf'
+    var exportpdfUrl = baseUrl + '/submissions/' + mockSubmission._id + '/exportpdf';
     var formsRouter;
 
     beforeEach(function createDownloadFile() {
@@ -56,7 +82,7 @@ describe("Forms App Submissions Router", function() {
         .expect(function verifyResponse(response) {
           assert.ok(response);
         })
-        .end(function (err, res) {
+        .end(function (err) {
           assert.ok(!err, "Expected No Error " + util.inspect(err));
           done();
         });
@@ -79,24 +105,63 @@ describe("Forms App Submissions Router", function() {
     });
 
   });
+
+  describe("submissions/export tests", function() {
+    var mockSubmission = fixtures.forms.submissions.get();
+    var exportCSVUrl = baseUrl + '/submissions/export';
+    var mockAppGuid = "somecloudappguid";
+
+    var mockAppUrl = "https://some.path.to.cloud.app";
+
+    var expectedUrl = "https://some.path.to.cloud.app/mbaas/forms/somecloudappguid/submission/:id/file/:fileId";
+    var formsRouter;
+
+    //Proxyquire was causing errors with archiver.
+    //Proxyquiring archiver with the module seems to have solved the proble.
+    archiver['@global'] = true;
+
+    before(function createRouter() {
+      var exportCSVStub = stubs.forms.core.exportSubmissions(expectedUrl);
+      var deps = {
+        'fh-forms': {
+          '@global': true,
+          core: {
+            exportSubmissions: exportCSVStub
+          }
+        },
+        'fh-mbaas-middleware': _.clone(stubs.mbaasMiddleware),
+        'fh-config': {
+          '@global': true,
+          getLogger: sinon.stub().returns(logger),
+          value: fhConfig.value
+        },
+        'archiver': archiver
+      };
+      formsRouter = proxyquire('../../../../lib/handlers/app/forms.js', deps);
+    });
+
+    it("should export submissions when all parameters are provided", function(done) {
+      var app = express();
+
+      app.use(bodyParser.json());
+      app.use(setRequestParams(mockSubmission.location, mockSubmission.fileUrlPath, mockAppUrl, mockAppGuid));
+      app.use(baseRoutePath, formsRouter);
+
+      supertest(app)
+        .post(exportCSVUrl)
+        .send({})
+        .expect(200)
+        .expect('Content-Type', "application/zip")
+        .expect('Content-disposition', 'attachment; filename=submissions.zip')
+        .expect(function verifyResponse(response) {
+          assert.ok(response);
+        })
+        .end(function (err) {
+          assert.ok(!err, "Expected No Error " + util.inspect(err));
+          done();
+        });
+    });
+  });
 });
 
-function setRequestParams(coreHost, fileUriPath) {
-  return function setRequestParameters(req, res, next) {
-    req.appMbaasModel = {
-    'coreHost': coreHost
-    };
-    req.fileUriPath = fileUriPath
-    next();
-  };
-}
 
-function assertInternalServerError(app, url, done) {
-  supertest(app)
-    .get(url)
-    .expect(500)
-    .end(function (err, res) {
-      assert.ok(!err, "Expected Invalid Arguments" + util.inspect(err));
-      done();
-    });
-}

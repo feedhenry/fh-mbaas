@@ -25,7 +25,7 @@ module.exports = {
         }),
         sinon.match.func
       )
-        .callsArgWith(1, undefined, mockCSVResponse);
+        .callsArgWith(2, undefined, mockCSVResponse);
 
       stub.throws("Invalid Arguments");
       return stub;
@@ -100,7 +100,8 @@ module.exports = {
           pdfExportDir: sinon.match(fixtures.config.fhmbaas.pdfExportDir),
           filesAreRemote: false,
           fileUriPath: sinon.match(mockSubmission.fileUrlPath),
-          location: sinon.match(mockSubmission.location)
+          location: sinon.match(mockSubmission.location),
+          uri: sinon.match(fixtures.mockMongoUrl)
         }), sinon.match.func).callsArgWith(1, undefined, mockSubmission.downloadFile);
       stub.yields("Invalid Arguments");
       return stub;
