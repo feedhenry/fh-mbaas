@@ -68,7 +68,7 @@ exports['middleware/appdata'] = {
         assert.equal(err.code, 404, err.message);
         done();
       };
-      middleware.findJob(req, undefined, next, 123);
+      middleware.findJob(req, undefined, next, mongoose.Types.ObjectId('012345678901234567890123'));
     }
   },
   '#allJobs': {
