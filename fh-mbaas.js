@@ -27,6 +27,11 @@ var formsUpdater = require('./lib/formsUpdater');
 var fhlogger = require('fh-logger');
 var amqp = require('./lib/util/amqp.js');
 
+var async = require('async');
+var models = require('./lib/models');
+
+
+
 var START_AGENDA = "startAgenda";
 
 // args and usage
@@ -85,30 +90,32 @@ function loadConfig(cb){
 }
 
 function createAndSetLogger() {
-    // We are overwriting any logger created in fhconfig.init and replacing
-    // it with an fh-logger instance to allow the underlying logger to be
-    // controlled (setting log levels for example)
-    logger = fhlogger.createLogger(fhconfig.getConfig().rawConfig.logger);
-    fhconfig.setLogger(logger);
-    forms.core.setLogger(logger);
+  // We are overwriting any logger created in fhconfig.init and replacing
+  // it with an fh-logger instance to allow the underlying logger to be
+  // controlled (setting log levels for example)
+  logger = fhlogger.createLogger(fhconfig.getConfig().rawConfig.logger);
+  fhconfig.setLogger(logger);
+  forms.core.setLogger(logger);
 
-    //Setting global forms config
-    logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
-    forms.core.setConfig({
-      minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
-    });
+  //Setting global forms config
+  logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
+  forms.core.setConfig({
+    minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
+  });
 }
 
 /**
  * Initialising The Scheduler. This is bound to a single worker using fh-cluster.
  * @param clusterWorker
  */
-function initializeScheduler(clusterWorker){
+function initializeScheduler(clusterWorker) {
   //Ensuring that the config is loaded.
-  initModules(clusterWorker, getMbaasMiddlewareConfig(), function(){
+  initModules(clusterWorker, getMbaasMiddlewareConfig(), function() {
     logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
     scheduler = formsUpdater.scheduler(logger, fhconfig.getConfig().rawConfig, fhconfig.mongoConnectionString());
     logger.info("Initialised scheduler", scheduler);
+    var appDataExportAgenda = require('./lib/export');
+    appDataExportAgenda.scheduler().start();
   });
 }
 
@@ -169,30 +176,35 @@ function getMbaasMiddlewareConfig() {
 }
 
 function initModules(clusterWorker, jsonConfig, cb) {
+  async.parallel([
+    async.apply(async.waterfall, [
+      async.constant(jsonConfig),
+      fhmbaasMiddleware.init,
+      models.init
+    ]),
+    async.apply(initAmqp, jsonConfig),
+    async.apply(fhServiceAuth.init, {logger: logger})
+  ], function(err) {
+    if (!err) {
+      return cb();
+    }
+    logger.error(err);
+    if(clusterWorker) {
+      clusterWorker.kill();
+    } else {
+      process.exit(1);
+    }
+  });
+}
+
+function initAmqp(config, cb) {
   var migrationStatusHandler = require('./lib/messageHandlers/migrationStatusHandler.js');
   var deployStatusHandler = require('./lib/messageHandlers/deployStatusHandler.js');
 
-  var amqpConnection = amqp.connect(jsonConfig, function(){
-    logger.warn("AMQP is ready. Setup subscribers");
-    deployStatusHandler.listenToDeployStatus(amqpConnection, jsonConfig, function(){
-      migrationStatusHandler.listenToMigrationStatus(amqpConnection, jsonConfig);
-    });
-  });
-
-  // models are also initialised in this call
-  fhmbaasMiddleware.init(jsonConfig, function(err) {
-    if (err) {
-      logger.error(err);
-      if(clusterWorker){
-        clusterWorker.kill();
-      } else {
-        process.exit(1);
-      }
-    } else {
-      fhServiceAuth.init({
-        logger: logger
-      }, cb);
-    }
+  var amqpConnection = amqp.connect(config);
+  deployStatusHandler.listenToDeployStatus(amqpConnection, config, function() {
+    migrationStatusHandler.listenToMigrationStatus(amqpConnection, config);
+    cb();
   });
 }
 
@@ -224,9 +236,10 @@ function startApp( ) {
   app.use('/sys', require('./lib/handlers/sys.js')());
   app.use('/api/mbaas', require('./lib/handlers/api.js'));
   app.use('/api/app', require('./lib/handlers/app.js'));
+  app.use('/api/storage', require('./lib/storage').router);
 
   var port = fhconfig.int('fhmbaas.port');
-  app.listen(port, function () {
+  app.listen(port, function() {
     // Get our version number from package.json
     var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), "utf8"));
     console.log("Started " + TITLE + " version: " + pkg.version + " at: " + new Date() + " on port: " + port);

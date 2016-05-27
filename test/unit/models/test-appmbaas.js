@@ -54,8 +54,19 @@ exports.test_create_db = function(finish){
   var createDb = sinon.stub();
   var mockMod = sinon.spy();
 
-  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js',
-    {'../util/mongo.js': {createDb: createDb}}).createDbMiddleware;
+  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', {
+    '../util/mongo.js': {createDb: createDb},
+    'fh-mbaas-middleware':{
+      "config":function() {
+        return{
+          "mongo":{
+            "host":"test",
+            "port":"port"
+          }
+        };
+      }
+    }
+  }).createDbMiddleware;
 
   var req = {
     params: {
@@ -93,8 +104,19 @@ exports.test_create_db_error = function(finish){
   var createDb = sinon.stub();
   var mockMod = sinon.spy();
 
-  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', {'../util/mongo.js': {createDb: createDb}}).createDbMiddleware;
-
+  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', {
+    '../util/mongo.js': {createDb: createDb},
+    'fh-mbaas-middleware':{
+      "config":function() {
+        return{
+          "mongo":{
+            "host":"test",
+            "port":"port"
+          }
+        };
+      }
+    }
+  }).createDbMiddleware;
   var req = {
     params: {
       appid: "someappguid",

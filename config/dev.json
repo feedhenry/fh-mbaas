@@ -11,6 +11,15 @@
     "pagination": {
       "maxLimit": 1000,
       "defaultLimit": 10
+    },
+    "appdataexport" : {
+      "output_dir" : "/var/feedhenry/data",
+      "schedule_time": 180000,
+      "default_lock_lifetime":120000,
+      "cleaner": {
+        "frequency": "*/30 * * * *",
+        "grace_time": 10
+      }
     }
   },
   "logger": {
@@ -145,6 +154,11 @@
     "enabled": false,
     "host": "192.168.33.1",
     "port": 4444
+  },
+  "storage": {
+    "token_exp_time" : 600,
+    "base_url_protocol": "https",
+    "base_url_host":"files.feedhenry.me"
   },
   "ops_env_file": "/etc/feedhenry/openv.json"
 }

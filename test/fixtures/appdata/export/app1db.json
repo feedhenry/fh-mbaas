@@ -1,0 +1,10 @@
+{
+  "collections": {
+    "collection1": {
+      "size": 1024
+    },
+    "collection2": {
+      "size": 2048
+    }
+  }
+}
