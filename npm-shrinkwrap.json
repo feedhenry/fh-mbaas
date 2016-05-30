@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "3.8.4-BUILD-NUMBER",
+  "version": "3.8.5-BUILD-NUMBER",
   "dependencies": {
     "async": {
       "version": "1.5.2",
