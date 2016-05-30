@@ -222,4 +222,76 @@ describe("Admin Submissions Router", function(){
       });
   });
 
+  it("Exporting A Submission PDF", function(done){
+    var mockSubmissionId = "somesubmissionid";
+    var mockPDFFileLocation = "/some/path/to/generated/file.pdf";
+    var mockCoreLocation = "http://testing.feedhenry.me";
+
+    var generateSubmissionPdfStub = sinon.stub();
+    generateSubmissionPdfStub.callsArgWith(1, undefined, mockPDFFileLocation);
+
+    var getValueStub = sinon.stub();
+    getValueStub.withArgs(sinon.match('fhmbaas.pdfExportDir')).returns(mockPDFFileLocation);
+
+    var createReadStreamStub = sinon.stub().withArgs(sinon.match(mockPDFFileLocation)).returns(new fixtures.MockReadStream());
+
+    var mocks = {
+      'fh-forms': {
+        '@global': true,
+        core: {
+          generateSubmissionPdf: generateSubmissionPdfStub
+        }
+      },
+      'fh-config': {
+        '@global': true,
+        value: getValueStub,
+        getLogger: sinon.stub().returns(logger)
+      },
+      'fs': {
+        '@global': true,
+        createReadStream: createReadStreamStub
+      }
+    };
+
+    var submissionsRouter = proxyquire('../../../../lib/routes/forms/submissions/router.js', mocks);
+
+    var app = express();
+
+    app.use(bodyParser.json());
+
+    app.use(function(req, res, next){
+      req.mongoUrl = fixtures.mockMongoUrl;
+      next();
+    });
+
+    app.use(baseRoutePath, submissionsRouter());
+
+    supertest(app)
+      .post(baseUrl + '/' + mockSubmissionId + "/exportpdf")
+      .send({
+        coreLocation: mockCoreLocation
+      })
+      .expect(200)
+      .expect('Content-Type', 'application/pdf')
+      .expect('Content-Disposition', 'attachment; filename="somesubmissionid.pdf"')
+      .end(function (err) {
+        if(err){
+          logger.error(err);
+        }
+        assert.ok(!err, "Expected No Error " + util.inspect(err));
+
+        sinon.assert.calledOnce(createReadStreamStub);
+        sinon.assert.calledOnce(generateSubmissionPdfStub);
+        sinon.assert.calledWith(generateSubmissionPdfStub, sinon.match({
+          uri: fixtures.mockMongoUrl,
+          _id: mockSubmissionId,
+          pdfExportDir: mockPDFFileLocation,
+          filesAreRemote: false,
+          location: sinon.match(mockCoreLocation)
+        }));
+
+        done();
+      });
+  });
+
 });

@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var os = require('os');
 
 var submission = {
   "_id": "53ac7108b8f15d51516d14b0",
@@ -87,7 +88,11 @@ var submission = {
   "status": "complete",
   "submissionStartedTimestamp": "2014-06-26T19:14:16.144Z",
   "updatedTimestamp": "2014-06-26T19:14:29.415Z",
-  "submissionCompletedTimestamp": "2014-06-26T19:14:29.409Z"
+  "submissionCompletedTimestamp": "2014-06-26T19:14:29.409Z",
+  "downloadFile": os.tmpdir() + '/download.pdf',
+  "pdfExportDir": '/tmp/',
+  "fileUrlPath": '/some/path',
+  "location": 'example.com.org'
 };
 
 

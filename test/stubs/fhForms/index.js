@@ -4,8 +4,32 @@ var _ = require('underscore');
 
 var mockMongoUrl = fixtures.mockMongoUrl;
 
+var noop = sinon.stub.yields();
+
 module.exports = {
   core: {
+    exportSubmissions: function(expectedFileUrl){
+      var stub = sinon.stub();
+
+      //The CSV Response is always "date-formId-formName : 'full CSV Export For The Form'"
+      var mockCSVResponse = {
+        "2016-05-25-01-49-someformid-someformname": 'formName,formId,_id,submissionCompletedTimestamp,appCloudName,deviceId,deviceIPAddress,updatedTimestamp,NON ADMIN,ADMIN\ntestadmind,573c4c28c080559575da5bba,573c4c7d6be54d82766374a3,Wed May 18 2016 11:05:34 GMT+0000 (UTC),testing-cdwmcf6dpi6txzock2exkxgi-dev,B64F9A23336B4CADBE55A26B39ABBBB8,"83.147.149.210,172.18.156.30",Wed May 18 2016 11:05:43 GMT+0000 (UTC),asfasf,gsdf'
+      };
+
+      stub.withArgs(
+        sinon.match({
+          uri: sinon.match(fixtures.mockMongoUrl)
+        }),
+        sinon.match({
+          downloadUrl: sinon.match(expectedFileUrl)
+        }),
+        sinon.match.func
+      )
+        .callsArgWith(2, undefined, mockCSVResponse);
+
+      stub.throws("Invalid Arguments");
+      return stub;
+    },
     getSubmissions: function(params){
       params = params || {};
       var stub = sinon.stub();
@@ -65,6 +89,22 @@ module.exports = {
 
       stub.throws("Invalid Arguments");
 
+      return stub;
+    },
+    generateSubmissionPdf: function() {
+      var mockSubmission = fixtures.forms.submissions.get();
+      var stub = sinon.stub();
+      stub.withArgs(
+        sinon.match({
+          _id: sinon.match(mockSubmission._id),
+          pdfExportDir: sinon.match(fixtures.config.fhmbaas.pdfExportDir),
+          filesAreRemote: false,
+          fileUriPath: sinon.match.string,
+          downloadUrl: sinon.match.string,
+          location: sinon.match(mockSubmission.location),
+          uri: sinon.match(fixtures.mockMongoUrl)
+        }), sinon.match.func).callsArgWith(1, undefined, mockSubmission.downloadFile);
+      stub.yields("Invalid Arguments");
       return stub;
     },
     dataSources: {
@@ -221,5 +261,31 @@ module.exports = {
         return updateCacheStub;
       }
     }
+  },
+  'middleware': {
+    'submissions': {
+      'generatePDF': noop,
+      'getRequestFileParameters': noop,
+      'submitFormFileBase64': noop,
+      'submitFormFile': noop,
+      'completeSubmission': noop,
+      'getSubmissionFile': noop,
+      'processFileResponse': noop,
+      'status': noop,
+      'listProjectSubmissions': noop,
+      'get': noop,
+    },
+    'formProjects': {
+      'getFormIds': noop,
+      'getFullTheme': noop,
+      'getConfig': noop
+    },
+    'forms': {
+      'listDeployedForms': noop,
+      'get': noop,
+      'search': noop,
+      'submitFormData':noop
+    },
+    'parseMongoConnectionOptions': noop
   }
 };
