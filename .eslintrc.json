@@ -24,6 +24,7 @@
     "space-before-blocks": "error",
     "space-before-function-paren": ["error", "never"],
     "keyword-spacing": ["error"],
-    "curly": ["error", "all"]
+    "curly": ["error", "all"],
+    "no-unused-vars": ["error", {"argsIgnorePattern": "\\bnext\\b"}]
   }
 }
