@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 
     accept: ['turbo --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js test/accept/test-dataSourceUpdater.js'],
 
-    unit_cover: ['istanbul cover --dir cov-unit ./node_modules/.bin/turbo -- --setUp=test/setup.js test/unit/**/*.js'],
+    unit_cover: ['istanbul cover --dir cov-unit -- node_modules/.bin/_mocha <%= _unit_args %> --recursive ./test/unit'],
 
     accept_cover: [
       'istanbul cover --dir cov-accept ./node_modules/.bin/turbo -- --series=true --setUp=test/accept/server.js --tearDown=test/accept/server.js test/accept/test-sys.js test/accept/test-api.js'
