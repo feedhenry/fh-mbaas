@@ -23,7 +23,7 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-fh-build');
-  grunt.registerTask('default', ['fh:dist']);
+  grunt.registerTask('default', ['eslint', 'fh:dist']);
 
   grunt.registerTask('coverage', ['fh:coverage']);
 };
