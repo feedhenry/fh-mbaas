@@ -89,6 +89,7 @@ var fileModelMock = {
 }
 
 var storageMock = {
+  '@global': true,
   registerFile: function(path, cb) {
     cb(null, fileModelMock);
   }
@@ -98,7 +99,11 @@ var AppExportRunner = proxyquire('lib/export/AppDataExportRunner',
   {
     './preparationSteps': prepStepsMock,
     './appDataExport': appDataExportMock,
-    '../storage/index': storageMock
+    '../../storage': storageMock,
+    'fh-config': {
+      '@global': true,
+      getLogger: sinon.stub().returns(logger)
+    }
   }).AppExportRunner;
 
 module.exports.test_export_shared_app = function(done) {
