@@ -43,8 +43,15 @@ var fsMock = {
   }),
   exists: function(path, cb) {
     cb(true);
-  }
+  },
+  stat: sinon.spy(function(path, cb) {
+    cb();
+  })
 };
+
+var rimrafMock = sinon.spy(function(path, cb) {
+  cb();
+});
 
 var storageMock = {
   deleteFile: function(fileId, cb) {
@@ -54,7 +61,8 @@ var storageMock = {
 
 var Cleaner = proxyquire('lib/export/cleaner/appDataExportCleanerRunner',
   {'fs': fsMock,
-    '../../storage/index': storageMock}
+    '../../storage/index': storageMock,
+    'rimraf': rimrafMock}
   ).AppDataExportCleanerRunner;
 
 const FINISH_EVENT = require('lib/jobs/progressPublisher').FINISH_EVENT;
@@ -156,8 +164,8 @@ module.exports.test_export_cleaner = function(done) {
 
     cleaner.on(FINISH_EVENT, function() {
 
-      assert.ok(fsMock.unlink.called);
-      assert.equal(fsMock.unlink.callCount, 3);
+      assert.ok(rimrafMock.called);
+      assert.equal(rimrafMock.callCount, 3);
 
       async.series([
         initdb
