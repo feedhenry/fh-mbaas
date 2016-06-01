@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "3.9.1-BUILD-NUMBER",
+  "version": "3.9.2-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -49,7 +49,8 @@
     "request": "2.67.0",
     "underscore": "1.8.3",
     "diskspace": "1.0.2",
-    "mkdirp": "0.5.1"
+    "mkdirp": "0.5.1",
+    "rimraf": "2.5.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
