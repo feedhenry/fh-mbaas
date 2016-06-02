@@ -102,13 +102,19 @@ var mkdirpMock = sinon.spy(function(path, cb) {
 var stopAppStub = sinon.stub();
 stopAppStub.withArgs(sinon.match.array, sinon.match.func).callsArg(1);
 
+mongo['@global'] = true;
+modelsMock['@global'] = true;
+diskSpaceMock['@global'] = true;
+mkdirpMock['@global'] = true;
+fhConfig['@global'] = true;
 var preparationSteps = proxyquire('lib/export/preparationSteps', {
   '../util/ditchhelper': ditchHelperStub,
   'mongodb': mongo,
   '../models' : modelsMock,
   'diskspace': diskSpaceMock,
   'mkdirp': mkdirpMock,
-  ' ../util/dfutils': proxyquire('../../../lib/util/dfutils', {
+  'fh-config': fhConfig,
+  '../util/dfutils': proxyquire('../../../lib/util/dfutils', {
     'fh-config': fhConfig,
     'fh-dfc': function () {
       return {
