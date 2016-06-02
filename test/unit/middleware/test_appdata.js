@@ -71,18 +71,26 @@ exports['middleware/appdata'] = {
       middleware.findJob(req, undefined, next, 'zzzzzzz');
     }
   },
-  '#allJobs': {
+  '#filteredJobs': {
     'should populate req.jobs': function(done) {
       var req = {};
+      var params = {};
+      params.appid = jobFixture.appid;
+      params.environment = jobFixture.environment;
+      req.params = params;
       var next = function(err) {
         assert.ok(!err);
         assert.equal(req.jobs[0].appid, jobFixture.appid);
         done();
       };
-      middleware.allJobs(req, undefined, next);
+      middleware.filteredJobs(req, undefined, next);
     },
     'should return a 500 error on find() errors': function(done) {
       var req = {};
+      var params = {};
+      params.appid = jobFixture.appid;
+      params.environment = jobFixture.environment;
+      req.params = params;
       middleware = proxyquire(modulePath, {
         '../models': {
           AppdataJob: {
@@ -94,7 +102,7 @@ exports['middleware/appdata'] = {
         assert.equal(500, err.code);
         done();
       };
-      middleware.allJobs(req, undefined, next);
+      middleware.filteredJobs(req, undefined, next);
     }
   },
   '#createJob': {
