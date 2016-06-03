@@ -128,6 +128,10 @@ exports['middleware/appdata'] = {
         deepequal(self.req.job, jobFixture);
         done();
       };
+
+      this.req.body = {
+        stopApp: false
+      };
       middleware.createJob(this.req, undefined, next);
     }
   },

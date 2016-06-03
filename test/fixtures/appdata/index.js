@@ -10,7 +10,8 @@ var baseJob = {
   metadata: {
     fileSize: 80 * 1024 * 1024,
     fileDeleted: false,
-    filePath: '/var/tmp/export1.tar.gz'
+    filePath: '/var/tmp/export1.tar.gz',
+    stopApp: false
   },
   progress: {
     collections: ['mbaas']
