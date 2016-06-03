@@ -139,8 +139,7 @@ function dropCollections(cb) {
 }
 
 function closeConnection(cb) {
-  mongoose.connection.close();
-  cb();
+  mongoose.connection.close(cb);
 }
 
 module.exports.test_export_cleaner = function(done) {

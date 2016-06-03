@@ -36,8 +36,7 @@ exports['middleware/appdata'] = {
       });
   },
   after: function(done) {
-    mongoose.connection.close();
-    done();
+    mongoose.connection.close(done);
   },
   beforeEach: function(done) {
     // reset mocks

@@ -34,8 +34,7 @@ exports['storage'] = {
     });
   },
   after: function(done) {
-    mongoose.connection.close();
-    done();
+    mongoose.connection.close(done);
   },
   '#registerFile': {
     'should register new file': function(done) {
