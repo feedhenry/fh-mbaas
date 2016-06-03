@@ -138,12 +138,18 @@ function dropCollections(cb) {
   }
 }
 
+function closeConnection(cb) {
+  mongoose.connection.close();
+  cb();
+}
+
 module.exports.test_export_cleaner = function(done) {
   mockgoose.reset();
   async.series([
     //collectionExists,
     //dropCollections,
-    initdb
+    initdb,
+    closeConnection
   ], function(err) {
     if (err) {
       return done(err);

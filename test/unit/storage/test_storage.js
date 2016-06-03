@@ -33,6 +33,10 @@ exports['storage'] = {
       done();
     });
   },
+  after: function(done) {
+    mongoose.connection.close();
+    done();
+  },
   '#registerFile': {
     'should register new file': function(done) {
       storage.registerFile(testPath, function(err, model) {

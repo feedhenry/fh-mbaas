@@ -35,6 +35,10 @@ exports['middleware/appdata'] = {
       models.init(mongoose.connection, done);
       });
   },
+  after: function(done) {
+    mongoose.connection.close();
+    done();
+  },
   beforeEach: function(done) {
     // reset mocks
     middleware = proxyquire(modulePath, {
