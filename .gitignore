@@ -25,3 +25,4 @@ cov-*
 plato
 .idea
 conf-docker.json
+*.swp
