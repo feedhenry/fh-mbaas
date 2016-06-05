@@ -33,6 +33,9 @@ exports['storage#router'] = {
       done();
     });
   },
+  after: function(done) {
+    mongoose.connection.close(done);
+  },
   'GET /api/storage/:resourceId': {
     before: function(done) {
       // register test file
