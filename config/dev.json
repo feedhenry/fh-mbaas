@@ -20,6 +20,15 @@
         "frequency": "*/30 * * * *",
         "grace_time": 10
       }
+    },
+    "appdata_jobs" : {
+      "scheduler": {
+        "concurrency": 1,
+        "frequency": "30 seconds"
+      },
+      "stalled_job_finder": {
+        "frequency": "1 minute"
+      }
     }
   },
   "logger": {
