@@ -88,9 +88,9 @@ var mockChildProcess = {
   }
 };
 
-var getHost = proxyquire('../../../lib/export/appDataExport', {
+var getHost = proxyquire('../../../lib/export/mongoExportFunctions/getSecondaryReplSetHost', {
   "child_process": mockChildProcess
-}).getSecondaryReplSetHost;
+});
 
 // Make sure that it finds the secondary replica set in a setup that
 // has replica sets

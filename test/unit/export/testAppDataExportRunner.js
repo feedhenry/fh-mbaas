@@ -12,10 +12,21 @@ fhConfig.setRawConfig({
     host: 'testing.feedhenry.me',
     port: '8802',
     service_key: '1a2b3c4d5e6f1a2b3c4d5e6f1a2b3c4d5e6f'
-  }
+  },
+  openshift3: {
+  },
+  "fhdfc": {
+    "dynofarm": "http://localhost:9000",
+    "username":"feedhenry",
+    "_password": "feedhenry101",
+    "loglevel": "warn",
+    "cache_timeout": 300000
+  },
 });
 
 var logger = fhConfig.getLogger();
+fhConfig["@global"] = true;
+fhConfig.getLogger = sinon.stub().returns(logger);
 
 var assert = require('assert');
 var sinon = require('sinon');
@@ -89,6 +100,7 @@ var fileModelMock = {
 }
 
 var storageMock = {
+  '@global': true,
   registerFile: function(path, cb) {
     cb(null, fileModelMock);
   }
@@ -98,7 +110,8 @@ var AppExportRunner = proxyquire('lib/export/AppDataExportRunner',
   {
     './preparationSteps': prepStepsMock,
     './appDataExport': appDataExportMock,
-    '../storage/index': storageMock
+    '../../storage': storageMock,
+    'fh-config': fhConfig
   }).AppExportRunner;
 
 module.exports.test_export_shared_app = function(done) {
