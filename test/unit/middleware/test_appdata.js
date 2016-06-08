@@ -33,7 +33,7 @@ exports['middleware/appdata'] = {
     mongoose.connect('test', function() {
       models = require('../../../lib/models');
       models.init(mongoose.connection, done);
-      });
+    });
   },
   after: function(done) {
     mongoose.connection.close(done);
@@ -43,7 +43,9 @@ exports['middleware/appdata'] = {
     middleware = proxyquire(modulePath, {
       '../models': models,
       '../export/appDataExportController': appExportControllerMock,
-      '../../lib/storage': storageMock
+      './buildJobMiddleware': proxyquire('../../../lib/middleware/buildJobMiddleware', {
+        '../../lib/storage': storageMock
+      })
     });
     mockgoose.reset();
 
@@ -54,7 +56,7 @@ exports['middleware/appdata'] = {
         done(err);
       });
   },
-  '#findJob': {
+  '#find': {
     'should populate req.job': function(done) {
       var req = {};
 
@@ -63,7 +65,7 @@ exports['middleware/appdata'] = {
         assert.ok(!err);
         done();
       };
-      middleware.findJob(req, undefined, next, jobFixture._id);
+      middleware.find(req, undefined, next, jobFixture._id);
     },
     'should return a 404 error when job not found': function(done) {
       var req = {};
@@ -71,7 +73,7 @@ exports['middleware/appdata'] = {
         assert.equal(err.code, 404, err.message);
         done();
       };
-      middleware.findJob(req, undefined, next, 'zzzzzzz');
+      middleware.find(req, undefined, next, 'zzzzzzz');
     }
   },
   '#filteredJobs': {
@@ -108,7 +110,7 @@ exports['middleware/appdata'] = {
       middleware.filteredJobs(req, undefined, next);
     }
   },
-  '#createJob': {
+  '#create': {
     beforeEach: function(done) {
       this.req = {
         params: {
@@ -128,14 +130,13 @@ exports['middleware/appdata'] = {
         deepequal(self.req.job, jobFixture);
         done();
       };
-
       this.req.body = {
         stopApp: false
       };
-      middleware.createJob(this.req, undefined, next);
+      middleware.create(this.req, undefined, next);
     }
   },
-  '#ensureJobFinishedAndRegistered': {
+  '#ensureFinishedAndRegistered': {
     beforeEach: function(done) {
       this.job = _.clone(jobFixture);
       this.job.status = AppdataJobSchema.statuses.FINISHED;
@@ -150,7 +151,7 @@ exports['middleware/appdata'] = {
         assert.ok(/not finished/.test(err.message));
         done();
       };
-      middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
+      middleware.ensureFinishedAndRegistered(this.req, undefined, next);
     },
     'should error on fileId missing': function(done) {
       delete this.job.metadata.fileId;
@@ -159,7 +160,7 @@ exports['middleware/appdata'] = {
         assert.ok(/no registered file/.test(err.message), err.message);
         done();
       };
-      middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
+      middleware.ensureFinishedAndRegistered(this.req, undefined, next);
     },
     'should error on file deleted': function(done) {
       this.job.metadata.fileDeleted = true;
@@ -168,7 +169,7 @@ exports['middleware/appdata'] = {
         assert.ok(/deleted/.test(err.message), err.message);
         done();
       };
-      middleware.ensureJobFinishedAndRegistered(this.req, undefined, next);
+      middleware.ensureFinishedAndRegistered(this.req, undefined, next);
     }
   },
   '#generateURL': {
