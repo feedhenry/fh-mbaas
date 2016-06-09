@@ -80,7 +80,9 @@ var config ={
 fhconfig.setRawConfig(config);
 
 module.exports.setUp = function(done){
-  done();
+  if (done) {
+    done();
+  }
 };
 
 module.exports.config = config;
