@@ -22,6 +22,7 @@
       }
     },
     "appdata_jobs" : {
+      "upload_dir" : "/var/feedhenry/upload",
       "scheduler": {
         "concurrency": 1,
         "frequency": "30 seconds"
