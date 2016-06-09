@@ -6,7 +6,10 @@ var config ={
   fhmbaas:{
     key:'testkey',
     protocol: "https",
-    "mbaasid":"development"
+    "mbaasid":"development",
+    "appdataexport": {
+      "output_dir": "/tmp"
+    }
   },
   mongo:{
     enabled: true,
