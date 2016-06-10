@@ -62,7 +62,13 @@ module.exports = {
     callback.reset();
     jobs = [{id:'job3'}];
     mockAppdataJobModel.runningJobs.yields(null, jobs);
-    var nextJob = {id: 'job4'};
+    var nextJob = {
+      id: 'job4',
+      checkCurrentState: sandbox.stub(),
+      readyToProceed: sandbox.stub()
+    };
+    nextJob.checkCurrentState.yields();
+    nextJob.readyToProceed.returns(true);
     mockAppdataJobModel.findNextJob.yields(null, [nextJob]);
     jobToRun({}, callback);
     assert.ok(callback.calledOnce);
