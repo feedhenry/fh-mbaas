@@ -11,10 +11,10 @@ const TEST_OUTPUT_FILES = require('./common').TEST_OUTPUT_FILES;
 
 
 var preparationStepsMock= {
-  appData: undefined,
+  appInfo: undefined,
   prepareForImport: sinon.spy(function(context, cb) {
     context.input.folder = TEST_IMPORT_FOLDER;
-    context.input.appData = preparationStepsMock.appData;
+    context.appInfo = preparationStepsMock.appInfo;
     context.input.progress = {
       total: TEST_OUTPUT_FILES.length * 2,
       // we simulate files has already been extracted
@@ -24,8 +24,8 @@ var preparationStepsMock= {
       folder: context.input.folder,
       files: TEST_OUTPUT_FILES
     };
-    if (context.input.appData) {
-      if (context.input.appData.dbConf) {
+    if (context.appInfo) {
+      if (context.appInfo.dbConf) {
         return cb(null, context);
       } else {
         return cb('Specified app has not been upgraded yet', context);
@@ -55,7 +55,7 @@ fhConfig.setRawConfig({
 });
 
 module.exports.aatest_app_data_import_runner = function(done) {
-  preparationStepsMock.appData = {
+  preparationStepsMock.appInfo = {
     _id : '5723913f3b263ee13207211b',
     id : '5723913f3b263ee13207211b',
     accessKey : '5723913f3b263ee13207211a',
@@ -105,7 +105,7 @@ module.exports.aatest_app_data_import_runner = function(done) {
 
 
 module.exports.aatest_app_data_import_app_not_found = function(done) {
-  preparationStepsMock.appData = undefined;
+  preparationStepsMock.appInfo = undefined;
   const AppDataImportRunner = proxyquire(
     'lib/appdata/import/appDataImportRunner',
     {'./preparationSteps': preparationStepsMock,

@@ -7,6 +7,8 @@ const TEST_IMPORT_FILE = 'test_import_file.tar';
 const TEST_OUTPUT_GZIPS = ['collection1.bson.gz', 'collection2.bson.gz', 'collection3.bson.gz', 'collection4.bson.gz'];
 const TEST_OUTPUT_FILES = ['collection1.bson', 'collection2.bson', 'collection3.bson', 'collection4.bson'];
 
+const contextBuilder = require('lib/jobs/context').contextBuilder;
+
 fhConfig.setRawConfig({
   fhditch: {
     protocol: 'http',
@@ -17,19 +19,22 @@ fhConfig.setRawConfig({
 });
 
 function createContext() {
-  var context = {
-    emitter: new EventEmitter(),
-    logger: fhConfig.getLogger(),
-    input: {
-      appData: {
-        guid: 'imtdbquweha2dq5etc7qrazv',
-        env: 'dev'
-      },
-      path: TEST_IMPORT_FOLDER + '/' + TEST_IMPORT_FILE
-    }
-  };
 
-  return context;
+  return contextBuilder()
+    .withApplicationInfo(
+      { guid: 'imtdbquweha2dq5etc7qrazv',
+        env: 'dev'}
+    )
+    .withEventEmitter(new EventEmitter())
+    .withCustomAtt('input', {
+      path: TEST_IMPORT_FOLDER + '/' + TEST_IMPORT_FILE
+    })
+    .withJobModel({_id: {
+      toString: function() {
+        return '123';
+      }
+    }})
+    .build();
 }
 
 module.exports.createContext = createContext;
