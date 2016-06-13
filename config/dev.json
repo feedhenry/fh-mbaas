@@ -4,6 +4,7 @@
     "key": "mBqxpulwlj3Rw7EsHZq0YEQyrArq2tlIRCQ0pCmr5DRPPDZMAP4ZNb7U0E6bPSb3",
     "maxpayloadsize": "100mb",
     "temp_forms_files_dest" : "/tmp/fh-mbaas",
+    "maxConcurrentPhantomPerWorker": 1,
     "pdfExportDir": "/tmp/fh-mbaas",
     "code_coverage_enabled": false,
     "mbaasid":"development",
