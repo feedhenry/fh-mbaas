@@ -3,6 +3,7 @@ var proxyquire =  require('proxyquire');
 var sinon = require('sinon');
 var _ = require('underscore');
 var assert = require('assert');
+const contextBuilder = require('lib/jobs/context').contextBuilder;
 
 fhConfig.setRawConfig({
   fhditch: {
@@ -40,6 +41,11 @@ var modelsMock = {
   exportJobs:{},
   AppdataJob: {
     id: 1234,
+    _id: {
+      toString: function() {
+        return '1234';
+      }
+    },
     progress: undefined,
     status: 'created',
     domain: 'testing',
@@ -141,17 +147,16 @@ var exportJob = modelsMock.AppdataJob;
 var TaggedLogger = require('lib/jobs/taggedLogger').TaggedLogger;
 
 module.exports.test_prepare_export = function(done) {
-  var context = {
-    appInfo : mockAppInfo,
-    exportJob : exportJob,
-    outputDir : '/tmp',
-    jobID: 'JOBID',
-    logger: new TaggedLogger(logger, '[APPDATAEXPORT]')
-  };
+  var context = contextBuilder()
+    .withApplicationInfo(mockAppInfo)
+    .withJobModel(exportJob)
+    .withCustomAtt('outputDir', '/tmp')
+    .withLogger(new TaggedLogger(logger, '[APPDATAEXPORT]'))
+    .build();
 
   preparationSteps.prepare(context, function(err, ctx) {
     assert.ok(mkdirpMock.calledOnce);
-    assert.equal(mkdirpMock.args[0][0], '/tmp/123456678/dev/JOBID');
+    assert.equal(mkdirpMock.args[0][0], '/tmp/123456678/dev/1234');
     assert.ok(diskSpaceMock.check.calledOnce);
     assert.ok(stopAppStub.calledOnce);
     done(err);
@@ -159,22 +164,22 @@ module.exports.test_prepare_export = function(done) {
 };
 
 module.exports.test_prepare_export_no_stop = function(done) {
-  var context = {
-    appInfo : mockAppInfo,
-    exportJob : exportJob,
-    outputDir : '/tmp',
-    jobID: 'JOBID',
-    logger: new TaggedLogger(logger, '[APPDATAEXPORT]')
-  };
 
-  context.exportJob.metadata.stopApp = false;
+  var context = contextBuilder()
+    .withApplicationInfo(mockAppInfo)
+    .withJobModel(exportJob)
+    .withCustomAtt('outputDir', '/tmp')
+    .withLogger(new TaggedLogger(logger, '[APPDATAEXPORT]'))
+    .build();
+
+  context.jobModel.metadata.stopApp = false;
   mkdirpMock.reset();
   diskSpaceMock.check.reset();
   stopAppStub.reset();
 
   preparationSteps.prepare(context, function(err, ctx) {
     assert.ok(mkdirpMock.calledOnce);
-    assert.equal(mkdirpMock.args[0][0], '/tmp/123456678/dev/JOBID');
+    assert.equal(mkdirpMock.args[0][0], '/tmp/123456678/dev/1234');
     assert.ok(diskSpaceMock.check.calledOnce);
     assert.equal(false, stopAppStub.calledOnce);
     done(err);

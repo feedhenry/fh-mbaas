@@ -72,7 +72,7 @@ module.exports = {
     mockAppMbaasModel.findOne.yields(null, appData);
     appDataJob.start(appModel);
     assert.ok(contextToVerify.appInfo);
-    assert.ok(contextToVerify.exportJob);
+    assert.ok(contextToVerify.jobModel);
     assert.equal(contextToVerify.jobID, appModel._id);
     assert.ok(contextToVerify.logger);
     done();
@@ -98,9 +98,9 @@ module.exports = {
 
     mockAppMbaasModel.findOne.yields(null, appData);
     appDataJob.start(appModel);
-    assert.ok(contextToVerify.input.appData);
+    assert.ok(contextToVerify.appInfo);
     assert.equal(contextToVerify.input.path, appModel.metadata.filePath);
-    assert.ok(contextToVerify.importJob);
+    assert.ok(contextToVerify.jobModel);
     assert.equal(contextToVerify.jobID, appModel._id);
     assert.ok(contextToVerify.logger);
     done();

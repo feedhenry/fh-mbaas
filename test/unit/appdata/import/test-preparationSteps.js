@@ -1,6 +1,11 @@
+const fhconfig = require('fh-config');
+fhconfig.setRawConfig({});
+
 const path = require('path');
 const assert = require('assert');
+
 const createContext = require('./common').createContext;
+
 const TEST_IMPORT_FOLDER = require('./common').TEST_IMPORT_FOLDER;
 const TEST_OUTPUT_GZIPS = require('./common').TEST_OUTPUT_GZIPS;
 const TEST_IMPORT_FILE = require('./common').TEST_IMPORT_FILE;
@@ -74,7 +79,7 @@ var fsStub = {
   })
 };
 
-module.exports.aatest_app_data_import_preparation_steps = function(done) {
+module.exports.test_app_data_import_preparation_steps = function(done) {
   resetDatabase(function() {
     var context = createContext();
 
@@ -109,6 +114,9 @@ module.exports.aatest_app_data_import_preparation_steps = function(done) {
       _.each(context.output.files, function(file, index) {
         assert.equal(file, TEST_OUTPUT_GZIPS[index].slice(0,-3));
       });
+
+      // we don't perform import steps
+      assert.equal(context.progress.current, context.progress.total - TEST_OUTPUT_GZIPS.length);
 
       done(err);
     });

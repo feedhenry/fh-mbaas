@@ -2,6 +2,7 @@ var fhConfig = require('fh-config');
 var proxyquire =  require('proxyquire');
 var sinon = require('sinon');
 var _ = require('underscore');
+const contextBuilder = require('lib/jobs/context').contextBuilder;
 
 const FINISH_EVENT = require('lib/jobs/progressPublisher').FINISH_EVENT;
 const FAIL_EVENT = require('lib/jobs/progressPublisher').FAIL_EVENT;
@@ -35,6 +36,11 @@ var modelsMock = {
   exportJobs:{},
   AppdataJob: {
     id: 1234,
+    _id: {
+      toString: function() {
+        return '1234';
+      }
+    },
     progress: undefined,
     status: 'created',
     metadata: {
@@ -123,13 +129,12 @@ module.exports.test_export_shared_app = function(done) {
 
   var exportJob = modelsMock.AppdataJob;
 
-  var context = {
-    appInfo : mockAppInfo,
-    exportJob : exportJob,
-    outputDir : '/tmp',
-    jobId: 'JOBID',
-    logger: logger
-  };
+  var context = contextBuilder()
+    .withApplicationInfo(mockAppInfo)
+    .withJobModel(exportJob)
+    .withCustomAtt('outputDir', '/tmp')
+    .withLogger(logger)
+    .build();
 
   var appExportRunner = new AppExportRunner(context)
     .on(FINISH_EVENT, function() {
