@@ -45,7 +45,11 @@ describe("Forms App Submissions Router", function() {
   describe("submissions/:id/exportpdf tests", function() {
     var mockSubmission = fixtures.forms.submissions.get();
     var exportpdfUrl = baseUrl + '/submissions/' + mockSubmission._id + '/exportpdf';
+    var mockPDFFileLocation = "/some/path/to/generated/file.pdf";
     var formsRouter;
+
+    var getValueStub = sinon.stub();
+    getValueStub.withArgs(sinon.match('fhmbaas.pdfExportDir')).returns(mockPDFFileLocation);
 
     beforeEach(function createDownloadFile() {
       fs.closeSync(fs.openSync(mockSubmission.downloadFile, 'w'));
@@ -64,7 +68,7 @@ describe("Forms App Submissions Router", function() {
         'fh-config': {
           '@global': true,
           getLogger: sinon.stub().returns(logger),
-          value: fhConfig.value
+          value: getValueStub
         }
       };
       formsRouter = proxyquire('../../../../lib/handlers/app/forms.js', deps);
