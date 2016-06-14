@@ -24,7 +24,7 @@ var appExportControllerMock = {
 var fakeUrl = { url: 'http://files.skunkhenry.com/storage/some-file.gz' };
 var storageMock = {
   generateURL: sinon.stub()
-    .callsArgWith(2, null, fakeUrl)
+    .callsArgWith(3, null, fakeUrl)
 };
 
 
@@ -195,7 +195,7 @@ exports['middleware/appdata'] = {
     },
     'should 500 on error': function(done) {
       storageMock.generateURL = sinon.stub()
-        .callsArgWith(2, new Error('test error'));
+        .callsArgWith(3, new Error('test error'));
       var next = function(err) {
         assert.ok(err);
         assert.equal(err.code, 500);

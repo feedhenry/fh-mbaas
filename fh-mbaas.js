@@ -236,11 +236,6 @@ function startApp( ) {
   // Parse JSON payloads
   app.use(bodyParser.json({limit: fhconfig.value('fhmbaas.maxpayloadsize') || "20mb"}));
 
-  //Multipart Form Request Parser
-  app.use(multer({
-    dest: fhconfig.value("fhmbaas.temp_forms_files_dest")
-  }));
-
   app.use('/sys', require('./lib/handlers/sys.js')());
   app.use('/api/mbaas', require('./lib/handlers/api.js'));
   app.use('/api/app', require('./lib/handlers/app.js'));
