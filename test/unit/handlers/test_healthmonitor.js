@@ -35,7 +35,8 @@ function healthMonitorApp(testResults) {
       addCriticalTest: function() {},
       runTests: function(cb) {
         cb(null, JSON.stringify(testResults));
-      }
+      },
+      setMaxRuntime: function() {}
     }
   });
   var app = express();
