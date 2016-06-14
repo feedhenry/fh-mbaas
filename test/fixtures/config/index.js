@@ -49,7 +49,17 @@ module.exports = {
     "pagination": {
       "maxLimit": 20
     },
-    'pdfExportDir': '/some/path'
+    'pdfExportDir': '/some/path',
+    "appdata_jobs" : {
+      "upload_dir" : "/tmp",
+      "scheduler": {
+        "concurrency": 1,
+        "frequency": "30 seconds"
+      },
+      "stalled_job_finder": {
+        "frequency": "1 minute"
+      }
+    }
   },
   "fhmessaging":{
     "enabled": true,

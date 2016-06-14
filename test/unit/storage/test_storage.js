@@ -86,7 +86,7 @@ exports['storage'] = {
     before: createModel,
     'should generate a url for download': function(done) {
       var self = this;
-      storage.generateURL(this.model._id, 600, function(err, urlObj) {
+      storage.generateURL(this.model._id, null, 600, function(err, urlObj) {
         assert.ok(!err);
         assert.ok((new RegExp(self.model._id)).test(urlObj.url));
         done();
