@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "3.10.3-BUILD-NUMBER",
+  "version": "3.10.4-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -25,7 +25,7 @@
     "express": "4.13.3",
     "express-bunyan-logger": "1.2.0",
     "express-paginate": "0.2.0",
-    "fh-agenda": "0.2.2",
+    "fh-agenda": "0.9.0",
     "fh-amqp-js": "0.6.0",
     "fh-cluster": "0.3.0",
     "fh-component-metrics": "2.0.1",
