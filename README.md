@@ -37,3 +37,9 @@ To configure email sending from `fh-mbaas`, the `email.transport` configuration 
 
 #### OSE3
 For OSE3 images, fh-mbaas will use `smtp` as a transport by default. An administrator must add an Environment variable to configure `fh-mbaas` to use a local SMTP relay/server - the name of this environment variable is `FH_EMAIL_SMTP` and it should be set to an SMTP URL e.g. `smtps://user:password@smtp.example.com`
+
+### Testing (grunt fh:test)
+
+* Modules published to npm.skunkhenry.com
+
+  * The module turbo-test-runner has been updated (heapdump and memwatch needed upgrading), due to permissions on npmjs this has been published to npm.skunkhenry.com

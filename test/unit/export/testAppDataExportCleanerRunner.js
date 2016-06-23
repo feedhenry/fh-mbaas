@@ -28,6 +28,7 @@ fhConfig.setRawConfig({
   }
 });
 
+
 mongoose.connect('mongodb://localhost/myapp');
 
 var ExportJobModule = require('lib/models/index');
@@ -36,6 +37,7 @@ ExportJobModule.init(mongoose, function(err) {});
 
 var ExportJob = require('lib/models/index').AppdataJob;
 var FileStore = require('lib/models/index').File;
+
 
 var fsMock = {
   unlink: sinon.spy(function (path, cb) {
@@ -145,10 +147,7 @@ function closeConnection(cb) {
 module.exports.test_export_cleaner = function(done) {
   mockgoose.reset();
   async.series([
-    //collectionExists,
-    //dropCollections,
-    initdb,
-    closeConnection
+    initdb
   ], function(err) {
     if (err) {
       return done(err);
@@ -170,10 +169,11 @@ module.exports.test_export_cleaner = function(done) {
     cleaner.on(FINISH_EVENT, function() {
 
       assert.ok(rimrafMock.called);
-      assert.equal(rimrafMock.callCount, 3);
+      assert.ok(rimrafMock.callCount >= 3 , 'Should be called at least 3 times');
 
       async.series([
-        initdb
+        initdb,
+        closeConnection
       ], function(err) {
         done(err);
       });
