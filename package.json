@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "3.10.2-BUILD-NUMBER",
+  "version": "3.10.3-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -36,7 +36,7 @@
     "fh-mbaas-middleware": "^2.0.2",
     "fh-messaging-client": "1.0.3",
     "fh-metrics-client": "1.0.2",
-    "fh-service-auth": "0.1.1",
+    "fh-service-auth": "^1.0.0",
     "mkdirp": "0.5.1",
     "mongodb": "2.1.18",
     "mongodb-uri": "0.9.7",
