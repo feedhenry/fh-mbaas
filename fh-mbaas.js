@@ -32,6 +32,8 @@ var async = require('async');
 var models = require('./lib/models');
 var mongoose = require('mongoose');
 
+var mongooseConnection;
+
 
 
 var START_AGENDA = "startAgenda";
@@ -193,7 +195,7 @@ function initModules(clusterWorker, jsonConfig, cb) {
     function initialiseModels(cb) {
       //The models should not be initialised on the mongoose connection for fh-mbaas-middleware. The document instanceof checks will not
       //pass and none of the returned models will have the correct schemas attached.
-      var mongooseConnection = mongoose.createConnection(fhconfig.mongoConnectionString());
+      mongooseConnection = mongoose.createConnection(fhconfig.mongoConnectionString());
       models.init(mongooseConnection, cb);
     },
     async.apply(initAmqp, jsonConfig),
@@ -272,6 +274,13 @@ function setupFhconfigReloadHandler(fhconfig) {
   });
 }
 
+//Closing a mongoose connection if needed.
+function closeMongooseConnection() {
+  if (mongooseConnection) {
+    mongooseConnection.close();
+  }
+}
+
 function setupUncaughtExceptionHandler(logger) {
   // handle uncaught exceptions
   process.on('uncaughtException', function(err) {
@@ -287,4 +296,7 @@ function setupUncaughtExceptionHandler(logger) {
     /* eslint-enable no-console */
     process.exit(1);
   });
+
+  // If the Node process ends, close the Mongoose connection
+  process.on('SIGINT', closeMongooseConnection).on('SIGTERM', closeMongooseConnection);
 }
