@@ -15,7 +15,6 @@ var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var fhconfig = require('fh-config');
-var multer = require('multer');
 var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 var fhServiceAuth = require('fh-service-auth');
@@ -31,6 +30,7 @@ var amqp = require('./lib/util/amqp.js');
 
 var async = require('async');
 var models = require('./lib/models');
+var mongoose = require('mongoose');
 
 
 
@@ -184,12 +184,18 @@ function getMbaasMiddlewareConfig() {
 }
 
 function initModules(clusterWorker, jsonConfig, cb) {
+
   async.parallel([
     async.apply(async.waterfall, [
       async.constant(jsonConfig),
-      fhmbaasMiddleware.init,
-      models.init
+      fhmbaasMiddleware.init
     ]),
+    function initialiseModels(cb) {
+      //The models should not be initialised on the mongoose connection for fh-mbaas-middleware. The document instanceof checks will not
+      //pass and none of the returned models will have the correct schemas attached.
+      var mongooseConnection = mongoose.createConnection(fhconfig.mongoConnectionString());
+      models.init(mongooseConnection, cb);
+    },
     async.apply(initAmqp, jsonConfig),
     async.apply(fhServiceAuth.init, {logger: logger})
   ], function(err) {
