@@ -62,6 +62,7 @@ loadConfig(function() {
     console.log("starting single master process");
     /* eslint-enable no-console */
     startWorker();
+    initializeScheduler();
   } else {
     var preferredWorkerId = fhconfig.value('agenda.preferredWorkerId');
     // Note: if required as a module, its up to the user to call start();
@@ -121,7 +122,11 @@ function createAndSetLogger() {
 function initializeScheduler(clusterWorker) {
   //Ensuring that the config is loaded.
   initModules(clusterWorker, getMbaasMiddlewareConfig(), function() {
-    logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
+    if(clusterWorker !== undefined) {
+      logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
+    } else {
+      logger.info("Initialising scheduler.");
+    }
     scheduler = formsUpdater.scheduler(logger, fhconfig.getConfig().rawConfig, fhconfig.mongoConnectionString());
     logger.info("Initialised scheduler", scheduler);
     var appDataExportAgenda = require('./lib/export');
@@ -173,7 +178,8 @@ function getMbaasMiddlewareConfig() {
       admin_auth: {
         user: conf.rawConfig.mongo.admin_auth.user,
         pass: conf.rawConfig.mongo.admin_auth.pass
-      }
+      },
+      replicaSet: conf.rawConfig.mongo.replicaset_name
     },
     crash_monitor: conf.rawConfig.crash_monitor,
     email: conf.rawConfig.email,
