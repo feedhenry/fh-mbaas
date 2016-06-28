@@ -2736,9 +2736,9 @@
       "resolved": "https://registry.npmjs.org/fh-logger/-/fh-logger-0.4.0.tgz"
     },
     "fh-mbaas-middleware": {
-      "version": "2.0.2",
-      "from": "fh-mbaas-middleware@>=2.0.2 <3.0.0",
-      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-2.0.2.tgz",
+      "version": "2.0.3",
+      "from": "fh-mbaas-middleware@2.0.3",
+      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-2.0.3.tgz",
       "dependencies": {
         "async": {
           "version": "0.9.2",
