@@ -178,7 +178,8 @@ function getMbaasMiddlewareConfig() {
       admin_auth: {
         user: conf.rawConfig.mongo.admin_auth.user,
         pass: conf.rawConfig.mongo.admin_auth.pass
-      }
+      },
+      replicaSet: conf.rawConfig.mongo.replicaset_name
     },
     crash_monitor: conf.rawConfig.crash_monitor,
     email: conf.rawConfig.email,
