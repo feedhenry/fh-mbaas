@@ -7,19 +7,21 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var async = require('async');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
-var bunyan = require('bunyan');
+var fhLogger = require('fh-logger');
 var ditchServer;
 var dynofarmServer;
 var testConfig = require('../setup.js');
+var fhconfig = require('fh-config');
 
 
 
-var log = bunyan.createLogger({
+var logger = fhLogger.createLogger({
   name: 'accept-test-logger',
   streams:[ {
-    level: 'debug',
-    stream: process.stdout,
-    src: true
+    "type": "stream",
+    "src": true,
+    "level": "trace",
+    "stream": "process.stdout"
   } ]
 });
 
@@ -49,16 +51,13 @@ var cfg = {
       "backup_file":"../messages/backup.log"
     }
   },
-  logger: log
+  logger: logger
 };
 
 
-var fhconfig = require('fh-config');
 
 var auth = require('../../lib/middleware/auth.js'); 
 var dfutils = require('../../lib/util/dfutils.js');
-
-var logger = fhconfig.getLogger();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
