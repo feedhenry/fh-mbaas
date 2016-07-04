@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "4.0.4-BUILD-NUMBER",
+  "version": "4.0.5-BUILD-NUMBER",
   "dependencies": {
     "archiver": {
       "version": "0.14.3",
