@@ -116,7 +116,9 @@ function createAndSetLogger() {
   clsMongoose(loggerNamespace, mongoose);
 
   fhconfig.setLogger(logger);
-  forms.core.setLogger(logger);
+
+  //Setting logger for fh-forms
+  forms.setLogger(logger);
 
   //Setting global forms config
   logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
