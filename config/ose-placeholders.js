@@ -5,7 +5,7 @@ var placeholders = {
   "fhmbaas.port": 8080,
   "fhmbaas.key": "{{env.FHMBAAS_KEY}}",
   "mongo.name": "{{env.MONGODB_FHMBAAS_DATABASE}}",
-  "mongo.host": "mongodb-1",
+  "mongo.host": "mongodb-1.{{env.MBAAS_NAMESPACE}}",
   "mongo.replicaset_name" : "rs0",
   "mongo.auth.enabled": true,
   "mongo.auth.user": "{{env.MONGODB_FHMBAAS_USER}}",
