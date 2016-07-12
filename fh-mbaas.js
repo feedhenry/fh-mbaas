@@ -122,7 +122,7 @@ function createAndSetLogger() {
 function initializeScheduler(clusterWorker) {
   //Ensuring that the config is loaded.
   initModules(clusterWorker, getMbaasMiddlewareConfig(), function() {
-    if(clusterWorker !== undefined) {
+    if (clusterWorker !== undefined) {
       logger.info("Initialising scheduler ", clusterWorker.id, clusterWorker.process.pid);
     } else {
       logger.info("Initialising scheduler.");
