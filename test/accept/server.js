@@ -42,7 +42,7 @@ var cfg = {
     "port":8803,
     "path":"msg/TOPIC",
     "cluster":"development",
-    "realtime": false,
+    "realtime": true,
     "apikey":"secretkey",
     "files":{
       "recovery_file":"../messages/recovery.log",

@@ -68,7 +68,7 @@ module.exports = {
     "port":8803,
     "path":"msg/TOPIC",
     "cluster":"development",
-    "realtime": false,
+    "realtime": true,
     "files":{
       "recovery_file":"../messages/recovery.log",
       "backup_file":"../messages/backup.log"
