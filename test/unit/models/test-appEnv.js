@@ -48,7 +48,7 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_MESSAGING_ENABLED, true);
   assert.equal(envs.FH_MESSAGING_HOST, 'localhost');
   assert.equal(envs.FH_MESSAGING_PROTOCOL, 'http');
-  assert.equal(envs.FH_MESSAGING_REALTIME_ENABLED, false);
+  assert.equal(envs.FH_MESSAGING_REALTIME_ENABLED, true);
   assert.equal(envs.FH_MESSAGING_RECOVERY_FILE, '../messages/recovery.log');
   assert.equal(envs.FH_MESSAGING_SERVER, 'http://localhost:8803/msg/TOPIC');
 
