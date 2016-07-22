@@ -111,7 +111,7 @@ function createAndSetLogger() {
 
   //Setting up namespace for the logger. This allows the logger to track request IDs
   //when mongoose queries have completed.
-  var clsMongoose = require('cls-mongoose');
+  var clsMongoose = require('fh-cls-mongoose');
   var loggerNamespace = logger.getLoggerNamespace();
   clsMongoose(loggerNamespace, mongoose);
 
