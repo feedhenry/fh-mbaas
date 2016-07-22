@@ -19,8 +19,9 @@ var forms = require('fh-forms');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 var fhServiceAuth = require('fh-service-auth');
 var requiredvalidation = require('./lib/util/requiredvalidation.js');
-var logger;
+var log = require('./lib/util/logger');
 var scheduler;
+var logger;
 var fhComponentMetrics = require('fh-component-metrics');
 var fhcluster = require('fh-cluster');
 var cluster = require('cluster');
@@ -105,8 +106,19 @@ function createAndSetLogger() {
   // it with an fh-logger instance to allow the underlying logger to be
   // controlled (setting log levels for example)
   logger = fhlogger.createLogger(fhconfig.getConfig().rawConfig.logger);
+
+  log.setLogger(logger);
+
+  //Setting up namespace for the logger. This allows the logger to track request IDs
+  //when mongoose queries have completed.
+  var clsMongoose = require('fh-cls-mongoose');
+  var loggerNamespace = logger.getLoggerNamespace();
+  clsMongoose(loggerNamespace, mongoose);
+
   fhconfig.setLogger(logger);
-  forms.core.setLogger(logger);
+
+  //Setting logger for fh-forms
+  forms.setLogger(logger);
 
   //Setting global forms config
   logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
@@ -232,6 +244,8 @@ function initAmqp(config, cb) {
 
 function startApp( ) {
   var app = express();
+
+  app.use(logger.requestIdMiddleware);
 
   if (fhconfig.bool('component_metrics.enabled')) {
     app.use(fhComponentMetrics.timingMiddleware(TITLE, fhconfig.value('component_metrics')));
