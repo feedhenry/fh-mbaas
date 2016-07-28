@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "4.2.0-BUILD-NUMBER",
+  "version": "4.2.1-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -27,7 +27,7 @@
     "express-bunyan-logger": "1.2.0",
     "express-paginate": "0.2.0",
     "fh-agenda": "0.9.0",
-    "fh-amqp-js": "0.6.0",
+    "fh-amqp-js": "0.7.0",
     "fh-cluster": "0.3.0",
     "fh-component-metrics": "2.0.1",
     "fh-config": "1.0.1",
@@ -49,7 +49,7 @@
     "multer": "0.1.8",
     "optimist": "0.6.1",
     "rc": "0.4.0",
-    "request": "2.67.0",
+    "request": "2.74.0",
     "rimraf": "2.5.2",
     "underscore": "1.8.3"
   },
