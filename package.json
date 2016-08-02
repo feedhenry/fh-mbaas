@@ -33,7 +33,7 @@
     "fh-config": "1.0.1",
     "fh-forms": "1.9.2",
     "fh-health": "0.2.0",
-    "fh-logger": "0.5.0",
+    "fh-logger": "0.5.1",
     "fh-mbaas-middleware": "2.1.0",
     "fh-messaging-client": "1.0.3",
     "fh-metrics-client": "1.0.2",
