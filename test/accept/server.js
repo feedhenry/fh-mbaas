@@ -12,6 +12,8 @@ var ditchServer;
 var dynofarmServer;
 var testConfig = require('../setup.js');
 var fhconfig = require('fh-config');
+var fhForms = require('fh-forms');
+
 
 
 
@@ -24,6 +26,8 @@ var logger = fhLogger.createLogger({
     "stream": "process.stdout"
   } ]
 });
+
+fhForms.init(logger);
 
 // used for the models init
 var cfg = {

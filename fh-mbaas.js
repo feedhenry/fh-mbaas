@@ -118,7 +118,7 @@ function createAndSetLogger() {
   fhconfig.setLogger(logger);
 
   //Setting logger for fh-forms
-  forms.setLogger(logger);
+  forms.init(logger);
 
   //Setting global forms config
   logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
