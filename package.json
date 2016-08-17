@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "4.2.5-BUILD-NUMBER",
+  "version": "5.0.0-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -12,6 +12,9 @@
   },
   "bin": {
     "fh-mbaas": "./fh-mbaas.js"
+  },
+  "engines": {
+    "node": "4.4"
   },
   "preferGlobal": true,
   "dependencies": {
