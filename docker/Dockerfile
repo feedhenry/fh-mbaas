@@ -11,6 +11,8 @@ RUN mkdir -p /var/feedhenry/data  && \
     mkdir -p config && \
     chown -R default:root ./
 
+RUN yum install -y https://s3-eu-west-1.amazonaws.com/fhcap/phantomjs-1.9.7-3.el7map.x86_64.rpm
+
 USER default
 
 # Extract app to work dir and copy conf
