@@ -11,6 +11,8 @@ RUN mkdir -p /var/feedhenry/data  && \
     mkdir -p config && \
     chown -R default:root ./
 
+# Installing fonts to be able to render PDFs for submissions
+RUN yum install -y dejavu-sans-fonts
 RUN yum install -y https://s3-eu-west-1.amazonaws.com/fhcap/phantomjs-1.9.7-3.el7map.x86_64.rpm
 
 USER default
