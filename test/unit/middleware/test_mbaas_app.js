@@ -186,11 +186,9 @@ module.exports.test_removeDbMiddlewareForDitch = function(done){
     '../util/mongo.js': {
       'dropDb': dropDbStub
     },
-    "../util/ditchhelper.js": {
-      removeAppCollection: function(name, callback){
+    '../services/appmbaas/removeAppDb.js': function(mongo, domain, appModel, environment, callback){
         callback(null, {collections: ["test", "test2"]});
       }
-    }
   };
   var mbaasApp = proxyquire(undertest, mocks);
   var req = {
@@ -208,7 +206,7 @@ module.exports.test_removeDbMiddlewareForDitch = function(done){
   };
   var res = {};
   mbaasApp.removeDbMiddleware(req, res, function next(err, ok){
-    assert.ok(!err, "did not expect an error to be returned");
+    assert.ok(!err, "did not expect an error to be returned " + util.inspect(err) );
     assert.ok(req.resultData);
     sinon.assert.notCalled(dropDbStub);
     done();
