@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "5.2.4-BUILD-NUMBER",
+  "version": "5.2.5-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -37,7 +37,7 @@
     "fh-forms": "1.9.5",
     "fh-health": "0.2.0",
     "fh-logger": "0.5.1",
-    "fh-mbaas-middleware": "2.2.3",
+    "fh-mbaas-middleware": "2.2.4",
     "fh-messaging-client": "1.0.3",
     "fh-metrics-client": "1.0.2",
     "fh-service-auth": "1.0.0",
@@ -66,7 +66,7 @@
     "should": "2.1.1",
     "sinon": "1.17.0",
     "supertest": "1.1.0",
-    "turbo-test-runner": "0.6.2",
+    "turbo-test-runner": "0.6.3",
     "deep-equal": "^1.0.1"
   }
 }
