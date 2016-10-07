@@ -1546,9 +1546,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.9.5",
-      "from": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.9.5.tgz",
-      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.9.5.tgz",
+      "version": "1.9.6",
+      "from": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.9.6.tgz",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.9.6.tgz",
       "dependencies": {
         "async": {
           "version": "0.2.9",
