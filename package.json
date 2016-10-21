@@ -61,12 +61,12 @@
     "grunt-fh-build": "^1.0.2",
     "istanbul": "0.4.3",
     "mocha": "^2.3.3",
-    "mockgoose": "6.1.0",
+    "mockgoose": "http://npm.skunkhenry.com/mockgoose/-/mockgoose-6.1.0.tgz",
     "proxyquire": "^1.4.0",
     "should": "2.1.1",
     "sinon": "1.17.0",
     "supertest": "1.1.0",
-    "turbo-test-runner": "0.6.3",
+    "turbo-test-runner": "http://npm.skunkhenry.com/turbo-test-runner/-/turbo-test-runner-0.6.3.tgz",
     "deep-equal": "^1.0.1"
   }
 }
