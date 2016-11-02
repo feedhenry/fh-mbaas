@@ -1,10 +1,10 @@
 {
   "name": "fh-mbaas",
-  "version": "5.2.7-BUILD-NUMBER",
+  "version": "5.2.8-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
-  "license": "Copyright (c) 2014 FeedHenry Ltd, All Rights Reserved.",
+  "license": "Apache 2.0",
   "scripts": {
     "install": "scripts/install.sh",
     "postinstall": "scripts/postinstall.sh",
