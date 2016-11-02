@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "scripts": {
     "install": "scripts/install.sh",
     "postinstall": "scripts/postinstall.sh",
