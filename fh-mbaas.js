@@ -154,7 +154,7 @@ function startWorker(clusterWorker) {
     coverage.hookLoader(__dirname);
   }
 
-  setupUncaughtExceptionHandler(logger);
+  setupUncaughtExceptionHandler(logger, clusterWorker);
   setupFhconfigReloadHandler(fhconfig);
 
   if (fhconfig.bool('component_metrics.enabled')) {
@@ -214,6 +214,7 @@ function initModules(clusterWorker, jsonConfig, cb) {
       //The models should not be initialised on the mongoose connection for fh-mbaas-middleware. The document instanceof checks will not
       //pass and none of the returned models will have the correct schemas attached.
       mongooseConnection = mongoose.createConnection(fhconfig.mongoConnectionString());
+      handleMongoConnectionEvents(mongooseConnection);
       models.init(mongooseConnection, cb);
     },
     async.apply(initAmqp, jsonConfig),
@@ -301,7 +302,21 @@ function closeMongooseConnection() {
   }
 }
 
-function setupUncaughtExceptionHandler(logger) {
+function handleMongoConnectionEvents(conn) {
+  if (conn) {
+    conn.on('error', function(err) {
+      logger.error('Mongo connection error: ' + err);
+      throw err;
+    });
+
+    conn.on('disconnected', function() {
+      logger.error('Mongo connection lost. Socket closed');
+      throw new Error('Mongo close even emitted');
+    });
+  }
+}
+
+function setupUncaughtExceptionHandler(logger, worker) {
   // handle uncaught exceptions
   process.on('uncaughtException', function(err) {
     logger.error("FATAL: UncaughtException, please report: " + util.inspect(err));
@@ -310,11 +325,15 @@ function setupUncaughtExceptionHandler(logger) {
     /* eslint-enable no-console */
     if (err !== undefined && err.stack !== undefined) {
       logger.error(util.inspect(err.stack));
+      /* eslint-disable no-console */
+      console.trace(err.stack);
+      /* eslint-enable no-console */
     }
-    /* eslint-disable no-console */
-    console.trace(err.stack);
-    /* eslint-enable no-console */
-    process.exit(1);
+    if (worker && worker.process) {
+      worker.process.exit(1);
+    } else {
+      process.exit(1);
+    }
   });
 
   // If the Node process ends, close the Mongoose connection
