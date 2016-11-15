@@ -29,7 +29,7 @@
     "express-bunyan-logger": "1.2.0",
     "express-paginate": "0.2.0",
     "fh-agenda": "0.9.0",
-    "fh-amqp-js": "0.7.0",
+    "fh-amqp-js": "0.7.1",
     "fh-cls-mongoose": "2.1.0",
     "fh-cluster": "0.3.0",
     "fh-component-metrics": "2.2.1",

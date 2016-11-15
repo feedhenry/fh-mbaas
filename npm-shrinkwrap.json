@@ -1021,9 +1021,9 @@
       }
     },
     "fh-amqp-js": {
-      "version": "0.7.0",
-      "from": "https://registry.npmjs.org/fh-amqp-js/-/fh-amqp-js-0.7.0.tgz",
-      "resolved": "https://registry.npmjs.org/fh-amqp-js/-/fh-amqp-js-0.7.0.tgz",
+      "version": "0.7.1",
+      "from": "fh-amqp-js@0.7.1",
+      "resolved": "https://registry.npmjs.org/fh-amqp-js/-/fh-amqp-js-0.7.1.tgz",
       "dependencies": {
         "amqp": {
           "version": "0.2.0",
@@ -1048,9 +1048,9 @@
           "resolved": "https://registry.npmjs.org/lodash/-/lodash-2.4.1.tgz"
         },
         "node-uuid": {
-          "version": "1.4.3",
-          "from": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz",
-          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
+          "version": "1.4.7",
+          "from": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz",
+          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
         },
         "rc": {
           "version": "0.1.1",
@@ -1063,9 +1063,9 @@
               "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.3.7.tgz",
               "dependencies": {
                 "wordwrap": {
-                  "version": "0.0.2",
-                  "from": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz",
-                  "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
+                  "version": "0.0.3",
+                  "from": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.3.tgz",
+                  "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.3.tgz"
                 }
               }
             },
@@ -4916,7 +4916,7 @@
     },
     "fh-service-auth": {
       "version": "1.0.3",
-      "from": "fh-service-auth@1.0.3",
+      "from": "https://registry.npmjs.org/fh-service-auth/-/fh-service-auth-1.0.3.tgz",
       "resolved": "https://registry.npmjs.org/fh-service-auth/-/fh-service-auth-1.0.3.tgz",
       "dependencies": {
         "bunyan": {
