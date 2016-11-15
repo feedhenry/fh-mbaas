@@ -40,7 +40,7 @@
     "fh-mbaas-middleware": "2.2.7",
     "fh-messaging-client": "1.0.4",
     "fh-metrics-client": "1.0.3",
-    "fh-service-auth": "1.0.1",
+    "fh-service-auth": "1.0.3",
     "mkdirp": "0.5.1",
     "mongodb": "2.1.18",
     "mongodb-uri": "0.9.7",
