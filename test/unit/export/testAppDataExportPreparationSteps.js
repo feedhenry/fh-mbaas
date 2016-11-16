@@ -80,7 +80,6 @@ var modelsMock = {
         progress: self.progress
       };
       cb();
-      //modelsMock.exportJobs.push(data);
     },
     set: function(field, value) {
       switch (field) {

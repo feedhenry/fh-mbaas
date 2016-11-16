@@ -12,8 +12,8 @@ var cfg = {
   },
   fhdfc: {
     "dynofarm": "http://localhost:9000",
-    "username":"feedhenry",
-    "_password": "feedhenry101",
+    "username":"DYNOFARM_USERNAME",
+    "_password": "DYNOFARM_PASSWORD",
     "loglevel": "warn",
     "cache_timeout": 1234123
   }

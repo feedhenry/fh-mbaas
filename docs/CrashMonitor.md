@@ -14,13 +14,13 @@ Example configuration:
   
 ``` 
  
- With the crash monitor, each time we receive a crash message, we calculate the average number of crashes that have occurred within the last sample_time_hrs. The sample time starts from when the first crash occurs. Once an app has crashed the minimum number of times, we begin deciding whether to take action or not
+ Each time a crash message is received, the average number of crashes that has occurred within the last sample_time_hrs is calculated. The sample time starts from the time of the first crash occurance. Once an app has crashed the minimum number of times, we begin deciding whether to take action or not
    
- for example: if the sample_time_hrs is 1 and the app started crashing 30 mins ago and has now crashed 31 times we will have an average number of crashes of 1 per minute.
- If our tolerance is 1 and base_time_seconds is 60 then our tolerance will have been met and the app stopped.
+ E.g. if the sample_time_hrs is 1 and the app started crashing 30 mins ago and has now crashed 31 times we will have an average number of crashes of 1 per minute.
+ If our tolerance is 1 and base_time_seconds is 60 then our tolerance will have been met and the app is stopped.
  
  The reason for using an average is to try to cater for the fact that apps do not always crash with regular intervals. It may crash 3 times in 3 seconds and then not crash for 10 minutes.
  
- We use a sample time to gain insight into the recent behaviour of the app rather than the behaviour of the app over a very long periods of time.
+ A sample time is used to gain insight into the recent behaviour of the app rather than the behaviour of the app over a very long periods of time.
  
  The maximum_num_crashes is a fail safe for if an app manages to avoid being stopped.
