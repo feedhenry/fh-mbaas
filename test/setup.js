@@ -31,8 +31,8 @@ var config ={
   },
   fhdfc:{
     "dynofarm":'http://localhost:' + dynofarmPort,
-    "username":"fh",
-    "_password": "fh",
+    "username":"DYNOFARM_USERNAME",
+    "_password": "DYNOFAR_PASSWORD",
     "cache_timeout": 30000,
     "loglevel": "warn"
   },

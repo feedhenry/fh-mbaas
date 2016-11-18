@@ -3,8 +3,6 @@
 #
 # Control script for FeedHenry component: fh-mbaas
 #
-# Copyright (c) 2012, FeedHenry Ltd.
-#
 ######################################################################
 if [ "$(id -u)" != "0" ]; then
  echo "This script must be run as root" 1>&2

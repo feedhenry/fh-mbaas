@@ -12,7 +12,6 @@ basePath: /api/metrics
 
 produces:
   - application/json
-  
 
 paths:
   /:
@@ -35,7 +34,7 @@ paths:
           schema:
           type: object
 
-#TODO, Full FH-Supercore Config
+#TODO Full FH-Supercore Config
 definitions:
   Metrics:
     properties:

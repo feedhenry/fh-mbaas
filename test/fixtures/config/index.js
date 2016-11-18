@@ -23,8 +23,8 @@ module.exports = {
   },
   "fhdfc": {
     "dynofarm": "http://localhost:9000",
-    "username":"feedhenry",
-    "_password": "feedhenry101",
+    "username":"FHDFC_USERNAME",
+    "_password": "FHDFC_PASSWORD",
     "loglevel": "warn",
     "cache_timeout": 300000
   },
@@ -84,6 +84,6 @@ module.exports = {
   "fhredis":{
     "host": "127.0.0.1",
     "port": 6379,
-    "password":""
+    "password":"FHREDIS_PASSWORD"
   }
 };

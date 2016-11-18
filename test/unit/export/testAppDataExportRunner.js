@@ -18,8 +18,8 @@ fhConfig.setRawConfig({
   },
   "fhdfc": {
     "dynofarm": "http://localhost:9000",
-    "username":"feedhenry",
-    "_password": "feedhenry101",
+    "username":"DYNOFARM_USERNAME",
+    "_password": "DYNOFARM_PASSWORD",
     "loglevel": "warn",
     "cache_timeout": 300000
   },
@@ -71,7 +71,6 @@ var modelsMock = {
         progress: self.progress
       };
       cb();
-      //modelsMock.exportJobs.push(data);
     },
     set: function(field, value) {
       switch (field) {

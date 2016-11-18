@@ -153,7 +153,7 @@ function dropDbForDomain(db, cb){
   var adminDb = db.admin();
   adminDb.listDatabases(function(err, dbs){
     assert.ok(!err, 'Failed to list databases: '+ util.inspect(err));
-    //created by app env acceptance test, since no data is written, the db is not actually created, but the user is, so makeu sure it's removed
+    //created by app env acceptance test, since no data is written, the db is not actually created, but the user is, so make sure it's removed
     var doDbRemove = ['fhmbaas-accept-test-domain_test_appenvtest', 'test-fhmbaas-accept']; 
     dbs = dbs.databases;
     for(var i=0;i<dbs.length;i++){

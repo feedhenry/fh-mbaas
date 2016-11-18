@@ -81,7 +81,7 @@ loadConfig(function() {
 });
 
 /**
- * Loading Mondule Config From File System
+ * Loading Module Config From File System
  * @param cb
  */
 function loadConfig(cb) {
@@ -148,7 +148,7 @@ function initializeScheduler(clusterWorker) {
 
 function startWorker(clusterWorker) {
 
-  // Note: location/order of these requires for istanbul code coverage is important.
+  // Note: location/order of these required for istanbul code coverage is important.
   if (fhconfig.bool('fhmbaas.code_coverage_enabled')) {
     var coverage = require('istanbul-middleware');
     coverage.hookLoader(__dirname);
