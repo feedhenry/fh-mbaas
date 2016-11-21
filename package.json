@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "5.2.10-BUILD-NUMBER",
+  "version": "5.3.12-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -18,7 +18,7 @@
   },
   "preferGlobal": true,
   "dependencies": {
-    "archiver": "0.14.3",
+    "archiver": "1.2.0",
     "async": "1.5.2",
     "body-parser": "1.14.1",
     "bunyan": "1.5.1",
@@ -34,7 +34,7 @@
     "fh-cluster": "0.3.0",
     "fh-component-metrics": "2.2.1",
     "fh-config": "1.0.3",
-    "fh-forms": "1.9.7",
+    "fh-forms": "1.10.8",
     "fh-health": "0.2.0",
     "fh-logger": "0.5.1",
     "fh-mbaas-middleware": "2.2.7",
