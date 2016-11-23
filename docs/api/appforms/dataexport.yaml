@@ -1,0 +1,161 @@
+# sys endpoint routes
+swagger: '2.0'
+info:
+  title: Appforms Submissions Admin API
+  description: Endpoints For Retrieving Metrics from an mbaas
+  version: "1.0.0"
+
+schemes:
+  - https
+
+basePath: /api
+
+produces:
+  - application/json
+
+parameters:
+  domain:
+    name: domain
+    in: path
+    description: the domain of the application
+    type: string
+    required: true
+  environment:
+    name: environment
+    in: path
+    description: the environment of the application
+    type: string
+    required: true
+  appid:
+    name: appid
+    in: path
+    description: the unique id of the application
+    type: string
+    required: true
+  job_id:
+    name: job_id
+    in: path
+    description: id of the export job to download the data from
+    type: string
+    required: true
+
+paths:
+  /{domain}/{environment}/appforms/data/export:
+    get:
+      tags:
+        - MbaaS
+        - Appforms
+        - Submissions
+      description: List export operations
+      parameters:
+        - $ref: "#/parameters/domain"
+        - $ref: "#/parameters/environment"
+        - $ref: "#/parameters/appid"
+      responses:
+        200:
+          description: List of export operations, includes both ongoing operations and historical data
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ExportJob'
+        401:
+          description: Authentication Invalid
+    post:
+      tags:
+        - MbaaS
+        - Appforms
+        - Submissions
+      description: Create a new export job
+      parameters:
+        - $ref: "#/parameters/domain"
+        - $ref: "#/parameters/environment"
+        - $ref: "#/parameters/appid"
+      responses:
+        200:
+          description: New job created successfully
+          schema:
+            $ref: '#/definitions/ExportJob'
+        401:
+          description: Authentication Invalid
+        500:
+          description: Error creating job
+  /{domain}/{environment}/appforms/data/export/{job_id}:
+    get:
+      tags:
+        - MbaaS
+        - Appforms
+        - Submissions
+      description: Details of an export operation
+      parameters:
+        - $ref: "#/parameters/domain"
+        - $ref: "#/parameters/environment"
+        - $ref: "#/parameters/appid"
+        - $ref: "#/parameters/job_id"
+      responses:
+        200:
+          description: Details of a single export operation
+          schema:
+            $ref: '#/definitions/ExportJob'
+        404:
+          description: job_id not found
+        401:
+          description: Authentication Invalid
+    post:
+      tags:
+        - MbaaS
+        - Appforms
+        - Submissions
+      description: Create download token+url for generated file
+      parameters:
+        - $ref: "#/parameters/domain"
+        - $ref: "#/parameters/environment"
+        - $ref: "#/parameters/appid"
+        - $ref: "#/parameters/job_id"
+      responses:
+        200:
+          description: Token generation successful
+          schema:
+            properties:
+              url: string
+            description: Download URL for the related file, including single-use token
+        401:
+          description: Authentication Invalid
+        404:
+          description:
+            Job not found or in invalid state
+            (i.e. not finished successfully and with file available)
+definitions:
+  ExportJob:
+    properties:
+      "_id":
+        type: string
+      environment:
+        type: string
+      domain:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+      step:
+        type: number
+      totalSteps:
+        type: number
+      fileSize:
+        type: number
+      fileDeleted:
+        type: string
+      fileId:
+        type: string
+      progress:
+        type: object
+      metadata:
+        type: object
+      logs:
+        type: array
+        items:
+          type: string
+      created:
+        type: date
+      modified:
+        type: date
