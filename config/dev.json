@@ -1,0 +1,175 @@
+{
+  "fhmbaas": {
+    "port": 8819,
+    "key": "ADD_YOUR_KEY",
+    "maxpayloadsize": "100mb",
+    "temp_forms_files_dest" : "/tmp/fh-mbaas",
+    "maxConcurrentPhantomPerWorker": 1,
+    "pdfExportDir": "/tmp/fh-mbaas",
+    "code_coverage_enabled": false,
+    "mbaasid":"development",
+    "dsMinsPerBackOffIndex": 1,
+    "pagination": {
+      "maxLimit": 1000,
+      "defaultLimit": 10
+    },
+    "appdataexport" : {
+      "output_dir" : "/var/feedhenry/data",
+      "schedule_time": 180000,
+      "default_lock_lifetime":120000,
+      "cleaner": {
+        "frequency": "*/30 * * * *",
+        "grace_time": 10
+      }
+    },
+    "appdata_jobs" : {
+      "upload_dir" : "/var/feedhenry/upload",
+      "scheduler": {
+        "concurrency": 1,
+        "frequency": "30 seconds"
+      },
+      "stalled_job_finder": {
+        "frequency": "1 minute"
+      }
+    }
+  },
+  "logger": {
+    "name": "mbaas",
+    "streams": [{
+      "type": "stream",
+      "src": true,
+      "level": "trace",
+      "stream": "process.stdout"
+    }, {
+      "type": "raw",
+      "src": true,
+      "level": "trace",
+      "stream": "ringBuffer"
+    }]
+  },
+  "mongo": {
+    "enabled": true,
+    "name": "fh-mbaas",
+    "host": "localhost",
+    "port": 27017,
+    "replicaset_name": null,
+    "auth": {
+      "enabled": false,
+      "user": "",
+      "pass": ""
+    },
+    "admin_auth": {
+      "user": "u-mbaas",
+      "pass": "password"
+    }
+  },
+  "fhditch": {
+    "host": "localhost",
+    "port": 8802,
+    "protocol": "http",
+    "service_key": "test"
+  },
+  "fhdfc": {
+    "dynofarm": "http://localhost:9000",
+    "username":"DYNOFARM_USERNAME",
+    "_password": "DYNOFARM_PASSWORD",
+    "loglevel": "warn",
+    "cache_timeout": 300000
+  },
+  "fhamqp": {
+    "app": {
+      "enabled": true
+    },
+    "enabled": true,
+    "max_connection_retry": 10,
+    "ssl": false,
+    "nodes": "node1:5672",
+    "vhosts": {
+      "events": {
+        "clusterNodes": [
+          "amqp://amqpuser:amqppassword@node1.feedhenry.local:5672/fhevents"
+        ]
+      },
+      "internal":{
+        "clusterNodes": [
+          "amqp://amqpuser:amqppassword@node1.feedhenry.local:5672/fhinternal"
+        ],
+        "heartbeat": 20
+      }
+    }
+  },
+  "fhmetrics" :{
+    "host":"127.0.0.1",
+    "port":"8813",
+    "protocol":"http",
+    "apikey":"ADD_YOUR_KEY"
+  },
+  "fhmessaging":{
+    "enabled": true,
+    "host":"localhost",
+    "protocol":"http",
+    "port":8803,
+    "path":"msg/TOPIC",
+    "cluster":"development",
+    "realtime": true,
+    "apikey":"secretkey",
+    "files":{
+      "recovery_file":"../messages/recovery.log",
+      "backup_file":"../messages/backup.log"
+    }
+  },
+  "fhstats":{
+    "enabled": true,
+    "host":"localhost",
+    "port": 8804,
+    "protocol": "http",
+    "apikey": "ADD_YOUR_KEY"
+  },
+  "fhredis":{
+    "host": "127.0.0.1",
+    "port": 6379,
+    "password":"FHREDIS_PASSWORD"
+  },
+  "crash_monitor":{
+    "enabled":true,
+    "min_num_crashes":10,
+    "max_num_crashes":40,
+    "tolerance":1,
+    "base_time_seconds":60,
+    "sample_time_hrs":1
+  },
+  "email": {
+    "transport": "",
+    "sendgrid": {
+      "auth": {
+        "api_user": "SENDGRID_USER",
+        "api_key": "SENDGRID_PASSWORD"
+      }
+    },
+    "smtp": "smtps://user:password@smtp.example.com",
+    "alert_email_from": "no-reply@feedhenry.com",
+    "alert_email_bcc": ""
+  },
+  "auto_create_app_dbs":["openshift3"],
+  "openshift3": false,
+  "agenda": {
+    "enabled": true,
+    "preferredWorkerId": 1,
+    "jobs": {
+      "data_source_update": {
+        "schedule": "60 seconds"
+      }
+    }
+  },
+  "component_metrics": {
+    "enabled": false,
+    "host": "192.168.33.1",
+    "port": 4444
+  },
+  "storage": {
+    "token_exp_time" : 600,
+    "base_url_protocol": "https",
+    "base_url_host":"files.feedhenry.me"
+  },
+  "ops_env_file": "/etc/feedhenry/openv.json"
+}

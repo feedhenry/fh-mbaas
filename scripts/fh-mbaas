@@ -1,0 +1,247 @@
+#!/bin/bash
+######################################################################
+#
+# Control script for FeedHenry component: fh-mbaas
+#
+######################################################################
+if [ "$(id -u)" != "0" ]; then
+ echo "This script must be run as root" 1>&2
+ exit 1
+fi
+
+################################################
+# GLOBALS
+################################################
+export PATH=/usr/local/bin:$PATH
+
+# Operating System
+OSNAME=`uname -s`
+
+# Service Essentials
+PS_DESC=FeedHenry-mbaas
+PS_TAG=fh-mbaas
+PS_PARENT=fh-mbaas
+
+# User/Group Details
+PS_SPAWN_USR=henryd
+PS_DAEMON_USR=henryd
+PS_DAEMON_GRP=henryg
+PS_DAEMON_UID=`id -u $PS_DAEMON_USR`
+PS_DAEMON_GID=`id -g $PS_DAEMON_USR`
+
+# Service Files
+PS_BIN=/usr/local/bin/$PS_TAG
+PS_LAUNCHER=/usr/local/bin/${PS_TAG}-launcher.sh
+PS_PID=/var/run/$PS_TAG.pid
+PS_CFG=/etc/feedhenry/$PS_PARENT/conf.json
+PS_CON=/var/log/feedhenry/$PS_PARENT/$PS_TAG-console.log
+PS_LOG=/var/log/feedhenry/$PS_PARENT/$PS_TAG.log
+
+# Service Limits
+PS_ULIMIT=8192
+PS_UMASK=002
+
+# Other
+START_TIMEOUT=30
+STOP_TIMEOUT=10
+RESTART_DELAY=1
+START_COMPLETE_MSG="Started $PS_TAG"
+
+################################################
+# COMMAND OVERRIDES
+################################################
+# Need ps command that has PID/PPID in columns 2/3
+case $OSNAME in
+ FreeBSD) PSCMD="/bin/ps -ejfww"    ;;
+ Linux)   PSCMD="/bin/ps -ejfww"    ;;
+ SunOS)   PSCMD="/usr/ucb/ps auxww" ;;
+ *)       PSCMD="/bin/ps -ejf"      ;;
+esac
+
+################################################
+# ALREADY RUNNING ?
+#  Returns: 0 if running, 1 if not
+################################################
+running () {
+ if [ -f $PS_PID ]; then
+  PID=`cat $PS_PID`
+  kill -0 $PID > /dev/null 2>&1
+  return $?
+ else
+  return 1
+ fi
+}
+
+################################################
+# START
+################################################
+do_start () {
+ echo -n "Starting $PS_DESC, please wait ..."
+ ulimit -n $PS_ULIMIT
+#umask $PS_UMASK
+ # Need to pass the effective user/group by id to some components via environment variable
+ DAEMON_USER=$PS_DAEMON_UID DAEMON_GROUP=$PS_DAEMON_GID PS_BIN=$PS_BIN PS_CON=$PS_CON start-stop-daemon --start -b -m -p $PS_PID -x $PS_LAUNCHER -u $PS_DAEMON_USR -g $PS_DAEMON_GRP -c $PS_SPAWN_USR:$PS_DAEMON_GRP -- $PS_CFG
+ status=$?
+ if [ $status -eq 0 ]; then
+  # Wait for startup to complete
+  counter=$START_TIMEOUT
+  while [ $counter -gt 0 ]; do
+   if [ -f $PS_CON ]; then
+    if [ -n "`cat $PS_CON | grep -si \"$START_COMPLETE_MSG\"`" ]; then
+     break;
+    fi
+   fi
+   sleep 1
+   echo -n "."
+   counter=`expr $counter - 1`
+  done
+  if [ $counter -eq 0 ]; then
+   echo " failed to start after $START_TIMEOUT seconds."
+   return 1
+  else
+   echo " started in `expr $START_TIMEOUT - $counter` seconds."
+   return 0
+  fi
+ else
+  return $status
+ fi
+}
+
+################################################
+# STOP
+################################################
+do_stop () {
+ echo -n "Stopping $PS_DESC, please wait ..."
+ start-stop-daemon -p $PS_PID -u $PS_DAEMON_USR --stop
+ status=$?
+ if [ $status -eq 0 ]; then
+  # Wait for stop to complete
+  counter=$STOP_TIMEOUT
+  while [ $counter -gt 0 ]; do
+   if running ; then
+    sleep 1
+    echo -n "."
+    counter=`expr $counter - 1`
+   else
+    break
+   fi
+  done
+  if [ $counter -eq 0 ]; then
+   if [ -n "$ARG2" -a "$ARG2" = "--force" ]; then
+    echo " failed to stop after $STOP_TIMEOUT seconds, killing PID $PID manually."
+    kill -9 $PID
+   else
+    echo " failed to stop after $STOP_TIMEOUT seconds."
+   fi
+   return 1
+  else
+   echo " stopped in `expr $STOP_TIMEOUT - $counter` seconds."
+   if [ -f $PS_PID ]; then rm $PS_PID; fi
+   return 0
+  fi
+ else
+  return $status
+ fi
+}
+
+################################################
+# MAIN
+################################################
+OP=$1
+ARG2=$2
+
+case "$OP" in
+ start)
+  if running ; then
+   echo "$PS_DESC is already running (PID=$PID)"
+   exit 0
+  fi
+  if do_start ; then
+   exit 0
+  else
+   exit 1
+  fi
+ ;;
+
+ stop)
+  if running ; then
+   if do_stop ; then
+    exit 0
+   else
+    exit 1
+   fi
+  else
+   echo "$PS_DESC is not running"
+  fi
+ ;;
+
+ restart)
+  if running; then
+   do_stop
+  fi
+  sleep $RESTART_DELAY
+  do_start
+ ;;
+
+ status)
+  if running; then
+   echo "$PS_DESC is running (PID=$PID)"
+   exit 0
+  else
+   echo "$PS_DESC is not running"
+   exit 1
+  fi
+ ;;
+
+ kill)
+  if running ; then
+   echo "Killing $PS_DESC (PID=$PID) ..."
+   kill -9 $PID
+  else
+   echo "$PS_DESC is not running"
+  fi
+  exit 0
+ ;;
+
+ reload)
+  if running ; then
+   echo "Reloading config for $PS_DESC (PID=$PID) ... Check output in $PS_CON"
+   kill -SIGUSR1 $PID
+  else
+   echo "$PS_DESC is not running"
+  fi
+  exit 0
+ ;;
+
+ console)
+  if [ -f $PS_CON ]; then tail -f $PS_CON; fi
+ ;;
+
+ log)
+  if [ -f $PS_LOG ]; then tail -f $PS_LOG; fi
+ ;;
+
+ purge)
+  if [ -f $PS_CON ]; then rm -f $PS_CON; fi
+  if [ -f $PS_LOG ]; then rm -f $PS_LOG; fi
+ ;;
+
+ proc)
+  if [ -z "$ARG2" ]; then echo "Please specify a process characteristic"; exit 1; fi
+  if running; then
+   cat /proc/$PID/$ARG2
+   exit 0
+  else
+   echo "$PS_DESC is not running"
+   exit 1
+  fi
+ ;;
+
+ *)
+  echo "Usage: $0 <op> [<data>]"
+  echo " where <op>   : start|stop|restart|status|console|log|purge|kill|proc|reload"
+  echo "       <data> : <item> (proc)|--force (kill)"
+  exit 1
+ ;;
+esac
+exit 0
