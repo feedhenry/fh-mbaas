@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhscl/nodejs-4-rhel7
+FROM centos/nodejs-4-centos7
 
 EXPOSE 8080
 
