@@ -169,4 +169,56 @@ describe("Forms App Submissions Router", function() {
   });
 });
 
+describe("Forms App Themes Router", function() {
+  describe("GET /themes", function() {
+    var formsRouter;
+    var getThemeUrl = baseUrl + '/themes';
+
+    archiver['@global'] = true;
+
+    before(function createRouter() {
+      var getThemeStub = stubs.forms.core.getFullTheme();
+      var deps = {
+        'fh-forms': {
+          '@global': true,
+          core: {
+            getFullTheme: getThemeStub
+          }
+        },
+        'fh-mbaas-middleware': _.clone(stubs.mbaasMiddleware),
+        'fh-config': {
+          '@global': true,
+          getlogger: sinon.stub().returns(logger),
+          value: fhConfig.value
+        },
+        'archiver': archiver
+      }
+
+      formsRouter = proxyquire('../../../../lib/handlers/app/forms.js', deps);
+    });
+
+    it("should return 200 and a theme if it is available", function(done) {
+      var app = express();
+
+      app.use(bodyParser.json());
+      app.use(baseRoutePath, formsRouter);
+
+      supertest(app)
+        .get(getThemeUrl)
+        .expect('Content-Type', "application/json")
+        .expect(200, done);
+    });
+
+    it("should return 204 if no theme are available", function(done) {
+      var app = express();
+
+      app.use(baseRoutePath, formsRouter);
+
+      supertest(app)
+        .get(getThemeUrl)
+        .expect(204, done);
+    });
+  });
+});
+
 

@@ -260,6 +260,31 @@ module.exports = {
 
         return updateCacheStub;
       }
+    },
+    getFullTheme: function() {
+      var stub = sinon.stub();
+
+      var mockThemeRes = {
+        "theme" : "mockTheme"
+      }
+
+      stub.withArgs(
+        sinon.match({req: sinon.match.object}),
+        sinon.match({res: sinon.match.object}),
+        sinon.match.func
+      )
+        .callsArgWith(2, undefined, mockThemeRes);
+
+      stub.withArgs(
+        sinon.match({req: sinon.match.object}),
+        sinon.match({res: sinon.match.object}),
+        sinon.match.func
+      )
+        .callsArgWith(2, undefined, null);
+
+      stub.throws("Invalid Arguments");
+
+      return stub;
     }
   },
   'middleware': {
@@ -277,7 +302,6 @@ module.exports = {
     },
     'formProjects': {
       'getFormIds': noop,
-      'getFullTheme': noop,
       'getConfig': noop
     },
     'forms': {
