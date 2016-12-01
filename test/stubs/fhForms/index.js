@@ -265,18 +265,35 @@ module.exports = {
       var stub = sinon.stub();
 
       var mockThemeRes = {
-        "theme" : "mockTheme"
-      }
+        "theme" : {
+          "_id" : "mockThemeId",
+          "createdBy" : "test@example.com",
+          "css" :"mockCSS",
+          "lastUpdated" : "2016-12-01T22:22:22.139Z",
+          "logo" : {
+            "base64String": "data:image/svg+xml;base64,mockbase64image",
+            "height" : 70,
+            "width": 200
+          },
+          "name" : "test-theme",
+          "structure" : [
+            {"id": "form", "label" : "Form"},
+            {"id": "page", "label" : "Page"},
+            {"id": "section", "label": "Section"}
+          ],
+          "updatedBy" : "test@example.com"
+        }
+      };
 
       stub.withArgs(
-        sinon.match({req: sinon.match.object}),
+        sinon.match({appId: sinon.match("mockProjectId")}),
         sinon.match({res: sinon.match.object}),
         sinon.match.func
       )
         .callsArgWith(2, undefined, mockThemeRes);
 
       stub.withArgs(
-        sinon.match({req: sinon.match.object}),
+        sinon.match({appId: sinon.match("mockProjectId")}),
         sinon.match({res: sinon.match.object}),
         sinon.match.func
       )

@@ -174,8 +174,6 @@ describe("Forms App Themes Router", function() {
     var formsRouter;
     var getThemeUrl = baseUrl + '/themes';
 
-    archiver['@global'] = true;
-
     before(function createRouter() {
       var getThemeStub = stubs.forms.core.getFullTheme();
       var deps = {
@@ -190,9 +188,8 @@ describe("Forms App Themes Router", function() {
           '@global': true,
           getlogger: sinon.stub().returns(logger),
           value: fhConfig.value
-        },
-        'archiver': archiver
-      }
+        }
+      };
 
       formsRouter = proxyquire('../../../../lib/handlers/app/forms.js', deps);
     });
