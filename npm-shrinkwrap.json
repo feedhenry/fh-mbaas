@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "5.3.17-BUILD-NUMBER",
+  "version": "5.3.18-BUILD-NUMBER",
   "dependencies": {
     "archiver": {
       "version": "1.2.0",
@@ -1690,8 +1690,8 @@
       }
     },
     "fh-forms": {
-      "version": "1.11.1",
-      "from": "fh-forms@1.11.1",
+      "version": "1.11.2",
+      "from": "fh-forms@1.11.2",
       "dependencies": {
         "async": {
           "version": "0.2.9",
