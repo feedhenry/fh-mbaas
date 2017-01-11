@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "5.3.12-BUILD-NUMBER",
+  "version": "5.3.13-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -34,7 +34,7 @@
     "fh-cluster": "0.3.0",
     "fh-component-metrics": "2.2.1",
     "fh-config": "1.0.3",
-    "fh-forms": "1.10.8",
+    "fh-forms": "1.11.2",
     "fh-health": "0.2.0",
     "fh-logger": "0.5.1",
     "fh-mbaas-middleware": "2.2.7",
@@ -68,5 +68,9 @@
     "supertest": "1.1.0",
     "turbo-test-runner": "http://npm.skunkhenry.com/turbo-test-runner/-/turbo-test-runner-0.6.3.tgz",
     "deep-equal": "^1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:feedhenry/fh-mbaas.git"
   }
 }
