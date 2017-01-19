@@ -39,6 +39,8 @@ var mongooseConnection;
 
 var START_AGENDA = "startAgenda";
 
+var initModulesCalled = false;
+
 // args and usage
 function usage() {
   /* eslint-disable no-console */
@@ -204,7 +206,10 @@ function getMbaasMiddlewareConfig() {
 }
 
 function initModules(clusterWorker, jsonConfig, cb) {
-
+  if (initModulesCalled) {
+    return process.nextTick(() => cb());
+  }
+  initModulesCalled = true;
   async.parallel([
     async.apply(async.waterfall, [
       async.constant(jsonConfig),
@@ -223,6 +228,7 @@ function initModules(clusterWorker, jsonConfig, cb) {
     if (!err) {
       return cb();
     }
+    initModulesCalled = false;
     logger.error(err);
     if (clusterWorker) {
       clusterWorker.kill();
