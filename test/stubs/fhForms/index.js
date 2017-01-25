@@ -8,6 +8,42 @@ var noop = sinon.stub.yields();
 
 module.exports = {
   core: {
+    completeFormSubmission: function(expectedSubmissionStatus) {
+      var mockSubmission = fixtures.forms.submissions.get();
+      var stub = sinon.stub();
+
+      var mockSubmissionStatus = {
+        status: expectedSubmissionStatus
+      };
+
+
+      stub.withArgs(sinon.match({
+        uri: sinon.match(fixtures.mockMongoUrl),
+        submission: sinon.match({
+          submissionId: sinon.match(mockSubmission._id)
+        })
+      }), sinon.match.func).callsArgWith(1, undefined, mockSubmissionStatus);
+
+
+      stub.throws("Invalid Arguments");
+
+      return stub;
+    },
+    getSubmissionEmailData: function() {
+      var mockSubmission = fixtures.forms.submissions.get();
+      var stub = sinon.stub();
+
+      stub.withArgs(sinon.match({
+        uri: sinon.match(fixtures.mockMongoUrl)
+      }), sinon.match({
+        _id: sinon.match(mockSubmission._id)
+      }), sinon.match.func).callsArgWith(2, undefined, {
+        formSubmission: mockSubmission, notificationMessage: {submittedFields: []}});
+
+      stub.throws("Invalid Arguments");
+
+      return stub;
+    },
     exportSubmissions: function(expectedFileUrl){
       var stub = sinon.stub();
 
@@ -273,7 +309,7 @@ module.exports = {
       'processFileResponse': noop,
       'status': noop,
       'listProjectSubmissions': noop,
-      'get': noop,
+      'get': noop
     },
     'formProjects': {
       'getFormIds': noop,
