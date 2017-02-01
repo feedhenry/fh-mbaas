@@ -121,11 +121,17 @@ function createAndSetLogger() {
 
   //Setting logger for fh-forms
   forms.init(logger);
-
-  //Setting global forms config
-  logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
-  forms.core.setConfig({
-    minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
+  forms.setupSharedMongoConnections(logger, fhconfig.mongoConnectionString(), fhconfig.getConfig().rawConfig, function(err, sharedConnections) {
+    if (err) {
+      logger.error("failed to setup shared mongo connections for fh-forms", {error: err});
+      throw err;
+    }
+    //Setting global forms config
+    logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
+    forms.core.setSharedConnections(sharedConnections);
+    forms.core.setConfig({
+      minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
+    });
   });
 }
 
