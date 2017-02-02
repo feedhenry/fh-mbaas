@@ -61,6 +61,10 @@
     "admin_auth": {
       "user": "u-mbaas",
       "pass": "password"
+    },
+    "form_user_auth": {
+      "user": "u-forms",
+      "pass": "password"
     }
   },
   "fhditch": {
