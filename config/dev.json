@@ -65,7 +65,8 @@
     "form_user_auth": {
       "user": "u-forms",
       "pass": "password"
-    }
+    },
+    "poolSize": 20
   },
   "fhditch": {
     "host": "localhost",
