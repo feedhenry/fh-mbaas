@@ -12,6 +12,8 @@ var placeholders = {
   "mongo.auth.pass": "{{env.MONGODB_FHMBAAS_PASSWORD}}",
   "mongo.admin_auth.user": "admin",
   "mongo.admin_auth.pass": "{{env.MONGODB_ADMIN_PASSWORD}}",
+  "mongo.form_user_auth.user": "u-forms",
+  "mongo.form_user_auth.pass": "{{env.MONGODB_FORM_PASSWORD}}",
   "fhredis.host": "{{env.REDIS_SERVICE_SERVICE_HOST}}",
   "fhredis.port": "{{env.REDIS_SERVICE_SERVICE_PORT}}",
   "fhmetrics.host": "fh-metrics-service.{{env.MBAAS_NAMESPACE}}",

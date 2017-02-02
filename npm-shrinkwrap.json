@@ -174,7 +174,7 @@
                 "once": {
                   "version": "1.3.3",
                   "from": "once@>=1.3.0 <1.4.0",
-                  "resolved": "http://registry.npmjs.org/once/-/once-1.3.3.tgz",
+                  "resolved": "https://registry.npmjs.org/once/-/once-1.3.3.tgz",
                   "dependencies": {
                     "wrappy": {
                       "version": "1.0.2",
@@ -242,7 +242,7 @@
         },
         "content-type": {
           "version": "1.0.2",
-          "from": "content-type@>=1.0.1 <1.1.0",
+          "from": "content-type@>=1.0.2 <1.1.0",
           "resolved": "https://registry.npmjs.org/content-type/-/content-type-1.0.2.tgz"
         },
         "debug": {
@@ -589,12 +589,12 @@
           "dependencies": {
             "statuses": {
               "version": "1.3.1",
-              "from": "statuses@>=1.3.0 <1.4.0",
+              "from": "statuses@>=1.0.0 <2.0.0",
               "resolved": "https://registry.npmjs.org/statuses/-/statuses-1.3.1.tgz"
             },
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@>=1.0.0 <1.1.0",
+              "from": "unpipe@1.0.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
@@ -702,7 +702,7 @@
             },
             "statuses": {
               "version": "1.3.1",
-              "from": "statuses@>=1.3.0 <1.4.0",
+              "from": "statuses@>=1.0.0 <2.0.0",
               "resolved": "https://registry.npmjs.org/statuses/-/statuses-1.3.1.tgz"
             }
           }
@@ -770,7 +770,7 @@
             },
             "mime-types": {
               "version": "2.1.14",
-              "from": "mime-types@>=2.1.11 <2.2.0",
+              "from": "mime-types@>=2.1.13 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.14.tgz",
               "dependencies": {
                 "mime-db": {
@@ -802,7 +802,7 @@
         "node-uuid": {
           "version": "1.4.7",
           "from": "node-uuid@>=1.4.1 <2.0.0",
-          "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
         },
         "useragent": {
           "version": "2.1.11",
@@ -1193,7 +1193,7 @@
     "fh-cluster": {
       "version": "0.3.0",
       "from": "fh-cluster@0.3.0",
-      "resolved": "http://npm.skunkhenry.com/fh-cluster/-/fh-cluster-0.3.0.tgz",
+      "resolved": "https://registry.npmjs.org/fh-cluster/-/fh-cluster-0.3.0.tgz",
       "dependencies": {
         "backoff": {
           "version": "2.4.1",
@@ -1704,9 +1704,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.12.0",
-      "from": "wei-lee/fh-forms-1#RHMAP-11889-shared-mongo-connections",
-      "resolved": "git://github.com/wei-lee/fh-forms-1.git#700c40b46f2f3350c8f67ac0f761538f7c5c8bba",
+      "version": "1.12.1",
+      "from": "fh-forms@1.12.1",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.12.1.tgz",
       "dependencies": {
         "async": {
           "version": "0.2.9",
@@ -2042,7 +2042,7 @@
                           "dependencies": {
                             "align-text": {
                               "version": "0.1.4",
-                              "from": "align-text@>=0.1.1 <0.2.0",
+                              "from": "align-text@>=0.1.3 <0.2.0",
                               "resolved": "https://registry.npmjs.org/align-text/-/align-text-0.1.4.tgz",
                               "dependencies": {
                                 "kind-of": {
@@ -2083,7 +2083,7 @@
                           "dependencies": {
                             "align-text": {
                               "version": "0.1.4",
-                              "from": "align-text@>=0.1.1 <0.2.0",
+                              "from": "align-text@>=0.1.3 <0.2.0",
                               "resolved": "https://registry.npmjs.org/align-text/-/align-text-0.1.4.tgz",
                               "dependencies": {
                                 "kind-of": {
@@ -2593,9 +2593,9 @@
                               "resolved": "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz"
                             },
                             "bcrypt-pbkdf": {
-                              "version": "1.0.0",
+                              "version": "1.0.1",
                               "from": "bcrypt-pbkdf@>=1.0.0 <2.0.0",
-                              "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.0.tgz"
+                              "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.1.tgz"
                             }
                           }
                         }
@@ -5661,7 +5661,7 @@
     "mongodb-uri": {
       "version": "0.9.7",
       "from": "mongodb-uri@0.9.7",
-      "resolved": "http://npm.skunkhenry.com/mongodb-uri/-/mongodb-uri-0.9.7.tgz"
+      "resolved": "https://registry.npmjs.org/mongodb-uri/-/mongodb-uri-0.9.7.tgz"
     },
     "mongoose": {
       "version": "4.5.0",
@@ -6294,9 +6294,9 @@
                   "resolved": "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz"
                 },
                 "bcrypt-pbkdf": {
-                  "version": "1.0.0",
+                  "version": "1.0.1",
                   "from": "bcrypt-pbkdf@>=1.0.0 <2.0.0",
-                  "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.0.tgz"
+                  "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.1.tgz"
                 }
               }
             }
@@ -6332,7 +6332,7 @@
         "node-uuid": {
           "version": "1.4.7",
           "from": "node-uuid@>=1.4.7 <1.5.0",
-          "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
         },
         "oauth-sign": {
           "version": "0.8.2",
