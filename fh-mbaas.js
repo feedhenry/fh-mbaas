@@ -28,6 +28,7 @@ var cluster = require('cluster');
 var formsUpdater = require('./lib/formsUpdater');
 var fhlogger = require('fh-logger');
 var amqp = require('./lib/util/amqp.js');
+var mongoUtils = require('./lib/util/mongo');
 
 var async = require('async');
 var models = require('./lib/models');
@@ -83,6 +84,17 @@ loadConfig(function() {
 });
 
 /**
+ * Print out the given message and error, and exit the process with error code.
+ */
+function printErrorAndExit(message, err) {
+  /* eslint-disable no-console */
+  console.error(message);
+  console.error(err);
+  /* eslint-enable no-console */
+  process.exit(-1);
+}
+
+/**
  * Loading Module Config From File System
  * @param cb
  */
@@ -92,14 +104,16 @@ function loadConfig(cb) {
 
   fhconfig.init(configFile, requiredvalidation, function(err) {
     if (err) {
-      /* eslint-disable no-console */
-      console.error("Problems reading config file: " + configFile);
-      console.error(err);
-      /* eslint-enable no-console */
-      process.exit(-1);
+      return printErrorAndExit("Problems reading config file: " + configFile, err);
     }
     createAndSetLogger();
-    cb();
+    //we call the ensureFormsUserExists function here as we only want to call it once. No point to call it in every worker.
+    ensureFormsUserExists(function(err) {
+      if (err) {
+        return printErrorAndExit("failed creating mongodb user for forms", err);
+      }
+      return cb();
+    });
   });
 }
 
@@ -118,14 +132,36 @@ function createAndSetLogger() {
   clsMongoose(loggerNamespace, mongoose);
 
   fhconfig.setLogger(logger);
+}
 
+/**
+ * Make sure the mongodb user for forms exists.
+ */
+function ensureFormsUserExists(cb) {
+  var mongoConfig = fhconfig.getConfig().rawConfig.mongo;
+  var mongoAdminDbUrl = mongoUtils.getAdminDbUrl(fhconfig.mongoConnectionString(), mongoConfig.admin_auth);
+  mongoUtils.createDbUser(mongoAdminDbUrl, {username: mongoConfig.form_user_auth.user, password: mongoConfig.form_user_auth.pass, roles: ['readWriteAnyDatabase']}, cb);
+}
+
+/**
+ * Initialise the fh-forms module.
+ */
+function initFormsModule(formsModule, logger, cb) {
+  var mongoConfig = fhconfig.getConfig().rawConfig.mongo;
   //Setting logger for fh-forms
-  forms.init(logger);
-
-  //Setting global forms config
-  logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
-  forms.core.setConfig({
-    minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
+  formsModule.init(logger);
+  formsModule.setupSharedMongoConnections(logger, fhconfig.mongoConnectionString(),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize}, function(err, sharedConnections) {
+    if (err) {
+      logger.error("failed to setup shared mongo connections for fh-forms", {error: err});
+      return cb(err);
+    }
+    //Setting global formsModule config
+    logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
+    formsModule.core.setSharedConnections(sharedConnections);
+    formsModule.core.setConfig({
+      minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
+    });
+    return cb();
   });
 }
 
@@ -222,6 +258,7 @@ function initModules(clusterWorker, jsonConfig, cb) {
       handleMongoConnectionEvents(mongooseConnection);
       models.init(mongooseConnection, cb);
     },
+    async.apply(initFormsModule, forms, logger),
     async.apply(initAmqp, jsonConfig),
     async.apply(fhServiceAuth.init, {logger: logger})
   ], function(err) {
