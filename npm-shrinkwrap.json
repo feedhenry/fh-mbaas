@@ -5821,9 +5821,9 @@
       }
     },
     "mongoose-timestamp": {
-      "version": "0.3.0",
-      "from": "mongoose-timestamp@0.3.0",
-      "resolved": "https://registry.npmjs.org/mongoose-timestamp/-/mongoose-timestamp-0.3.0.tgz"
+      "version": "0.6.0",
+      "from": "mongoose-timestamp@0.6.0",
+      "resolved": "https://registry.npmjs.org/mongoose-timestamp/-/mongoose-timestamp-0.6.0.tgz"
     },
     "mongoose-unique-validator": {
       "version": "0.3.0",
