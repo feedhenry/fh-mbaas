@@ -16,5 +16,6 @@ node('nodejs-ubuntu') {
 
     stage('Build artifact') {
       sh 'grunt fh:dist'
+      archiveArtifacts 'dist/fh-mbaas*.tar.gz, CHANGELOG.*, dist/sha.txt, output/**/VERSION.txt'
     }
 }
