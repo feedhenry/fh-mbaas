@@ -31,9 +31,9 @@ fhForms.init(logger);
 
 // used for the models init
 var cfg = {
-  mongoUrl: 'mongodb://localhost:27017/test-fhmbaas-accept',
+  mongoUrl: `mongodb://${process.env.MONGODB_HOST || 'localhost'}/test-fhmbaas-accept`,
   mongo:{
-    host: 'localhost',
+    host: `${process.env.MONGODB_HOST || 'localhost'}`,
     port: 27017,
     name: 'test-fhmbaas-accept',
     admin_auth: {
@@ -60,7 +60,7 @@ var cfg = {
 
 
 
-var auth = require('../../lib/middleware/auth.js'); 
+var auth = require('../../lib/middleware/auth.js');
 var dfutils = require('../../lib/util/dfutils.js');
 
 app.use(cors());
@@ -154,7 +154,7 @@ function dropDbForDomain(db, cb){
   adminDb.listDatabases(function(err, dbs){
     assert.ok(!err, 'Failed to list databases: '+ util.inspect(err));
     //created by app env acceptance test, since no data is written, the db is not actually created, but the user is, so make sure it's removed
-    var doDbRemove = ['fhmbaas-accept-test-domain_test_appenvtest', 'test-fhmbaas-accept']; 
+    var doDbRemove = ['fhmbaas-accept-test-domain_test_appenvtest', 'test-fhmbaas-accept'];
     dbs = dbs.databases;
     for(var i=0;i<dbs.length;i++){
       logger.info('db name = ' + dbs[i].name);

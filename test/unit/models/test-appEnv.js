@@ -1,7 +1,7 @@
 var fixtures = require('../../fixtures');
 
 var dbConf = {
-  host: 'localhost',
+  host: `${process.env.MONGODB_HOST || 'localhost'}`,
   port: 27017,
   name: 'test',
   user: 'testuser',
@@ -38,7 +38,7 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_AMQP_VHOST, 'fhevents');
   assert.equal(envs.FH_AMQP_USER, 'fheventuser');
   assert.equal(envs.FH_AMQP_PASS, 'fheventpassword');
-  
+
   assert.equal(envs.FH_DITCH_HOST, 'localhost');
   assert.equal(envs.FH_DITCH_PORT, 8802);
   assert.equal(envs.FH_DITCH_PROTOCOL, 'http');
@@ -52,7 +52,7 @@ exports.test_app_envs = function(finish){
   assert.equal(envs.FH_MESSAGING_RECOVERY_FILE, '../messages/recovery.log');
   assert.equal(envs.FH_MESSAGING_SERVER, 'http://localhost:8803/msg/TOPIC');
 
-  assert.equal(envs.FH_MONGODB_CONN_URL, 'mongodb://testuser:testpass@localhost:27017/test');
+  assert.equal(envs.FH_MONGODB_CONN_URL, `mongodb://testuser:testpass@${process.env.MONGODB_HOST || 'localhost'}:27017/test`);
 
   assert.equal(envs.FH_STATS_ENABLED, false);
   assert.equal(envs.FH_STATS_HOST, 'localhost');

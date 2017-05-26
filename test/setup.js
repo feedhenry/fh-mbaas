@@ -13,7 +13,7 @@ var config ={
   },
   mongo:{
     enabled: true,
-    host: 'localhost',
+    host: `${process.env.MONGODB_HOST || 'localhost'}`,
     port: 27017,
     name: 'test-fhmbaas-accept',
     auth: {
