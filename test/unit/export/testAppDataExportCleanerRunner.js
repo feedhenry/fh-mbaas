@@ -29,7 +29,7 @@ fhConfig.setRawConfig({
 });
 
 
-mongoose.connect('mongodb://localhost/myapp');
+mongoose.connect(`mongodb://${process.env.MONGODB_HOST || 'localhost'}/myapp`);
 
 var ExportJobModule = require('lib/models/index');
 

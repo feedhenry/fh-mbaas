@@ -3,7 +3,7 @@ var assert = require('assert');
 
 var cfg = {
   mongo: {
-    host: 'localhost',
+    host: `${process.env.MONGODB_HOST || 'localhost'}`,
     port: 8888,
     admin_auth : {
       user: 'admin',

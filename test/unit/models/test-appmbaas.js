@@ -6,7 +6,7 @@ var _ = require('underscore');
 var fhmbaasMiddleware = require('fh-mbaas-middleware');
 
 var cfg = {
-  mongoUrl: 'mongodb://localhost:27017/test-fhmbaas-accept',
+  mongoUrl: `mongodb://${process.env.MONGODB_HOST || 'localhost'}:27017/test-fhmbaas-accept`,
   mongo: {
     host: 'localhost',
     port: 8888,
@@ -412,5 +412,3 @@ exports.test_get_models_info_error = function(finish){
   assert.equal(next.args[0][0], "Error: Failed to look up Mbaas/AppMbaas instance");
   finish();
 };
-
-
