@@ -276,12 +276,9 @@ function initModules(clusterWorker, jsonConfig, cb) {
 }
 
 function initAmqp(config, cb) {
-  var migrationStatusHandler = require('./lib/messageHandlers/migrationStatusHandler.js');
   var deployStatusHandler = require('./lib/messageHandlers/deployStatusHandler.js');
-
   var amqpConnection = amqp.connect(config);
   deployStatusHandler.listenToDeployStatus(amqpConnection, config, function() {
-    migrationStatusHandler.listenToMigrationStatus(amqpConnection, config);
     cb();
   });
 }
