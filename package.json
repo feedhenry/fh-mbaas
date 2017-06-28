@@ -14,7 +14,7 @@
     "fh-mbaas": "./fh-mbaas.js"
   },
   "engines": {
-    "node": "6.9"
+    "node": "4.4"
   },
   "preferGlobal": true,
   "dependencies": {
