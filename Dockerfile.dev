@@ -1,0 +1,32 @@
+FROM centos/nodejs-4-centos7
+
+EXPOSE 8080
+
+#debug port
+EXPOSE 5858
+
+USER root
+
+# Extract app to work dir and copy conf
+COPY . ./
+
+RUN mkdir -p /var/feedhenry/data  && \
+    mkdir -p /var/feedhenry/upload && \
+    chmod -R 755 /var/feedhenry && \
+    ln -sf /usr/share/zoneinfo/UTC /etc/localtime && \
+    mkdir -p config && \
+    chown -R default:root ./
+
+# Installing fonts to be able to render PDFs for submissions
+RUN yum install -y dejavu-sans-fonts && \
+    yum install -y http://cbs.centos.org/kojifiles/packages/phantomjs/1.9.7/3.el7/x86_64/phantomjs-1.9.7-3.el7.x86_64.rpm
+
+USER default
+
+RUN scl enable rh-nodejs4 "npm install -g nodemon" && \
+    scl enable rh-nodejs4 "npm install --production" && \
+    mv conf-docker-dev.json config/conf.json && \
+    chmod -R ug+rw ./
+
+ENV FHDEV true
+CMD ["bash", "-c", "nodemon --debug=5858 fh-mbaas.js config/conf.json --master-only"]

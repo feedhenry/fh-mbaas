@@ -321,6 +321,9 @@ function startApp( ) {
 }
 
 function setupFhconfigReloadHandler(fhconfig) {
+  if (process.env.FHDEV === 'true') {
+    return;
+  }
   process.on(fhconfig.RELOAD_CONFIG_SIGNAL, function() {
     fhconfig.reload(cluster.workers, function(err) {
       if (err) {

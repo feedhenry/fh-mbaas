@@ -1,0 +1,10 @@
+.git
+node_modules
+test
+CONTRIBUTING.md
+Gruntfile.js
+Jenkinsfile
+LICENSE
+README.md
+sonar-project.properties
+docs
