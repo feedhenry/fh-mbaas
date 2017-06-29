@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "5.5.0-BUILD-NUMBER",
+  "version": "5.5.1-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -14,7 +14,7 @@
     "fh-mbaas": "./fh-mbaas.js"
   },
   "engines": {
-    "node": "4.4"
+    "node": "6.9"
   },
   "preferGlobal": true,
   "dependencies": {
@@ -56,18 +56,57 @@
     "rimraf": "2.5.2",
     "underscore": "1.8.3"
   },
+  "bundledDependencies": [
+    "archiver",
+    "async",
+    "body-parser",
+    "bunyan",
+    "cors",
+    "cuid",
+    "diskspace",
+    "express",
+    "express-bunyan-logger",
+    "express-paginate",
+    "fh-agenda",
+    "fh-amqp-js",
+    "fh-cls-mongoose",
+    "fh-cluster",
+    "fh-component-metrics",
+    "fh-config",
+    "fh-forms",
+    "fh-health",
+    "fh-logger",
+    "fh-mbaas-middleware",
+    "fh-messaging-client",
+    "fh-metrics-client",
+    "fh-service-auth",
+    "mkdirp",
+    "mongodb",
+    "mongodb-uri",
+    "mongoose",
+    "mongoose-filter-denormalize",
+    "mongoose-timestamp",
+    "mongoose-unique-validator",
+    "mongoose-validator",
+    "multer",
+    "optimist",
+    "rc",
+    "request",
+    "rimraf",
+    "underscore"
+  ],
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-fh-build": "^1.0.2",
+    "grunt": "~1.0.1",
+    "grunt-fh-build": "git://github.com/pb82/grunt-fh-build.git#FH-2703",
     "istanbul": "0.4.3",
-    "mocha": "^2.3.3",
+    "mocha": "~2.5.3",
     "mockgoose": "http://npm.skunkhenry.com/mockgoose/-/mockgoose-6.1.0.tgz",
-    "proxyquire": "^1.4.0",
+    "proxyquire": "~1.8.0",
     "should": "2.1.1",
     "sinon": "1.17.0",
     "supertest": "1.1.0",
     "turbo-test-runner": "http://npm.skunkhenry.com/turbo-test-runner/-/turbo-test-runner-0.6.3.tgz",
-    "deep-equal": "^1.0.1"
+    "deep-equal": "~1.0.1"
   },
   "repository": {
     "type": "git",
