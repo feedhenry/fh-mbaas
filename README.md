@@ -27,9 +27,10 @@ For development purposes, we can build a CentOS based Docker image and watch for
 
 ### Build the development image
 
-1. `docker build -t docker.io/my-Username/fh-mbaas:dev -f Dockerfile.dev .`
-2. `oc edit dc fh-mbaas`
-3. Replace the image with the tagged version above.
+1. Generate the config file: `grunt fh-generate-dockerised-config`
+2. `docker build -t docker.io/my-Username/fh-mbaas:dev -f Dockerfile.dev .`
+3. `oc edit dc fh-mbaas`
+4. Replace the image with the tagged version above.
 
 ### Hot Deployment
 

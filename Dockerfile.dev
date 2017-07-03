@@ -25,7 +25,7 @@ USER default
 
 RUN scl enable rh-nodejs4 "npm install -g nodemon" && \
     scl enable rh-nodejs4 "npm install --production" && \
-    mv conf-docker-dev.json config/conf.json && \
+    mv conf-docker.json config/conf.json && \
     chmod -R ug+rw ./
 
 ENV FHDEV true
