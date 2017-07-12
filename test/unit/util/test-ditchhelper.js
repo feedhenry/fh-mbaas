@@ -61,3 +61,20 @@ exports.it_should_removeAppCollection = function(finish){
   finish();
 };
 
+exports.it_should_check_migration_jobs = function(done){
+  var ditchhelper = proxyquire('../../../lib/util/ditchhelper', {
+    request: {
+      post: function (params, cb) {
+        assert.equal(params.url, "http://localhost:8802/admin/checkmigration");
+        assert.equal(params.json.appName, "testing-1234567890-dev");
+        return cb(null);
+      }
+    }
+  });
+
+  ditchhelper.checkMigrationJobs("testing-1234567890-dev", function(err) {
+    assert.ok(!err);
+    done();
+  });
+};
+
