@@ -1,4 +1,7 @@
-//https://github.com/feedhenry/fh-pipeline-library
+#!groovy
+
+// https://github.com/feedhenry/fh-pipeline-library
+@Library('fh-pipeline-library') _
 
 fhBuildNode {
     stage('Install Dependencies') {
