@@ -31,4 +31,8 @@ fhBuildNode {
             name = 'fh-mbaas'
         }
     }
+
+    stage('Build Image') {
+        dockerBuildNodeComponent("fh-mbaas")
+    }
 }
