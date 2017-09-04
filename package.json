@@ -1,6 +1,7 @@
 {
   "name": "fh-mbaas",
-  "version": "5.7.2-BUILD-NUMBER",
+
+  "version": "5.8.1-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -35,7 +36,7 @@
     "fh-component-metrics": "2.2.1",
     "fh-config": "1.0.3",
     "fh-forms": "1.15.0-rhmap-1157.4",
-    "fh-health": "0.2.0",
+    "fh-health": "0.3.1",
     "fh-logger": "0.5.1",
     "fh-mbaas-middleware": "2.2.7",
     "fh-messaging-client": "1.0.4",
