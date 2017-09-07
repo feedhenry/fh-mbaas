@@ -1,4 +1,4 @@
-FROM centos/nodejs-4-centos7
+FROM centos/nodejs-4-centos7:latest
 
 EXPOSE 8080
 
