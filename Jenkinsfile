@@ -3,6 +3,10 @@
 // https://github.com/feedhenry/fh-pipeline-library
 @Library('fh-pipeline-library') _
 
+stage('Trust') {
+    enforceTrustedApproval()
+}
+
 fhBuildNode([labels: ['nodejs6-ubuntu']]) {
     stage('Install Dependencies') {
         npmInstall {}
