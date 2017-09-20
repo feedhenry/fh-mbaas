@@ -1,5 +1,6 @@
 ## fh-mbaas - FeedHenry MBaaS Management Service
 
+
 ### Email Configuration
 
 To configure email sending from `fh-mbaas`, the `email.transport` configuration property must be set to:
