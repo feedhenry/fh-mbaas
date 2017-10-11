@@ -8,6 +8,13 @@ stage('Trust') {
 }
 
 fhBuildNode {
+
+    final String COMPONENT = 'fh-mbaas'
+    final String VERSION = getBaseVersionFromPackageJson()
+    final String BUILD = env.BUILD_NUMBER
+    final String DOCKER_HUB_ORG = "feedhenry"
+    final String CHANGE_URL = env.CHANGE_URL
+
     stage('Install Dependencies') {
         npmInstall {}
         withPrivateNPMRegistry {
@@ -32,11 +39,26 @@ fhBuildNode {
 
     stage('Build') {
         gruntBuild {
-            name = 'fh-mbaas'
+            name = COMPONENT
         }
+        s3PublishArtifacts([
+                bucket: "fh-wendy-builds/${COMPONENT}/${BUILD}",
+                directory: "./dist"
+        ])
+    }
+
+    stage('Platform Update') {
+        final Map updateParams = [
+                componentName: COMPONENT,
+                componentVersion: VERSION,
+                componentBuild: BUILD,
+                changeUrl: CHANGE_URL
+        ]
+        fhcapComponentUpdate(updateParams)
+        fhOpenshiftTemplatesComponentUpdate(updateParams)
     }
 
     stage('Build Image') {
-        dockerBuildNodeComponent("fh-mbaas")
+        dockerBuildNodeComponent(COMPONENT, DOCKER_HUB_ORG)
     }
 }
