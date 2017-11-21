@@ -28,5 +28,10 @@ RUN scl enable rh-nodejs4 "npm install -g nodemon" && \
     mv conf-docker.json config/conf.json && \
     chmod -R ug+rw ./
 
+USER root
+RUN  mkdir -p /root/licenses/rhmap/ && \
+     cp licenses/* /root/licenses/rhmap/
+USER default
+
 ENV FHDEV true
 CMD ["bash", "-c", "nodemon --debug=5858 fh-mbaas.js config/conf.json --master-only"]

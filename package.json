@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "5.10.2-BUILD-NUMBER",
+  "version": "5.10.3-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -8,6 +8,8 @@
   "scripts": {
     "install": "scripts/install.sh",
     "postinstall": "scripts/postinstall.sh",
+    "preshrinkwrap": "npm cache clean && npm ls",
+    "postshrinkwrap": "license-reporter save --full-dependency-tree --xml licenses.xml && license-reporter report --full-dependency-tree --silent",
     "start": "node fh-mbaas.js config/conf.json --master-only"
   },
   "bin": {
@@ -57,17 +59,18 @@
     "underscore": "1.8.3"
   },
   "devDependencies": {
+    "deep-equal": "~1.0.1",
     "grunt": "~1.0.1",
     "grunt-fh-build": "~2.0.0",
     "istanbul": "0.4.3",
+    "license-reporter": "github:bucharest-gold/license-reporter#d74abaf47220137b6dfd3a070556c6d5c4f2003b",
     "mocha": "~2.5.3",
     "mockgoose": "http://npm.skunkhenry.com/mockgoose/-/mockgoose-6.1.0.tgz",
     "proxyquire": "~1.8.0",
     "should": "2.1.1",
     "sinon": "1.17.0",
     "supertest": "1.1.0",
-    "turbo-test-runner": "http://npm.skunkhenry.com/turbo-test-runner/-/turbo-test-runner-0.6.3.tgz",
-    "deep-equal": "~1.0.1"
+    "turbo-test-runner": "http://npm.skunkhenry.com/turbo-test-runner/-/turbo-test-runner-0.6.3.tgz"
   },
   "repository": {
     "type": "git",

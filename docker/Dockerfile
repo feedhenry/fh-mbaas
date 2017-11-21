@@ -11,6 +11,9 @@ RUN mkdir -p /var/feedhenry/data  && \
     mkdir -p config && \
     chown -R default:root ./
 
+# NOTE: if you change the versions of RPMs (or add new packages) here,
+# please update the metadata in the rpm-* files in the licenses dir.
+
 # Installing fonts to be able to render PDFs for submissions
 RUN yum install -y dejavu-sans-fonts
 RUN yum install -y http://cbs.centos.org/kojifiles/packages/phantomjs/1.9.7/3.el7/x86_64/phantomjs-1.9.7-3.el7.x86_64.rpm
@@ -23,5 +26,10 @@ RUN tar -xf fh-*.tar.gz --strip 1 && \
             rm fh-*.tar.gz && \
             mv conf-docker.json config/conf.json && \
             chmod -R ug+rw ./
+
+USER root
+RUN  mkdir -p /root/licenses/rhmap/ && \
+     cp licenses/* /root/licenses/rhmap/
+USER default
 
 CMD ["bash", "-c", "node fh-mbaas.js config/conf.json --master-only"]
