@@ -1,0 +1,61 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.7.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - fh-service-auth > mongoose > mquery > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > serve-static > send > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-forms > mongoose > mquery > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > mongoose > mquery > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > send > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-forms > phantom > phantomjs-prebuilt > extract-zip > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > finalhandler > debug:
+        patched: '2017-10-11T14:39:32.244Z'
+  'npm:moment:20161019':
+    - fh-forms > moment:
+        patched: '2017-10-11T14:39:32.244Z'
+  'npm:moment:20160126':
+    - fh-health > fhlog > moment:
+        patched: '2017-10-11T14:39:32.244Z'
+  'npm:mongoose:20160116':
+    - mongoose-filter-denormalize > mongoose:
+        patched: '2017-10-11T14:39:32.244Z'
+  'npm:ms:20170412':
+    - fh-forms > phantom > phantomjs-prebuilt > extract-zip > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > serve-static > send > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > mongoose > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-service-auth > mongoose > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > finalhandler > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > send > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > serve-static > send > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > express > send > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-forms > mongoose > mquery > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-mbaas-middleware > mongoose > mquery > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-service-auth > mongoose > mquery > debug > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+    - fh-forms > mongoose > ms:
+        patched: '2017-10-11T14:39:32.244Z'
+  'npm:ms:20151024':
+    - mongoose-filter-denormalize > mongoose > ms:
+        patched: '2017-10-11T14:39:32.244Z'
