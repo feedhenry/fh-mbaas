@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<licenseSummary>
+    <dependencies>
+        <dependency>
+            <packageName>dejavu-sans-fonts</packageName>
+            <version>2.33</version>
+            <licenses>
+                <license>
+                    <name>Bitstream Vera and Public Domain</name>
+                    <url>https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/master/LICENSE</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>phantomjs</packageName>
+            <version>1.9.7</version>
+            <licenses>
+                <license>
+                    <name>BSD</name>
+                    <url>https://raw.githubusercontent.com/ariya/phantomjs/master/LICENSE.BSD</url>
+                </license>
+            </licenses>
+        </dependency>
+    </dependencies>
+</licenseSummary>
