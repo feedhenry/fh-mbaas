@@ -41,10 +41,6 @@ fhBuildNode([labels: ['nodejs6-ubuntu']]) {
         gruntBuild {
             name = COMPONENT
         }
-        s3PublishArtifacts([
-                bucket: "fh-wendy-builds/${COMPONENT}/${BUILD}",
-                directory: "./dist"
-        ])
     }
 
     stage('Platform Update') {
@@ -54,7 +50,6 @@ fhBuildNode([labels: ['nodejs6-ubuntu']]) {
                 componentBuild: BUILD,
                 changeUrl: CHANGE_URL
         ]
-        fhcapComponentUpdate(updateParams)
         fhOpenshiftTemplatesComponentUpdate(updateParams)
     }
 
