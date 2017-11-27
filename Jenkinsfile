@@ -55,10 +55,5 @@ fhBuildNode([labels: ['nodejs6-ubuntu']]) {
                 changeUrl: CHANGE_URL
         ]
         fhcapComponentUpdate(updateParams)
-        fhOpenshiftTemplatesComponentUpdate(updateParams)
-    }
-
-    stage('Build Image') {
-        dockerBuildNodeComponent(COMPONENT, DOCKER_HUB_ORG)
     }
 }
