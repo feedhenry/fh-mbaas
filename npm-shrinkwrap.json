@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "5.10.4-BUILD-NUMBER",
+  "version": "5.10.5-BUILD-NUMBER",
   "dependencies": {
     "accepts": {
       "version": "1.3.4",
@@ -1236,9 +1236,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.16.2",
-      "from": "fh-forms@1.16.2",
-      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.16.2.tgz",
+      "version": "1.16.3-rhmap.19008.1",
+      "from": "fh-forms@1.16.3-rhmap.19008.1",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.16.3-rhmap.19008.1.tgz",
       "dependencies": {
         "async": {
           "version": "0.2.9",
