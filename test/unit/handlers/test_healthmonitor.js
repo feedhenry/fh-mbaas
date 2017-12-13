@@ -28,8 +28,10 @@ function sendAndAssertHealthCheckRequest(testResults, statusCode, finish) {
 }
 
 function healthMonitorApp(testResults) {
+
   var healthMonitor = proxyquire('../../../lib/handlers/healthmonitor.js', {"fh-config": fhconfig(),
     "../util/ditchhelper.js": {},
+    "./health/apps.js": {},
     'fh-health': {
       init: function() {},
       addCriticalTest: function() {},
