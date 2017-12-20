@@ -6,7 +6,7 @@ var placeholders = {
   "fhmbaas.key": "{{env.FHMBAAS_KEY}}",
   "fhmbaas.namespace": "{{env.MBAAS_NAMESPACE}}",
   "mongo.name": "{{env.MONGODB_FHMBAAS_DATABASE}}",
-  "mongo.host": "{{env.MONGO_HOST}}",
+  "mongo.host": "mongodb-1.{{env.MBAAS_NAMESPACE}}",
   "mongo.count": "{{env.MONGODB_ENDPOINT_COUNT}}",
   "mongo.replicaset_name" : "{{env.MONGODB_REPLICA_NAME}}",
   "mongo.auth.enabled": true,
