@@ -48,3 +48,16 @@ exports.testCreateDbUser = function(done) {
     done();
   });
 };
+
+exports.hasUserSpaceDb = function(done) {
+  process.env.MONGODB_USERDB_NAMESPACE = 'henry.3-node-mbaas';
+  assert.ok(underTest.hasUserSpaceDb());
+
+  process.env.MONGODB_USERDB_NAMESPACE = '';
+  assert.ok(!underTest.hasUserSpaceDb());
+
+  delete process.env.MONGODB_USERDB_NAMESPACE;
+  assert.ok(!underTest.hasUserSpaceDb());
+  
+  done();
+};

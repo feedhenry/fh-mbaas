@@ -16,6 +16,22 @@ module.exports = {
       "pass": "password"
     }
   },
+  "mongo_userdb": {
+    "enabled": true,
+    "name": "fh-mbaas",
+    "host": `${process.env.MONGODB_HOST || 'userdb-localhost'}`,
+    "port": 27017,
+    "replicaset_name": 'rsuser0',
+    "auth": {
+      "enabled": false,
+      "user": "user_db",
+      "pass": "user_db"
+    },
+    "admin_auth": {
+      "user": "u-mbaas",
+      "pass": "password"
+    }
+  },
   "fhditch": {
     "host": "localhost",
     "port": 8802,

@@ -87,3 +87,45 @@ module.exports.test_get_connection_string_not_ok_when_fhconfig_reload_fails = fu
   finish();
 };
 
+module.exports.test_get_connection_string_userspace = function(finish) {
+  process.env.MONGODB_USERDB_NAMESPACE = "something";
+  var cfg = require("../../../fixtures/config");
+
+  var req = {"appMbaasModel":{
+    "dbConf":{
+      "host":"10.2.3.4,10.3.4.5,10.4.5.6",
+      "pass":"test",
+      "user":"test",
+      "name":"test"
+    }
+  }}, res = {};
+  
+  var next = sinon.spy(function (err){
+
+  });
+
+  var reload = sinon.spy(function (workers,callback){
+    return callback();
+  });
+
+  var value = sinon.spy(function (val){
+    var key = val.split('.')[1];
+    return cfg.mongo_userdb[key];
+  });
+
+  var db = proxyquire(undertest,{
+    "fh-config":{
+      "reload":reload,
+      "value":value
+    }
+  });
+
+  db.getConnectionString(req,res,next);
+  assert(next.calledOnce,"expected next to be called once");
+  assert(req.resultData, "expected result data");
+  assert.ok(req.resultData.url,"expected a url value");
+  assert.ok(req.resultData.url.indexOf("mongodb") === 0,"expected a mongodb connection string");
+  assert.ok(req.resultData.url.indexOf("userdb-localhost") !== -1,"expected userspace substring in mongodb connection string");
+  delete process.env.MONGODB_USERDB_NAMESPACE;
+  finish();
+};
