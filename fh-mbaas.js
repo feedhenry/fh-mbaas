@@ -150,21 +150,38 @@ function initFormsModule(formsModule, logger, cb) {
   var mongoConfig = fhconfig.getConfig().rawConfig.mongo;
   //Setting logger for fh-forms
   formsModule.init(logger);
-  formsModule.setupSharedMongoConnections(logger, fhconfig.mongoConnectionString(),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize}, function(err, sharedConnections) {
+
+  var tasks = [
+    async.apply(formsModule.setupSharedMongoConnections, logger, fhconfig.mongoConnectionString(),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize})
+  ];
+
+  if (mongoUtils.hasUserSpaceDb()) {
+    tasks.push(async.apply(formsModule.setupSharedMongoConnections, logger, fhconfig.mongoConnectionString(),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize}));
+  }
+
+  async.series(tasks, function(err, results) {
     if (err) {
       logger.error("failed to setup shared mongo connections for fh-forms", {error: err});
       return cb(err);
     }
-    //Setting global formsModule config
+
+    var sharedConnections = results[0];
+    var userSharedConnections = results[1];
+
     logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
+    
     formsModule.core.setSharedConnections(sharedConnections);
+    if (userSharedConnections) {
+      formsModule.core.setSharedConnections(userSharedConnections, true);
+    }
+
     formsModule.core.setConfig({
       minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
     });
+
     return cb();
   });
 }
-
 /**
  * Initialising The Scheduler. This is bound to a single worker using fh-cluster.
  * @param clusterWorker
