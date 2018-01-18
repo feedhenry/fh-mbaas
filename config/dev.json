@@ -68,6 +68,27 @@
     },
     "poolSize": 20
   },
+  "mongo_userdb": {
+    "enabled": true,
+    "name": "fh-mbaas",
+    "host": "localhost",
+    "port": 27017,
+    "replicaset_name": null,
+    "auth": {
+      "enabled": false,
+      "user": "",
+      "pass": ""
+    },
+    "admin_auth": {
+      "user": "u-mbaas",
+      "pass": "password"
+    },
+    "form_user_auth": {
+      "user": "u-forms",
+      "pass": "password"
+    },
+    "poolSize": 20
+  },
   "fhditch": {
     "host": "localhost",
     "port": 8802,

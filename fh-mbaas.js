@@ -236,6 +236,21 @@ function getMbaasMiddlewareConfig() {
     fhamqp: conf.rawConfig.fhamqp,
     logger: logger
   };
+
+  if (conf.rawConfig.mongo_userdb) {
+    jsonConfig.mongoUserUrl = fhconfig.mongoConnectionString('mongo_userdb');
+    jsonConfig.mongo_userdb = {
+      host: conf.rawConfig.mongo_userdb.host,
+      port: conf.rawConfig.mongo_userdb.port,
+      name: conf.rawConfig.mongo_userdb.name,
+      admin_auth: {
+        user: conf.rawConfig.mongo_userdb.admin_auth.user,
+        pass: conf.rawConfig.mongo_userdb.admin_auth.pass
+      },
+      replicaSet: conf.rawConfig.mongo_userdb.replicaset_name
+    };
+  }
+
   logger.debug('JSON Config ', jsonConfig);
 
   return jsonConfig;

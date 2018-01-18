@@ -213,3 +213,51 @@ module.exports.test_removeDbMiddlewareForDitch = function(done){
   });
 };
 
+module.exports.test_create_app_userdb_allowed_app_types = function (done){
+  process.env.MONGODB_USERDB_NAMESPACE = "something";
+  var mocks = {
+    '../util/mongo.js':{
+      'createDb':function (config, user, pass, name,callback){
+         callback();
+      }
+    },
+    'fh-mbaas-middleware':{
+      "config":function (){
+        return{
+          "mongo":{
+            "host":"test",
+            "port":"port"
+          },
+          "mongo_userdb":{
+            "host":"host-user",
+            "port":"port-user"
+          }
+        }
+      }
+    }
+  };
+  var mbaasApp = proxyquire(undertest,mocks);
+  var req = {
+    "appMbaasModel":{
+      "name":"testapp",
+      "type":"openshift3",
+      "save": function (cb){
+        return cb();
+      },
+      "markModified": function (){}
+    }
+  };
+  var res = {};
+  mbaasApp.createDbForAppTypes(["openshift3"])(req,res,function next(err,ok){
+    assert.ok(!err, "did not expect an error to be returned");
+    assert.ok(ok,"expected a dbconfig to be returned");
+    assert.ok(ok.host === "host-user","expected a host");
+    assert.ok(ok.port === "port-user","expected a port");
+    assert.ok(ok.hasOwnProperty("name"),"expected a name property");
+    assert.ok(ok.hasOwnProperty("user"),"expected a user property");
+    assert.ok(ok.hasOwnProperty("pass"),"expected a pass property");
+    delete process.env.MONGODB_USERDB_NAMESPACE;
+    done();
+  });
+};
+
