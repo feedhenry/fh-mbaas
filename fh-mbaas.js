@@ -33,6 +33,7 @@ var mongoUtils = require('./lib/util/mongo');
 var async = require('async');
 var models = require('./lib/models');
 var mongoose = require('mongoose');
+var util = require('util');
 
 var mongooseConnection;
 
@@ -147,24 +148,49 @@ function ensureFormsUserExists(cb) {
  * Initialise the fh-forms module.
  */
 function initFormsModule(formsModule, logger, cb) {
-  var mongoConfig = fhconfig.getConfig().rawConfig.mongo;
+  var appConfig = fhconfig.getConfig();
+  var mongoConfig = appConfig.rawConfig.mongo;
+  var userMongoConfig;
   //Setting logger for fh-forms
   formsModule.init(logger);
-  formsModule.setupSharedMongoConnections(logger, fhconfig.mongoConnectionString(),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize}, function(err, sharedConnections) {
+
+  var tasks = [
+    async.apply(formsModule.setupSharedMongoConnections, logger, fhconfig.mongoConnectionString(),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize})
+  ];
+
+  if (mongoUtils.hasUserSpaceDb()) {
+    userMongoConfig = appConfig.rawConfig.mongo_userdb;
+    tasks.push(async.apply(formsModule.setupSharedMongoConnections, logger, fhconfig.mongoConnectionString('mongo_userdb'),{auth: userMongoConfig.form_user_auth, poolSize: userMongoConfig.poolSize}));
+  }
+
+  console.log('---' + fhconfig.mongoConnectionString('mongo_userdb') + '---');
+  console.log('---' + util.inspect(userMongoConfig) + '---');
+
+  async.series(tasks, function(err, results) {
     if (err) {
       logger.error("failed to setup shared mongo connections for fh-forms", {error: err});
       return cb(err);
     }
-    //Setting global formsModule config
+
+    console.log('---' + results + '---');
+
+    var sharedConnections = results[0];
+    var userSharedConnections = results[1];
+
     logger.debug("minsPerBackOffIndex", fhconfig.int('fhmbaas.dsMinsPerBackOffIndex'));
+    
     formsModule.core.setSharedConnections(sharedConnections);
+    if (userSharedConnections) {
+      formsModule.core.setSharedConnections(userSharedConnections, true);
+    }
+
     formsModule.core.setConfig({
       minsPerBackOffIndex: fhconfig.int('fhmbaas.dsMinsPerBackOffIndex')
     });
+
     return cb();
   });
 }
-
 /**
  * Initialising The Scheduler. This is bound to a single worker using fh-cluster.
  * @param clusterWorker
