@@ -138,8 +138,14 @@ function createAndSetLogger() {
  * Make sure the mongodb user for forms exists.
  */
 function ensureFormsUserExists(cb) {
-  var mongoConfig = fhconfig.getConfig().rawConfig.mongo;
-  var mongoAdminDbUrl = mongoUtils.getAdminDbUrl(fhconfig.mongoConnectionString(), mongoConfig.admin_auth);
+  var appConfig = fhconfig.getConfig().rawConfig;
+  var mongoConfig = appConfig.mongo;
+  var mongoConfigKey;
+  if (mongoUtils.hasUserSpaceDb()) {
+    mongoConfig = appConfig.mongo_userdb;
+    mongoConfigKey = 'mongo_userdb';
+  }
+  var mongoAdminDbUrl = mongoUtils.getAdminDbUrl(fhconfig.mongoConnectionString(mongoConfigKey), mongoConfig.admin_auth);
   mongoUtils.createDbUser(mongoAdminDbUrl, {username: mongoConfig.form_user_auth.user, password: mongoConfig.form_user_auth.pass, roles: ['readWriteAnyDatabase']}, cb);
 }
 
@@ -147,10 +153,16 @@ function ensureFormsUserExists(cb) {
  * Initialise the fh-forms module.
  */
 function initFormsModule(formsModule, logger, cb) {
-  var mongoConfig = fhconfig.getConfig().rawConfig.mongo;
+  appConfig = fhconfig.getConfig().rawConfig;
+  var mongoConfig = appConfig.mongo;
+  var mongoConfigKey;
+  if (mongoUtils.hasUserSpaceDb()) {
+    mongoConfig = appConfig.mongo_userdb;
+    mongoConfigKey = 'mongo_userdb';
+  }
   //Setting logger for fh-forms
   formsModule.init(logger);
-  formsModule.setupSharedMongoConnections(logger, fhconfig.mongoConnectionString(),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize}, function(err, sharedConnections) {
+  formsModule.setupSharedMongoConnections(logger, fhconfig.mongoConnectionString(mongoConfigKey),{auth: mongoConfig.form_user_auth, poolSize: mongoConfig.poolSize}, function(err, sharedConnections) {
     if (err) {
       logger.error("failed to setup shared mongo connections for fh-forms", {error: err});
       return cb(err);
