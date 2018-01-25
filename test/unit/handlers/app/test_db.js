@@ -88,7 +88,7 @@ module.exports.test_get_connection_string_not_ok_when_fhconfig_reload_fails = fu
 };
 
 module.exports.test_get_connection_string_userspace = function(finish) {
-  process.env.MONGODB_USERDB_NAMESPACE = "something";
+  process.env.MONGODB_USERDB_SERVICE_NAME = "something";
   var cfg = require("../../../fixtures/config");
 
   var req = {"appMbaasModel":{
@@ -126,6 +126,6 @@ module.exports.test_get_connection_string_userspace = function(finish) {
   assert.ok(req.resultData.url,"expected a url value");
   assert.ok(req.resultData.url.indexOf("mongodb") === 0,"expected a mongodb connection string");
   assert.ok(req.resultData.url.indexOf("userdb-localhost") !== -1,"expected userspace substring in mongodb connection string");
-  delete process.env.MONGODB_USERDB_NAMESPACE;
+  delete process.env.MONGODB_USERDB_SERVICE_NAME;
   finish();
 };
