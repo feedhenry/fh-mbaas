@@ -214,7 +214,7 @@ module.exports.test_removeDbMiddlewareForDitch = function(done){
 };
 
 module.exports.test_create_app_userdb_allowed_app_types = function (done){
-  process.env.MONGODB_USERDB_NAMESPACE = "something";
+  process.env.MONGODB_USERDB_SERVICE_NAME = "something";
   var mocks = {
     '../util/mongo.js':{
       'createDb':function (config, user, pass, name,callback){
@@ -256,7 +256,7 @@ module.exports.test_create_app_userdb_allowed_app_types = function (done){
     assert.ok(ok.hasOwnProperty("name"),"expected a name property");
     assert.ok(ok.hasOwnProperty("user"),"expected a user property");
     assert.ok(ok.hasOwnProperty("pass"),"expected a pass property");
-    delete process.env.MONGODB_USERDB_NAMESPACE;
+    delete process.env.MONGODB_USERDB_SERVICE_NAME;
     done();
   });
 };
