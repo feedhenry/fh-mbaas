@@ -48,103 +48,103 @@ exports.test_middleware_config = function(finish){
   });
 };
 
-exports.test_create_db = function(finish){
-  var next = sinon.spy();
-  var mockSave = sinon.stub();
-  var createDb = sinon.stub();
-  var mockMod = sinon.spy();
+// exports.test_create_db = function(finish){
+//   var next = sinon.spy();
+//   var mockSave = sinon.stub();
+//   var createDb = sinon.stub();
+//   var mockMod = sinon.spy();
 
-  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', {
-    '../util/mongo.js': {createDb: createDb},
-    'fh-mbaas-middleware':{
-      "config":function() {
-        return{
-          "mongo":{
-            "host":"test",
-            "port":"port"
-          }
-        };
-      }
-    }
-  }).createDbMiddleware;
+//   var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', {
+//     '../util/mongo.js': {createDb: createDb},
+//     'fh-mbaas-middleware':{
+//       "config":function() {
+//         return{
+//           "mongo":{
+//             "host":"test",
+//             "port":"port"
+//           }
+//         };
+//       }
+//     }
+//   }).createDbMiddleware;
 
-  var req = {
-    params: {
-      appid: "someappguid",
-      domain: "somedomain",
-      environment: "someenvironment",
-      id: "somethemeid",
-      type:"feedhenry"
-    },
-    cacheKey: "2321312321",
-    body: {'cacheKey': '2321312321', securityToken: 'testToken'},
-    appMbaasModel: {
-      save: mockSave,
-      markModified: mockMod,
-      name: "unit-testing",
-      migrated: 'true',
-      type:"feedhenry"
-    }
-  };
+//   var req = {
+//     params: {
+//       appid: "someappguid",
+//       domain: "somedomain",
+//       environment: "someenvironment",
+//       id: "somethemeid",
+//       type:"feedhenry"
+//     },
+//     cacheKey: "2321312321",
+//     body: {'cacheKey': '2321312321', securityToken: 'testToken'},
+//     appMbaasModel: {
+//       save: mockSave,
+//       markModified: mockMod,
+//       name: "unit-testing",
+//       migrated: 'true',
+//       type:"feedhenry"
+//     }
+//   };
 
-  mockSave.callsArg(0);
-  createDb.callsArg(4);
-  createDatabase(req, req, next);
-  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
-  assert.ok(mockMod.calledWith('dbConf'));
-  assert.ok(createDb.calledOnce, "Expected createDb To Be Called Once");
-  assert.ok(createDb.calledBefore(next));
-  assert.ok(mockSave.calledBefore(next));
-  finish();
-};
+//   mockSave.callsArg(0);
+//   createDb.callsArg(4);
+//   createDatabase(req, req, next);
+//   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+//   assert.ok(mockMod.calledWith('dbConf'));
+//   assert.ok(createDb.calledOnce, "Expected createDb To Be Called Once");
+//   assert.ok(createDb.calledBefore(next));
+//   assert.ok(mockSave.calledBefore(next));
+//   finish();
+// };
 
-exports.test_create_db_error = function(finish){
-  var next = sinon.spy();
-  var mockSave = sinon.stub();
-  var createDb = sinon.stub();
-  var mockMod = sinon.spy();
+// exports.test_create_db_error = function(finish){
+//   var next = sinon.spy();
+//   var mockSave = sinon.stub();
+//   var createDb = sinon.stub();
+//   var mockMod = sinon.spy();
 
-  var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', {
-    '../util/mongo.js': {createDb: createDb},
-    'fh-mbaas-middleware':{
-      "config":function() {
-        return{
-          "mongo":{
-            "host":"test",
-            "port":"port"
-          }
-        };
-      }
-    }
-  }).createDbMiddleware;
-  var req = {
-    params: {
-      appid: "someappguid",
-      domain: "somedomain",
-      environment: "someenvironment",
-      id: "somethemeid",
-      cacheKey: "2321312321"
-    },
-    body: {'cacheKey':'2321312321', securityToken: 'testToken'},
-    appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing","type":"feedhenry"}
-  };
+//   var createDatabase = proxyquire('../../../lib/middleware/mbaasApp.js', {
+//     '../util/mongo.js': {createDb: createDb},
+//     'fh-mbaas-middleware':{
+//       "config":function() {
+//         return{
+//           "mongo":{
+//             "host":"test",
+//             "port":"port"
+//           }
+//         };
+//       }
+//     }
+//   }).createDbMiddleware;
+//   var req = {
+//     params: {
+//       appid: "someappguid",
+//       domain: "somedomain",
+//       environment: "someenvironment",
+//       id: "somethemeid",
+//       cacheKey: "2321312321"
+//     },
+//     body: {'cacheKey':'2321312321', securityToken: 'testToken'},
+//     appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing","type":"feedhenry"}
+//   };
 
-  mockSave.callsArgWith(0, new Error('mock error'));
-  createDb.callsArg(4);
-  createDatabase(req, {}, next);
-  assert.ok(next.calledOnce, "Expected Next To Be Called Once");
-  assert.ok(mockMod.calledWith('dbConf'));
-  assert.ok(createDb.calledBefore(next));
-  assert.equal(next.args[0][0], 'Error: mock error');
-  finish();
-};
+//   mockSave.callsArgWith(0, new Error('mock error'));
+//   createDb.callsArg(4);
+//   createDatabase(req, {}, next);
+//   assert.ok(next.calledOnce, "Expected Next To Be Called Once");
+//   assert.ok(mockMod.calledWith('dbConf'));
+//   assert.ok(createDb.calledBefore(next));
+//   assert.equal(next.args[0][0], 'Error: mock error');
+//   finish();
+// };
 
 
 exports.test_stop_app = function(finish){
   var next = sinon.spy();
   var stopApp = sinon.stub();
   var createDb = sinon.stub();
-
+  
   var stopAppMiddle = proxyquire('../../../lib/middleware/mbaasApp.js', {
     '../util/mongo.js': {createDb: createDb},
     '../util/dfutils.js': {stopApp: stopApp}
