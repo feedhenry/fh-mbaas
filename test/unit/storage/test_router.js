@@ -1,6 +1,7 @@
-const mockgoose = require('mockgoose');
+const Mockgoose = require('mockgoose').Mockgoose;
 const mongoose = require('mongoose');
-mockgoose(mongoose);
+const mockgoose = new Mockgoose(mongoose);
+mockgoose.helper.setDbVersion("3.2.10");
 const proxyquire = require('proxyquire');
 const express = require('express');
 const fhConfig = require('fh-config');
@@ -41,23 +42,25 @@ var mockRouter = {};
 
 exports['storage#router'] = {
   before: function(done) {
-    mongoose.connect('test', function() {
-      models = require('../../../lib/models');
-      models.init(mongoose.connection, function () {
-        storage = proxyquire('../../../lib/storage', {
-          './models/FileSchema': models,
+    mockgoose.prepareStorage().then(function() {
+      mongoose.connect('mongodb://example.com/TestingDB', function(err) {
+        models = require('../../../lib/models');
+        models.init(mongoose.connection, function () {
+          storage = proxyquire('../../../lib/storage', {
+            './models/FileSchema': models,
 
-          // This seems to be required for the router to pick up the mocked fhConfig
-          './impl/router.js': proxyquire('../../../lib/storage/impl/router', mockRouter)
-        });
+            // This seems to be required for the router to pick up the mocked fhConfig
+            './impl/router.js': proxyquire('../../../lib/storage/impl/router', mockRouter)
+          });
 
-        router = storage.router;
-        app = express();
-        app.use('/api/storage/', router);
+          router = storage.router;
+          app = express();
+          app.use('/api/storage/', router);
 
-        createFakeJob(models.AppdataJob, function (err, job) {
-          FAKE_JOB_ID = job._id;
-          done();
+          createFakeJob(models.AppdataJob, function (err, job) {
+            FAKE_JOB_ID = job._id;
+            done();
+          });
         });
       });
     });
