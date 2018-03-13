@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
 var assert = require('assert');
-var mockgoose = require('mockgoose');
+var Mockgoose = require('mockgoose').Mockgoose;
 var async = require('async');
 
 var fixtures = require('../../fixtures');
-mockgoose(mongoose);
+var mockgoose = new Mockgoose(mongoose);
+mockgoose.helper.setDbVersion("3.2.10");
 
 var models = require('lib/models');
 
@@ -12,14 +13,21 @@ var models = require('lib/models');
 describe('Submission Export Job Model', function(){
 
   before(function(done){
-    this.connection = mongoose.createConnection("mongodb://some.mongo.host.com:27017");
-    done();
+    mockgoose.prepareStorage().then(() => {
+      mongoose.connect('mongodb://example.com/TestingDB', function(err) {
+        done(err);
+      });
+    });
+  });
+
+  after(function(done) {
+    mongoose.connection.close(done);
   });
 
   beforeEach(function(done){
-    mockgoose.reset();
+    mockgoose.helper.reset();
 
-    models.init(this.connection, done);
+    models.init(mongoose.connection, done);
   });
 
   it("Initialise Submission Export Model", function(done){

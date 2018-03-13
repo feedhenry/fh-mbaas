@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
-var mockgoose = require('mockgoose');
-mockgoose(mongoose);
+var Mockgoose = require('mockgoose').Mockgoose;
+var mockgoose = new Mockgoose(mongoose);
+mockgoose.helper.setDbVersion("3.2.10");
 var async = require('async');
 var sinon = require('sinon');
 var proxyquire = require('proxyquire');
@@ -28,8 +29,12 @@ fhConfig.setRawConfig({
   }
 });
 
-
-mongoose.connect(`mongodb://${process.env.MONGODB_HOST || 'localhost'}/myapp`);
+mockgoose.prepareStorage().then(() => {
+  mongoose.connect(`mongodb://${process.env.MONGODB_HOST || 'localhost'}/myapp`);
+  mongoose.connection.on('connected', () => {  
+    console.log('db connection is now open');
+  }); 
+});
 
 var ExportJobModule = require('lib/models/index');
 
@@ -145,7 +150,7 @@ function closeConnection(cb) {
 }
 
 module.exports.test_export_cleaner = function(done) {
-  mockgoose.reset();
+  mockgoose.helper.reset();
   async.series([
     initdb
   ], function(err) {
