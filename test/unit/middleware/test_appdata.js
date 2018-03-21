@@ -3,9 +3,10 @@ var deepequal=require('deep-equal');
 var proxyquire = require('proxyquire');
 var fixtures = require('../../fixtures');
 var fhConfig = require('fh-config');
-var mockgoose = require('mockgoose');
+var Mockgoose = require('mockgoose').Mockgoose;
 var mongoose = require('mongoose');
-mockgoose(mongoose);
+var mockgoose = new Mockgoose(mongoose);
+mockgoose.helper.setDbVersion("3.2.10");
 var sinon = require('sinon');
 var _ = require('underscore');
 var AppdataJobSchema = require('../../../lib/models/AppdataJobSchema');
@@ -30,9 +31,11 @@ var storageMock = {
 
 exports['middleware/appdata'] = {
   before: function(done) {
-    mongoose.connect('test', function() {
-      models = require('../../../lib/models');
-      models.init(mongoose.connection, done);
+    mockgoose.prepareStorage().then(function() {
+      mongoose.connect('mongodb://example.com/TestingDB', function(err) {
+        models = require('../../../lib/models');
+        models.init(mongoose.connection, done);
+      });
     });
   },
   after: function(done) {
@@ -47,7 +50,7 @@ exports['middleware/appdata'] = {
         '../../lib/storage': storageMock
       })
     });
-    mockgoose.reset();
+    mockgoose.helper.reset();
 
     // repopulate fixtures
     new models.AppdataJob(fixtures.appdata.createJob(1))

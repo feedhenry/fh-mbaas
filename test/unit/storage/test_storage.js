@@ -2,9 +2,10 @@ const assert = require('assert');
 const path = require('path');
 const proxyquire = require('proxyquire');
 const fhConfig = require('fh-config');
-const mockgoose = require('mockgoose');
+const Mockgoose = require('mockgoose').Mockgoose;
 const mongoose = require('mongoose');
-mockgoose(mongoose);
+const mockgoose = new Mockgoose(mongoose);
+mockgoose.helper.setDbVersion("3.2.10");
 const fixtures = require('../../fixtures');
 fhConfig.setRawConfig(fixtures.config);
 
@@ -24,13 +25,15 @@ function createModel(done) {
 
 exports['storage'] = {
   before: function(done) {
-    mongoose.connect('test', function() {
-      models = require('../../../lib/storage/models/FileSchema');
-      models.createModel(mongoose.connection);
-      storage = proxyquire('../../../lib/storage', {
-        './models/FileSchema': models
+    mockgoose.prepareStorage().then(function() {
+      mongoose.connect('mongodb://example.com/TestingDB', function(err) {
+        models = require('../../../lib/storage/models/FileSchema');
+        models.createModel(mongoose.connection);
+        storage = proxyquire('../../../lib/storage', {
+          './models/FileSchema': models
+        });
+        done(err);
       });
-      done();
     });
   },
   after: function(done) {
