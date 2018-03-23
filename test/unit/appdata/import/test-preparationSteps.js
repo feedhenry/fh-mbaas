@@ -12,10 +12,11 @@ const TEST_IMPORT_FILE = require('./common').TEST_IMPORT_FILE;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 const mongoose = require('mongoose');
-const mockgoose = require('mockgoose');
+const Mockgoose = require('mockgoose').Mockgoose;
 const _ = require('underscore');
-
-mockgoose(mongoose);
+ 
+const mockgoose = new Mockgoose(mongoose);
+mockgoose.helper.setDbVersion("3.2.10");
 
 const models = require('fh-mbaas-middleware').models;
 
@@ -25,7 +26,7 @@ models.init({mongoUrl: 'dummyurl'}, function() {
 
 
 function resetDatabase(cb) {
-  mockgoose.reset();
+  mockgoose.helper.reset();
   var AppMbaasModel = models.getModels().AppMbaas;
 
   var app = new AppMbaasModel(
