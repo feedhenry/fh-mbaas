@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <licenseSummary>
     <project>fh-mbaas</project>
-    <version>6.0.2-BUILD-NUMBER</version>
+    <version>6.0.3-BUILD-NUMBER</version>
     <license>Apache-2.0</license>
     <dependencies>
         <dependency>
@@ -1660,7 +1660,7 @@
         </dependency>
         <dependency>
             <packageName>fh-mbaas-middleware</packageName>
-            <version>2.3.1</version>
+            <version>2.3.2</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1670,7 +1670,7 @@
         </dependency>
         <dependency>
             <packageName>fh-mbaas</packageName>
-            <version>6.0.2-BUILD-NUMBER</version>
+            <version>6.0.3-BUILD-NUMBER</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
