@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "6.0.2-BUILD-NUMBER",
+  "version": "6.0.3-BUILD-NUMBER",
   "dependencies": {
     "accepts": {
       "version": "1.3.5",
@@ -325,8 +325,7 @@
     "decamelize": {
       "version": "1.2.0",
       "from": "decamelize@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/decamelize/-/decamelize-1.2.0.tgz",
-      "optional": true
+      "resolved": "https://registry.npmjs.org/decamelize/-/decamelize-1.2.0.tgz"
     },
     "deep-is": {
       "version": "0.1.3",
@@ -1953,7 +1952,7 @@
             "node-uuid": {
               "version": "1.4.7",
               "from": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz",
-              "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
             }
           }
         },
@@ -2249,9 +2248,9 @@
       }
     },
     "fh-mbaas-middleware": {
-      "version": "2.3.1",
-      "from": "fh-mbaas-middleware@2.3.1",
-      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-2.3.1.tgz",
+      "version": "2.3.2",
+      "from": "fh-mbaas-middleware@2.3.2",
+      "resolved": "https://registry.npmjs.org/fh-mbaas-middleware/-/fh-mbaas-middleware-2.3.2.tgz",
       "dependencies": {
         "accepts": {
           "version": "1.3.4",
@@ -2527,7 +2526,7 @@
             "node-uuid": {
               "version": "1.4.7",
               "from": "node-uuid@>=1.4.4 <2.0.0",
-              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+              "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
             },
             "rc": {
               "version": "0.1.1",
