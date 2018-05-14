@@ -83,7 +83,8 @@ exports.test_create_db = function(finish){
       markModified: mockMod,
       name: "unit-testing",
       migrated: 'true',
-      type:"feedhenry"
+      type: "feedhenry",
+      guid: "testappguid"
     }
   };
 
@@ -126,7 +127,7 @@ exports.test_create_db_error = function(finish){
       cacheKey: "2321312321"
     },
     body: {'cacheKey':'2321312321', securityToken: 'testToken'},
-    appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing","type":"feedhenry"}
+    appMbaasModel: {save: mockSave, markModified: mockMod, name: "unit-testing","type":"feedhenry", "guid":"testappguid"}
   };
 
   mockSave.callsArgWith(0, new Error('mock error'));
