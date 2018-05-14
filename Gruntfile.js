@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     _test_runner: '_mocha',
-    _unit_args: '-b -A -u exports -t 20000',
+    _unit_args: '-b -A -u exports -t 120000',
     optional: ['<%= _test_runner %> --recursive test/accept/test-backoff.js --exit'],
     unit: ['echo $NODE_PATH', '<%= _test_runner %> <%= _unit_args %> --recursive ./test/unit/**/test*.js --exit'],
     // use `grunt fh:testfile:{{unit_test_filename}}` to run a single test file
