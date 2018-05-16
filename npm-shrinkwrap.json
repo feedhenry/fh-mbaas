@@ -1179,9 +1179,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.16.6",
-      "from": "fh-forms@1.16.6",
-      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.16.6.tgz",
+      "version": "1.16.7",
+      "from": "fh-forms@1.16.7",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.16.7.tgz",
       "dependencies": {
         "async": {
           "version": "0.2.9",
@@ -5579,9 +5579,9 @@
       "optional": true
     },
     "winston": {
-      "version": "2.4.1",
+      "version": "2.4.2",
       "from": "winston@>=2.4.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/winston/-/winston-2.4.1.tgz",
+      "resolved": "https://registry.npmjs.org/winston/-/winston-2.4.2.tgz",
       "dependencies": {
         "async": {
           "version": "1.0.0",
