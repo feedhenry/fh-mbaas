@@ -9,7 +9,8 @@ RUN mkdir -p /var/feedhenry/data  && \
     chmod -R 755 /var/feedhenry && \
     ln -sf /usr/share/zoneinfo/UTC /etc/localtime && \
     mkdir -p config && \
-    chown -R default:root ./
+    chown -R default:root ./ && \
+    yum -y remove kernel-headers 
 
 # NOTE: if you change the versions of RPMs (or add new packages) here,
 # please update the metadata in the rpm-* files in the licenses dir.
