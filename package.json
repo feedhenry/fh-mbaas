@@ -34,7 +34,7 @@
     "fh-cluster": "0.3.0",
     "fh-component-metrics": "2.2.1",
     "fh-config": "1.0.3",
-    "fh-forms": "1.16.7",
+    "fh-forms": "1.16.8-alpha.1",
     "fh-health": "0.3.2",
     "fh-logger": "0.5.1",
     "fh-mbaas-middleware": "2.3.2",
