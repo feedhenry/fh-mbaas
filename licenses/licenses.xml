@@ -1650,7 +1650,7 @@
         </dependency>
         <dependency>
             <packageName>fh-forms</packageName>
-            <version>1.16.7</version>
+            <version>1.16.8</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>

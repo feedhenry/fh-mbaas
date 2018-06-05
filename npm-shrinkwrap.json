@@ -1192,9 +1192,9 @@
       }
     },
     "fh-forms": {
-      "version": "1.16.7",
-      "from": "austincunningham/fh-forms#RHMAP-18684",
-      "resolved": "git://github.com/austincunningham/fh-forms.git#a72075bab84f99cc551ab0f923cb5c809a69494e",
+      "version": "1.16.8",
+      "from": "fh-forms@1.16.8",
+      "resolved": "https://registry.npmjs.org/fh-forms/-/fh-forms-1.16.8.tgz",
       "dependencies": {
         "async": {
           "version": "0.2.9",
@@ -2759,7 +2759,7 @@
             "node-uuid": {
               "version": "1.4.7",
               "from": "node-uuid@>=1.4.7 <2.0.0",
-              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+              "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
             }
           }
         },
@@ -3809,7 +3809,7 @@
             "node-uuid": {
               "version": "1.4.7",
               "from": "node-uuid@>=1.4.7 <1.5.0",
-              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+              "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
             },
             "oauth-sign": {
               "version": "0.8.2",
