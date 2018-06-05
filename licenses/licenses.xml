@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <licenseSummary>
     <project>fh-mbaas</project>
-    <version>6.0.3-BUILD-NUMBER</version>
+    <version>6.0.4-BUILD-NUMBER</version>
     <license>Apache-2.0</license>
     <dependencies>
         <dependency>
@@ -579,6 +579,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>buffer-from</packageName>
+            <version>1.1.0</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>buffer-shims</packageName>
             <version>1.0.0</version>
             <licenses>
@@ -831,6 +841,16 @@
         <dependency>
             <packageName>concat-stream</packageName>
             <version>1.6.0</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>concat-stream</packageName>
+            <version>1.6.2</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -1440,7 +1460,7 @@
         </dependency>
         <dependency>
             <packageName>extract-zip</packageName>
-            <version>1.6.6</version>
+            <version>1.6.7</version>
             <licenses>
                 <license>
                     <name>BSD 2-clause "Simplified" License</name>
@@ -1600,7 +1620,7 @@
         </dependency>
         <dependency>
             <packageName>fh-forms</packageName>
-            <version>1.16.7</version>
+            <version>1.16.8</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1670,7 +1690,7 @@
         </dependency>
         <dependency>
             <packageName>fh-mbaas</packageName>
-            <version>6.0.3-BUILD-NUMBER</version>
+            <version>6.0.4-BUILD-NUMBER</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -3201,16 +3221,6 @@
         <dependency>
             <packageName>mkdirp</packageName>
             <version>0.3.5</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>mkdirp</packageName>
-            <version>0.5.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
