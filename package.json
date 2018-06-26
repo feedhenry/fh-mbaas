@@ -42,7 +42,7 @@
     "fh-metrics-client": "1.0.5",
     "fh-service-auth": "1.0.4",
     "mkdirp": "0.5.1",
-    "mongodb": "2.1.18",
+    "mongodb": "2.2.35",
     "mongodb-uri": "0.9.7",
     "mongoose": "4.11.14",
     "mongoose-timestamp": "0.3.0",
