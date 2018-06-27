@@ -61,7 +61,7 @@
     "mocha": "~2.5.3",
     "mockgoose": "^7.3.5",
     "proxyquire": "~1.8.0",
-    "should": "2.1.1",
+    "should": "13.2.1",
     "sinon": "1.17.0",
     "supertest": "3.1.0",
     "turbo-test-runner": "http://npm.skunkhenry.com/turbo-test-runner/-/turbo-test-runner-0.6.3.tgz"
