@@ -32,7 +32,7 @@
     "fh-amqp-js": "0.7.1",
     "fh-cls-mongoose": "2.1.1",
     "fh-cluster": "0.3.0",
-    "fh-component-metrics": "2.2.1",
+    "fh-component-metrics": "2.7.0",
     "fh-config": "1.0.3",
     "fh-forms": "1.16.8",
     "fh-health": "0.3.2",
