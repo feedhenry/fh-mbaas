@@ -84,12 +84,6 @@
       "from": "balanced-match@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz"
     },
-    "bcrypt-pbkdf": {
-      "version": "1.0.1",
-      "from": "bcrypt-pbkdf@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.1.tgz",
-      "optional": true
-    },
     "bl": {
       "version": "1.2.2",
       "from": "bl@>=1.0.0 <2.0.0",
@@ -404,12 +398,6 @@
       "version": "0.1.4",
       "from": "duplexer2@>=0.1.4 <0.2.0",
       "resolved": "https://registry.npmjs.org/duplexer2/-/duplexer2-0.1.4.tgz"
-    },
-    "ecc-jsbn": {
-      "version": "0.1.1",
-      "from": "ecc-jsbn@>=0.1.1 <0.2.0",
-      "resolved": "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz",
-      "optional": true
     },
     "ee-first": {
       "version": "1.1.1",
@@ -1401,6 +1389,11 @@
           "version": "1.0.31",
           "from": "readable-stream@1.0.31",
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.31.tgz"
+        },
+        "request": {
+          "version": "2.83.0",
+          "from": "request@2.83.0",
+          "resolved": "https://registry.npmjs.org/request/-/request-2.83.0.tgz"
         },
         "string_decoder": {
           "version": "0.10.31",
@@ -4680,12 +4673,6 @@
       "from": "isstream@>=0.1.2 <0.2.0",
       "resolved": "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz"
     },
-    "jsbn": {
-      "version": "0.1.1",
-      "from": "jsbn@>=0.1.0 <0.2.0",
-      "resolved": "https://registry.npmjs.org/jsbn/-/jsbn-0.1.1.tgz",
-      "optional": true
-    },
     "json-schema": {
       "version": "0.2.3",
       "from": "json-schema@0.2.3",
@@ -5279,16 +5266,9 @@
       "resolved": "https://registry.npmjs.org/repeat-string/-/repeat-string-1.6.1.tgz"
     },
     "request": {
-      "version": "2.83.0",
-      "from": "request@2.83.0",
-      "resolved": "https://registry.npmjs.org/request/-/request-2.83.0.tgz",
-      "dependencies": {
-        "uuid": {
-          "version": "3.2.1",
-          "from": "uuid@>=3.1.0 <4.0.0",
-          "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.2.1.tgz"
-        }
-      }
+      "version": "2.87.0",
+      "from": "request@2.87.0",
+      "resolved": "https://registry.npmjs.org/request/-/request-2.87.0.tgz"
     },
     "request-progress": {
       "version": "2.0.1",
@@ -5478,12 +5458,6 @@
       "version": "0.6.0",
       "from": "tunnel-agent@>=0.6.0 <0.7.0",
       "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.6.0.tgz"
-    },
-    "tweetnacl": {
-      "version": "0.14.5",
-      "from": "tweetnacl@>=0.14.0 <0.15.0",
-      "resolved": "https://registry.npmjs.org/tweetnacl/-/tweetnacl-0.14.5.tgz",
-      "optional": true
     },
     "type-check": {
       "version": "0.3.2",

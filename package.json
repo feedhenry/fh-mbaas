@@ -48,7 +48,7 @@
     "mongoose-timestamp": "0.3.0",
     "multer": "0.1.8",
     "optimist": "0.6.1",
-    "request": "2.83.0",
+    "request": "2.87.0",
     "rimraf": "2.5.2",
     "underscore": "1.8.3"
   },
