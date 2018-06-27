@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "6.0.6-BUILD-NUMBER",
+  "version": "6.0.7-BUILD-NUMBER",
   "description": "",
   "main": "index.js",
   "author": "FeedHenry",
@@ -56,14 +56,14 @@
     "deep-equal": "~1.0.1",
     "grunt": "~1.0.1",
     "grunt-fh-build": "~2.0.0",
-    "istanbul": "0.4.3",
+    "istanbul": "0.4.5",
     "license-reporter": "github:bucharest-gold/license-reporter#d74abaf47220137b6dfd3a070556c6d5c4f2003b",
-    "mocha": "~2.5.3",
+    "mocha": "5.2.0",
     "mockgoose": "^7.3.5",
     "proxyquire": "~1.8.0",
-    "should": "2.1.1",
+    "should": "13.2.1",
     "sinon": "1.17.0",
-    "supertest": "1.1.0",
+    "supertest": "3.1.0",
     "turbo-test-runner": "http://npm.skunkhenry.com/turbo-test-runner/-/turbo-test-runner-0.6.3.tgz"
   },
   "repository": {
