@@ -1603,9 +1603,9 @@
       }
     },
     "fh-logger": {
-      "version": "0.5.1",
-      "from": "fh-logger@0.5.1",
-      "resolved": "https://registry.npmjs.org/fh-logger/-/fh-logger-0.5.1.tgz",
+      "version": "0.5.2",
+      "from": "fh-logger@0.5.2",
+      "resolved": "https://registry.npmjs.org/fh-logger/-/fh-logger-0.5.2.tgz",
       "dependencies": {
         "bunyan": {
           "version": "1.8.1",

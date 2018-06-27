@@ -36,7 +36,7 @@
     "fh-config": "2.0.0",
     "fh-forms": "1.16.9",
     "fh-health": "0.3.3",
-    "fh-logger": "0.5.1",
+    "fh-logger": "0.5.2",
     "fh-mbaas-middleware": "2.3.2",
     "fh-messaging-client": "1.0.4",
     "fh-metrics-client": "1.0.5",
