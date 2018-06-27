@@ -569,6 +569,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>bson</packageName>
+            <version>1.0.9</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>buffer-alloc-unsafe</packageName>
             <version>1.1.0</version>
             <licenses>
@@ -3399,6 +3409,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>mongodb-core</packageName>
+            <version>2.1.19</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>mongodb-uri</packageName>
             <version>0.9.7</version>
             <licenses>
@@ -3441,6 +3461,16 @@
         <dependency>
             <packageName>mongodb</packageName>
             <version>2.2.31</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>mongodb</packageName>
+            <version>2.2.35</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
