@@ -605,7 +605,7 @@
         "node-uuid": {
           "version": "1.4.7",
           "from": "node-uuid@>=1.4.4 <2.0.0",
-          "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
         },
         "rc": {
           "version": "0.1.1",
@@ -2564,7 +2564,7 @@
             "node-uuid": {
               "version": "1.4.7",
               "from": "node-uuid@>=1.4.4 <2.0.0",
-              "resolved": "http://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
+              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
             },
             "rc": {
               "version": "0.1.1",
@@ -4997,9 +4997,9 @@
           "resolved": "https://registry.npmjs.org/async/-/async-2.1.4.tgz"
         },
         "bson": {
-          "version": "1.0.6",
+          "version": "1.0.9",
           "from": "bson@>=1.0.4 <1.1.0",
-          "resolved": "https://registry.npmjs.org/bson/-/bson-1.0.6.tgz"
+          "resolved": "https://registry.npmjs.org/bson/-/bson-1.0.9.tgz"
         },
         "es6-promise": {
           "version": "3.2.1",
@@ -5422,6 +5422,11 @@
       "from": "safejson@>=1.0.0 <1.1.0",
       "resolved": "https://registry.npmjs.org/safejson/-/safejson-1.0.1.tgz"
     },
+    "safer-buffer": {
+      "version": "2.1.2",
+      "from": "safer-buffer@>=2.0.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
+    },
     "semver": {
       "version": "5.5.0",
       "from": "semver@>=5.1.0 <6.0.0",
@@ -5480,9 +5485,9 @@
       "resolved": "https://registry.npmjs.org/split/-/split-1.0.1.tgz"
     },
     "sshpk": {
-      "version": "1.14.1",
+      "version": "1.14.2",
       "from": "sshpk@>=1.7.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.14.1.tgz"
+      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.14.2.tgz"
     },
     "stack-trace": {
       "version": "0.0.10",
