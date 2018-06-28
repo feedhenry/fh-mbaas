@@ -23,10 +23,11 @@ RUN yum install -y dejavu-sans-fonts && \
 
 USER default
 
-RUN scl enable rh-nodejs4 "npm install -g nodemon" && \
-    scl enable rh-nodejs4 "npm install --production" && \
+RUN scl enable rh-nodejs6 "npm install -g forever" && \
+    scl enable rh-nodejs6 "npm install --production" && \
     mv conf-docker.json config/conf.json && \
     chmod -R ug+rw ./
+RUN echo "node_modules" >> .foreverignore
 
 USER root
 RUN  mkdir -p /root/licenses/rhmap/ && \
@@ -34,4 +35,4 @@ RUN  mkdir -p /root/licenses/rhmap/ && \
 USER default
 
 ENV FHDEV true
-CMD ["bash", "-c", "nodemon --debug=5858 fh-mbaas.js config/conf.json --master-only"]
+CMD ["forever","-w","--watchDirectory=/opt/app-root/src","fh-mbaas.js","config/conf.json","--master-only"]
