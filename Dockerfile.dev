@@ -35,4 +35,4 @@ RUN  mkdir -p /root/licenses/rhmap/ && \
 USER default
 
 ENV FHDEV true
-CMD ["forever","-w","--watchDirectory=/opt/app-root/src","fh-mbaas.js","config/conf.json","--master-only"]
+CMD ["forever","-w","--watchDirectory=/opt/app-root/src", "-c", "node --debug", "fh-mbaas.js","config/conf.json","--master-only"]

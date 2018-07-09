@@ -40,8 +40,9 @@ For development purposes, we can build a CentOS based Docker image and watch for
 
 1. Generate the config file: `grunt fh-generate-dockerised-config`
 2. `docker build -t docker.io/my-Username/fh-mbaas:dev -f Dockerfile.dev .`
-3. `oc edit dc fh-mbaas`
-4. Replace the image with the tagged version above.
+3. `docker push docker.io/my-Username/fh-mbaas:dev`
+4. `oc edit dc fh-mbaas`
+5. Replace the image with the tagged version above.
 
 ### Hot Deployment
 
@@ -49,7 +50,7 @@ The development image will allow you to sync local code changes to the running c
 
 From the root of the `fh-mbaas directory, run the following:
 
-`oc rsync --no-perms=true ./lib $(oc get po | grep fh-mbaas | grep Running | awk '{print $1}'):/opt/app-root/src`
+`oc rsync --no-perms=true --watch ./lib $(oc get po | grep fh-mbaas | grep Running | awk '{print $1}'):/opt/app-root/src`
 
 ### Debugging with VS Code
 
