@@ -102,16 +102,20 @@ function loadConfig(cb) {
   // read our config file
   var configFile = process.env.conf_file || args._[0];
 
+  console.log(`Calling fhconfig.init, with configFile: ${configFile}, requiredvalidation: ${requiredvalidation}`);
   fhconfig.init(configFile, requiredvalidation, function(err) {
     if (err) {
       return printErrorAndExit("Problems reading config file: " + configFile, err);
     }
+    console.log("Creating and setting logger");
     createAndSetLogger();
     //we call the ensureFormsUserExists function here as we only want to call it once. No point to call it in every worker.
+    console.log("Ensuring forms user exists");
     ensureFormsUserExists(function(err) {
       if (err) {
         return printErrorAndExit("failed creating mongodb user for forms", err);
       }
+      console.log("Calling callback from loadConfig");
       return cb();
     });
   });
@@ -142,10 +146,13 @@ function ensureFormsUserExists(cb) {
   var mongoConfig = appConfig.mongo;
   var mongoConfigKey;
   if (mongoUtils.hasUserSpaceDb()) {
+    logger.trace("In ensureFormsUserExists: hasUserspaceDb");
     mongoConfig = appConfig.mongo_userdb;
     mongoConfigKey = 'mongo_userdb';
   }
+  logger.trace(`In ensureFormsUserExists: mongoConfigKey: ${mongoConfigKey}, mongoConfig: ${util.inspect(mongoConfig)}`);
   var mongoAdminDbUrl = mongoUtils.getAdminDbUrl(fhconfig.mongoConnectionString(mongoConfigKey), mongoConfig.admin_auth);
+  logger.trace(`In ensureformsuserexists: mongoAdminDbUrl: ${mongoAdminDbUrl}`);
   mongoUtils.createDbUser(mongoAdminDbUrl, {username: mongoConfig.form_user_auth.user, password: mongoConfig.form_user_auth.pass, roles: ['readWriteAnyDatabase']}, cb);
 }
 
