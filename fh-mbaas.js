@@ -102,6 +102,8 @@ function loadConfig(cb) {
   // read our config file
   var configFile = process.env.conf_file || args._[0];
 
+  console.log(fhconfig);
+
   fhconfig.init(configFile, requiredvalidation, function(err) {
     if (err) {
       return printErrorAndExit("Problems reading config file: " + configFile, err);
