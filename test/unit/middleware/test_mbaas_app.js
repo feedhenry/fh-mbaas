@@ -62,7 +62,8 @@ module.exports.test_create_app_db_allowed_app_types = function (done){
       "save": function (cb){
         return cb();
       },
-      "markModified": function (){}
+      "markModified": function (){},
+      "guid": "testappguid"
     }
   };
   var res = {};
@@ -244,7 +245,8 @@ module.exports.test_create_app_userdb_allowed_app_types = function (done){
       "save": function (cb){
         return cb();
       },
-      "markModified": function (){}
+      "markModified": function (){},
+      "guid": "testappguid"
     }
   };
   var res = {};
