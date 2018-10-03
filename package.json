@@ -38,7 +38,7 @@
     "fh-health": "0.3.3",
     "fh-logger": "0.5.2",
     "fh-mbaas-middleware": "2.3.5",
-    "fh-messaging-client": "1.0.4",
+    "fh-messaging-client": "1.0.5",
     "fh-metrics-client": "1.0.5",
     "fh-service-auth": "1.0.4",
     "mkdirp": "0.5.1",
