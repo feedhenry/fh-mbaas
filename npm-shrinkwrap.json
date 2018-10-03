@@ -1,6 +1,6 @@
 {
   "name": "fh-mbaas",
-  "version": "6.0.12-BUILD-NUMBER",
+  "version": "6.0.13-BUILD-NUMBER",
   "dependencies": {
     "accepts": {
       "version": "1.3.5",
