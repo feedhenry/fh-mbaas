@@ -1,19 +1,9 @@
 <?xml version='1.0'?>
 <licenseSummary>
     <project>fh-mbaas</project>
-    <version>6.0.7-BUILD-NUMBER</version>
+    <version>6.0.12-BUILD-NUMBER</version>
     <license>Apache-2.0</license>
     <dependencies>
-        <dependency>
-            <packageName>accepts</packageName>
-            <version>1.3.4</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
         <dependency>
             <packageName>accepts</packageName>
             <version>1.3.5</version>
@@ -100,37 +90,7 @@
         </dependency>
         <dependency>
             <packageName>amqp</packageName>
-            <version>0.2.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>amqp</packageName>
             <version>0.2.6</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>ansi-regex</packageName>
-            <version>2.0.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>ansi-styles</packageName>
-            <version>2.2.1</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -229,18 +189,18 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>async</packageName>
-            <version>0.2.10</version>
+            <packageName>async-listener</packageName>
+            <version>0.6.9</version>
             <licenses>
                 <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
+                    <name>BSD 2-clause "Simplified" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-2-Clause</url>
                 </license>
             </licenses>
         </dependency>
         <dependency>
             <packageName>async</packageName>
-            <version>0.2.7</version>
+            <version>0.2.10</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -350,16 +310,6 @@
         </dependency>
         <dependency>
             <packageName>aws4</packageName>
-            <version>1.5.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>aws4</packageName>
             <version>1.6.0</version>
             <licenses>
                 <license>
@@ -371,6 +321,16 @@
         <dependency>
             <packageName>aws4</packageName>
             <version>1.7.0</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>aws4</packageName>
+            <version>1.8.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -421,6 +381,16 @@
         <dependency>
             <packageName>bcrypt-pbkdf</packageName>
             <version>1.0.1</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>bcrypt-pbkdf</packageName>
+            <version>1.0.2</version>
             <licenses>
                 <license>
                     <name>BSD 3-clause "New" or "Revised" License</name>
@@ -669,6 +639,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>bunyan-lite</packageName>
+            <version>1.0.1</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>bunyan</packageName>
             <version>1.8.1</version>
             <licenses>
@@ -760,16 +740,6 @@
         </dependency>
         <dependency>
             <packageName>caseless</packageName>
-            <version>0.11.0</version>
-            <licenses>
-                <license>
-                    <name>Apache License 2.0</name>
-                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>caseless</packageName>
             <version>0.12.0</version>
             <licenses>
                 <license>
@@ -781,16 +751,6 @@
         <dependency>
             <packageName>center-align</packageName>
             <version>0.1.3</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>chalk</packageName>
-            <version>1.1.3</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -859,16 +819,6 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>commander</packageName>
-            <version>2.9.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
             <packageName>compress-commons</packageName>
             <version>1.2.2</version>
             <licenses>
@@ -921,6 +871,16 @@
         <dependency>
             <packageName>continuation-local-storage</packageName>
             <version>3.1.7</version>
+            <licenses>
+                <license>
+                    <name>BSD 2-clause "Simplified" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-2-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>continuation-local-storage</packageName>
+            <version>3.2.1</version>
             <licenses>
                 <license>
                     <name>BSD 2-clause "Simplified" License</name>
@@ -1170,16 +1130,6 @@
         </dependency>
         <dependency>
             <packageName>depd</packageName>
-            <version>1.1.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>depd</packageName>
             <version>1.1.1</version>
             <licenses>
                 <license>
@@ -1289,6 +1239,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>ecc-jsbn</packageName>
+            <version>0.1.2</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>ee-first</packageName>
             <version>1.1.1</version>
             <licenses>
@@ -1309,12 +1269,12 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>encodeurl</packageName>
-            <version>1.0.1</version>
+            <packageName>emitter-listener</packageName>
+            <version>1.1.1</version>
             <licenses>
                 <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
+                    <name>BSD 2-clause "Simplified" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-2-Clause</url>
                 </license>
             </licenses>
         </dependency>
@@ -1370,7 +1330,7 @@
         </dependency>
         <dependency>
             <packageName>es6-promise</packageName>
-            <version>4.2.4</version>
+            <version>4.2.5</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -1381,16 +1341,6 @@
         <dependency>
             <packageName>escape-html</packageName>
             <version>1.0.3</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>escape-string-regexp</packageName>
-            <version>1.0.5</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -1501,6 +1451,16 @@
         <dependency>
             <packageName>extend</packageName>
             <version>3.0.1</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>extend</packageName>
+            <version>3.0.2</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -1620,16 +1580,6 @@
         </dependency>
         <dependency>
             <packageName>fh-amqp-js</packageName>
-            <version>0.7.1</version>
-            <licenses>
-                <license>
-                    <name>Apache License 2.0</name>
-                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>fh-amqp-js</packageName>
             <version>0.7.5</version>
             <licenses>
                 <license>
@@ -1670,7 +1620,7 @@
         </dependency>
         <dependency>
             <packageName>fh-config</packageName>
-            <version>2.0.0</version>
+            <version>1.0.3</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1680,7 +1630,7 @@
         </dependency>
         <dependency>
             <packageName>fh-forms</packageName>
-            <version>1.16.9</version>
+            <version>1.16.10</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1729,6 +1679,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>fh-logger</packageName>
+            <version>1.0.0</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>fh-mbaas-client</packageName>
             <version>1.1.1</version>
             <licenses>
@@ -1740,7 +1700,7 @@
         </dependency>
         <dependency>
             <packageName>fh-mbaas-middleware</packageName>
-            <version>2.3.2</version>
+            <version>2.3.5</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1750,7 +1710,7 @@
         </dependency>
         <dependency>
             <packageName>fh-mbaas</packageName>
-            <version>6.0.7-BUILD-NUMBER</version>
+            <version>6.0.12-BUILD-NUMBER</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1760,7 +1720,7 @@
         </dependency>
         <dependency>
             <packageName>fh-messaging-client</packageName>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1939,26 +1899,6 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>generate-function</packageName>
-            <version>2.0.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>generate-object-property</packageName>
-            <version>1.2.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
             <packageName>get-stdin</packageName>
             <version>4.0.1</version>
             <licenses>
@@ -2039,16 +1979,6 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>graceful-readlink</packageName>
-            <version>1.0.1</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
             <packageName>gridfs-stream</packageName>
             <version>0.4.0</version>
             <licenses>
@@ -2090,16 +2020,6 @@
         </dependency>
         <dependency>
             <packageName>har-validator</packageName>
-            <version>2.0.6</version>
-            <licenses>
-                <license>
-                    <name>ISC License</name>
-                    <url>http://www.isc.org/software/license</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>har-validator</packageName>
             <version>4.2.1</version>
             <licenses>
                 <license>
@@ -2119,12 +2039,12 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>has-ansi</packageName>
-            <version>2.0.0</version>
+            <packageName>har-validator</packageName>
+            <version>5.1.0</version>
             <licenses>
                 <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
+                    <name>ISC License</name>
+                    <url>http://www.isc.org/software/license</url>
                 </license>
             </licenses>
         </dependency>
@@ -2400,16 +2320,6 @@
         </dependency>
         <dependency>
             <packageName>ipaddr.js</packageName>
-            <version>1.5.2</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>ipaddr.js</packageName>
             <version>1.6.0</version>
             <licenses>
                 <license>
@@ -2459,26 +2369,6 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>is-my-json-valid</packageName>
-            <version>2.15.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>is-property</packageName>
-            <version>1.0.2</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
             <packageName>is-stream</packageName>
             <version>1.1.0</version>
             <licenses>
@@ -2501,6 +2391,16 @@
         <dependency>
             <packageName>is-utf8</packageName>
             <version>0.2.1</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>is</packageName>
+            <version>3.2.1</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -2625,16 +2525,6 @@
                 <license>
                     <name>UNKNOWN</name>
                     <url>UNKNOWN</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>jsonpointer</packageName>
-            <version>4.0.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
                 </license>
             </licenses>
         </dependency>
@@ -2830,16 +2720,6 @@
         </dependency>
         <dependency>
             <packageName>lodash</packageName>
-            <version>1.3.1</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>lodash</packageName>
             <version>2.1.0</version>
             <licenses>
                 <license>
@@ -2851,16 +2731,6 @@
         <dependency>
             <packageName>lodash</packageName>
             <version>2.2.1</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>lodash</packageName>
-            <version>2.4.1</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -3030,16 +2900,6 @@
         </dependency>
         <dependency>
             <packageName>mime-db</packageName>
-            <version>1.24.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>mime-db</packageName>
             <version>1.26.0</version>
             <licenses>
                 <license>
@@ -3069,8 +2929,8 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>mime-types</packageName>
-            <version>2.0.14</version>
+            <packageName>mime-db</packageName>
+            <version>1.36.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -3080,7 +2940,7 @@
         </dependency>
         <dependency>
             <packageName>mime-types</packageName>
-            <version>2.1.12</version>
+            <version>2.0.14</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -3119,6 +2979,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>mime-types</packageName>
+            <version>2.1.20</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>mime</packageName>
             <version>1.4.1</version>
             <licenses>
@@ -3145,16 +3015,6 @@
                 <license>
                     <name>ISC License</name>
                     <url>http://www.isc.org/software/license</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>minimist</packageName>
-            <version>0.0.10</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
                 </license>
             </licenses>
         </dependency>
@@ -3420,7 +3280,7 @@
         </dependency>
         <dependency>
             <packageName>mongoose-validator</packageName>
-            <version>1.2.5</version>
+            <version>1.3.2</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -3541,6 +3401,16 @@
         <dependency>
             <packageName>muri</packageName>
             <version>1.2.2</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>mv-lite</packageName>
+            <version>1.0.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -3769,6 +3639,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>oauth-sign</packageName>
+            <version>0.9.0</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>object-assign</packageName>
             <version>4.1.0</version>
             <licenses>
@@ -3815,16 +3695,6 @@
                 <license>
                     <name>ISC License</name>
                     <url>http://www.isc.org/software/license</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>optimist</packageName>
-            <version>0.3.7</version>
-            <licenses>
-                <license>
-                    <name>UNKNOWN</name>
-                    <url>UNKNOWN</url>
                 </license>
             </licenses>
         </dependency>
@@ -4070,16 +3940,6 @@
         </dependency>
         <dependency>
             <packageName>proxy-addr</packageName>
-            <version>2.0.2</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>proxy-addr</packageName>
             <version>2.0.3</version>
             <licenses>
                 <license>
@@ -4095,6 +3955,16 @@
                 <license>
                     <name>ISC License</name>
                     <url>http://www.isc.org/software/license</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>psl</packageName>
+            <version>1.1.29</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
                 </license>
             </licenses>
         </dependency>
@@ -4120,16 +3990,6 @@
         </dependency>
         <dependency>
             <packageName>qs</packageName>
-            <version>6.3.0</version>
-            <licenses>
-                <license>
-                    <name>BSD 3-clause "New" or "Revised" License</name>
-                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>qs</packageName>
             <version>6.4.0</version>
             <licenses>
                 <license>
@@ -4141,6 +4001,16 @@
         <dependency>
             <packageName>qs</packageName>
             <version>6.5.1</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>qs</packageName>
+            <version>6.5.2</version>
             <licenses>
                 <license>
                     <name>BSD 3-clause "New" or "Revised" License</name>
@@ -4175,16 +4045,6 @@
                 <license>
                     <name>MIT License</name>
                     <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>rc</packageName>
-            <version>0.1.1</version>
-            <licenses>
-                <license>
-                    <name>UNKNOWN</name>
-                    <url>UNKNOWN</url>
                 </license>
             </licenses>
         </dependency>
@@ -4303,16 +4163,6 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>redis</packageName>
-            <version>0.8.2</version>
-            <licenses>
-                <license>
-                    <name>UNKNOWN</name>
-                    <url>UNKNOWN</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
             <packageName>regexp-clone</packageName>
             <version>0.0.1</version>
             <licenses>
@@ -4364,16 +4214,6 @@
         </dependency>
         <dependency>
             <packageName>request</packageName>
-            <version>2.78.0</version>
-            <licenses>
-                <license>
-                    <name>Apache License 2.0</name>
-                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>request</packageName>
             <version>2.81.0</version>
             <licenses>
                 <license>
@@ -4395,6 +4235,16 @@
         <dependency>
             <packageName>request</packageName>
             <version>2.87.0</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>request</packageName>
+            <version>2.88.0</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -4565,16 +4415,6 @@
         <dependency>
             <packageName>semver</packageName>
             <version>5.3.0</version>
-            <licenses>
-                <license>
-                    <name>ISC License</name>
-                    <url>http://www.isc.org/software/license</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>semver</packageName>
-            <version>5.4.1</version>
             <licenses>
                 <license>
                     <name>ISC License</name>
@@ -4813,6 +4653,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>source-map</packageName>
+            <version>0.6.1</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>spdx-correct</packageName>
             <version>1.0.2</version>
             <licenses>
@@ -5017,16 +4867,6 @@
             </licenses>
         </dependency>
         <dependency>
-            <packageName>strip-ansi</packageName>
-            <version>3.0.1</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
             <packageName>strip-bom</packageName>
             <version>2.0.0</version>
             <licenses>
@@ -5059,16 +4899,6 @@
         <dependency>
             <packageName>strip-json-comments</packageName>
             <version>2.0.1</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>supports-color</packageName>
-            <version>2.0.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -5167,22 +4997,22 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>tough-cookie</packageName>
+            <version>2.4.3</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>trim-newlines</packageName>
             <version>1.0.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
                     <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>tunnel-agent</packageName>
-            <version>0.4.3</version>
-            <licenses>
-                <license>
-                    <name>Apache License 2.0</name>
-                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
                 </license>
             </licenses>
         </dependency>
@@ -5219,16 +5049,6 @@
         <dependency>
             <packageName>type-is</packageName>
             <version>1.5.7</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>type-is</packageName>
-            <version>1.6.15</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -5397,6 +5217,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>uuid</packageName>
+            <version>3.3.2</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>validate-npm-package-license</packageName>
             <version>3.0.1</version>
             <licenses>
@@ -5408,7 +5238,7 @@
         </dependency>
         <dependency>
             <packageName>validator</packageName>
-            <version>4.9.0</version>
+            <version>7.2.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -5488,7 +5318,7 @@
         </dependency>
         <dependency>
             <packageName>winston</packageName>
-            <version>2.4.3</version>
+            <version>2.4.4</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
