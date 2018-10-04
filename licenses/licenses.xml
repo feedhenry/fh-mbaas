@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <licenseSummary>
     <project>fh-mbaas</project>
-    <version>6.0.12-BUILD-NUMBER</version>
+    <version>6.0.13-BUILD-NUMBER</version>
     <license>Apache-2.0</license>
     <dependencies>
         <dependency>
@@ -37,16 +37,6 @@
         <dependency>
             <packageName>ajv</packageName>
             <version>4.11.5</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>ajv</packageName>
-            <version>5.5.1</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -1520,16 +1510,6 @@
         </dependency>
         <dependency>
             <packageName>fast-deep-equal</packageName>
-            <version>1.0.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>fast-deep-equal</packageName>
             <version>1.1.0</version>
             <licenses>
                 <license>
@@ -1710,7 +1690,7 @@
         </dependency>
         <dependency>
             <packageName>fh-mbaas</packageName>
-            <version>6.0.12-BUILD-NUMBER</version>
+            <version>6.0.13-BUILD-NUMBER</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1730,7 +1710,7 @@
         </dependency>
         <dependency>
             <packageName>fh-metrics-client</packageName>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1811,16 +1791,6 @@
         <dependency>
             <packageName>form-data</packageName>
             <version>2.1.2</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>form-data</packageName>
-            <version>2.3.1</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -2091,16 +2061,6 @@
         <dependency>
             <packageName>hoek</packageName>
             <version>2.16.3</version>
-            <licenses>
-                <license>
-                    <name>BSD 3-clause "New" or "Revised" License</name>
-                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>hoek</packageName>
-            <version>4.2.0</version>
             <licenses>
                 <license>
                     <name>BSD 3-clause "New" or "Revised" License</name>
@@ -2910,16 +2870,6 @@
         </dependency>
         <dependency>
             <packageName>mime-db</packageName>
-            <version>1.30.0</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>mime-db</packageName>
             <version>1.33.0</version>
             <licenses>
                 <license>
@@ -2951,16 +2901,6 @@
         <dependency>
             <packageName>mime-types</packageName>
             <version>2.1.14</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>mime-types</packageName>
-            <version>2.1.17</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -4718,16 +4658,6 @@
         </dependency>
         <dependency>
             <packageName>sshpk</packageName>
-            <version>1.13.1</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>sshpk</packageName>
             <version>1.14.2</version>
             <licenses>
                 <license>
@@ -4978,16 +4908,6 @@
         </dependency>
         <dependency>
             <packageName>tough-cookie</packageName>
-            <version>2.3.3</version>
-            <licenses>
-                <license>
-                    <name>BSD 3-clause "New" or "Revised" License</name>
-                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>tough-cookie</packageName>
             <version>2.3.4</version>
             <licenses>
                 <license>
@@ -5189,16 +5109,6 @@
         <dependency>
             <packageName>uuid</packageName>
             <version>3.0.1</version>
-            <licenses>
-                <license>
-                    <name>MIT License</name>
-                    <url>http://www.opensource.org/licenses/MIT</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <packageName>uuid</packageName>
-            <version>3.1.0</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
