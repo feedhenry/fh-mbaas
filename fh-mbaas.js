@@ -352,7 +352,7 @@ function setupFhconfigReloadHandler(fhconfig) {
     return;
   }
   process.on(fhconfig.RELOAD_CONFIG_SIGNAL, function() {
-    fhconfig.reload(cluster.workers, function(err) {
+    fhconfig.reloadRawConfig(function(err) {
       if (err) {
         /* eslint-disable no-console */
         console.error("Config not reloaded");
