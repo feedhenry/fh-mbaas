@@ -3,17 +3,22 @@
 // https://github.com/feedhenry/fh-pipeline-library
 @Library('fh-pipeline-library') _
 
+final String COMPONENT = 'fh-mbaas'
+final String DOCKER_HUB_ORG = "feedhenry"
+
+String BUILD = ""
+String VERSION = ""
+String CHANGE_URL = ""
+
 stage('Trust') {
     enforceTrustedApproval()
 }
 
 fhBuildNode([labels: ['nodejs6']]) {
 
-    final String COMPONENT = 'fh-mbaas'
-    final String VERSION = getBaseVersionFromPackageJson()
-    final String BUILD = env.BUILD_NUMBER
-    final String DOCKER_HUB_ORG = "feedhenry"
-    final String CHANGE_URL = env.CHANGE_URL
+    VERSION = getBaseVersionFromPackageJson()
+    BUILD = env.BUILD_NUMBER
+    CHANGE_URL = env.CHANGE_URL
 
     stage('Install Dependencies') {
         npmInstall {}
@@ -41,6 +46,9 @@ fhBuildNode([labels: ['nodejs6']]) {
         gruntBuild {
             name = COMPONENT
         }
+
+        sh "cp ./dist/fh-*x64.tar.gz docker/"
+        stash name: "dockerdir", includes: "docker/"
     }
 
     stage('Platform Update') {
@@ -52,8 +60,24 @@ fhBuildNode([labels: ['nodejs6']]) {
         ]
         fhOpenshiftTemplatesComponentUpdate(updateParams)
     }
+}
 
+node('master') {
     stage('Build Image') {
-        dockerBuildNodeComponent(COMPONENT, DOCKER_HUB_ORG)
+        unstash "dockerdir"
+
+        final String tag = "${VERSION}-${BUILD}"
+        final Map params = [
+            fromDir: "./docker",
+            buildConfigName: COMPONENT,
+            imageRepoSecret: "dockerhub",
+            outputImage: "docker.io/${DOCKER_HUB_ORG}/${COMPONENT}:${tag}"
+        ]
+
+        try {
+            buildWithDockerStrategy params
+        } finally {
+            sh "rm -rf ./docker/"
+        }
     }
 }
