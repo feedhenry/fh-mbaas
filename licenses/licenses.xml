@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <licenseSummary>
     <project>fh-mbaas</project>
-    <version>6.0.7-BUILD-NUMBER</version>
+    <version>6.0.9-BUILD-NUMBER</version>
     <license>Apache-2.0</license>
     <dependencies>
         <dependency>
@@ -379,6 +379,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>aws4</packageName>
+            <version>1.8.0</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>backoff</packageName>
             <version>2.4.1</version>
             <licenses>
@@ -421,6 +431,16 @@
         <dependency>
             <packageName>bcrypt-pbkdf</packageName>
             <version>1.0.1</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>bcrypt-pbkdf</packageName>
+            <version>1.0.2</version>
             <licenses>
                 <license>
                     <name>BSD 3-clause "New" or "Revised" License</name>
@@ -1289,6 +1309,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>ecc-jsbn</packageName>
+            <version>0.1.2</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>ee-first</packageName>
             <version>1.1.1</version>
             <licenses>
@@ -1509,6 +1539,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>extend</packageName>
+            <version>3.0.2</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>extract-zip</packageName>
             <version>1.6.7</version>
             <licenses>
@@ -1670,7 +1710,7 @@
         </dependency>
         <dependency>
             <packageName>fh-config</packageName>
-            <version>2.0.0</version>
+            <version>1.0.3</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1750,7 +1790,7 @@
         </dependency>
         <dependency>
             <packageName>fh-mbaas</packageName>
-            <version>6.0.7-BUILD-NUMBER</version>
+            <version>6.0.9-BUILD-NUMBER</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -1770,7 +1810,7 @@
         </dependency>
         <dependency>
             <packageName>fh-metrics-client</packageName>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -2111,6 +2151,16 @@
         <dependency>
             <packageName>har-validator</packageName>
             <version>5.0.3</version>
+            <licenses>
+                <license>
+                    <name>ISC License</name>
+                    <url>http://www.isc.org/software/license</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>har-validator</packageName>
+            <version>5.1.0</version>
             <licenses>
                 <license>
                     <name>ISC License</name>
@@ -3069,6 +3119,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>mime-db</packageName>
+            <version>1.36.0</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>mime-types</packageName>
             <version>2.0.14</version>
             <licenses>
@@ -3111,6 +3171,16 @@
         <dependency>
             <packageName>mime-types</packageName>
             <version>2.1.18</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>mime-types</packageName>
+            <version>2.1.20</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
@@ -3769,6 +3839,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>oauth-sign</packageName>
+            <version>0.9.0</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>object-assign</packageName>
             <version>4.1.0</version>
             <licenses>
@@ -4099,6 +4179,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>psl</packageName>
+            <version>1.1.29</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>punycode</packageName>
             <version>1.4.1</version>
             <licenses>
@@ -4141,6 +4231,16 @@
         <dependency>
             <packageName>qs</packageName>
             <version>6.5.1</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>qs</packageName>
+            <version>6.5.2</version>
             <licenses>
                 <license>
                     <name>BSD 3-clause "New" or "Revised" License</name>
@@ -4395,6 +4495,16 @@
         <dependency>
             <packageName>request</packageName>
             <version>2.87.0</version>
+            <licenses>
+                <license>
+                    <name>Apache License 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>request</packageName>
+            <version>2.88.0</version>
             <licenses>
                 <license>
                     <name>Apache License 2.0</name>
@@ -4813,6 +4923,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>source-map</packageName>
+            <version>0.6.1</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>spdx-correct</packageName>
             <version>1.0.2</version>
             <licenses>
@@ -5167,6 +5287,16 @@
             </licenses>
         </dependency>
         <dependency>
+            <packageName>tough-cookie</packageName>
+            <version>2.4.3</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-clause "New" or "Revised" License</name>
+                    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
             <packageName>trim-newlines</packageName>
             <version>1.0.0</version>
             <licenses>
@@ -5389,6 +5519,16 @@
         <dependency>
             <packageName>uuid</packageName>
             <version>3.3.0</version>
+            <licenses>
+                <license>
+                    <name>MIT License</name>
+                    <url>http://www.opensource.org/licenses/MIT</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>uuid</packageName>
+            <version>3.3.2</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
